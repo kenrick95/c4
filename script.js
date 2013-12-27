@@ -3,20 +3,21 @@ function Game() {
 	this.paused = false;
 	this.won = false;
 	this.rejectClick = false;
-	
 	this.move = 0;
-	for (var i=0; i <= 6; i++) {
-		this.map[i] = Array();	
-		for (var j=0; j<=7; j++) {
-			this.map[i][j] = 0;	
+	this.init = function () {
+		for (var i=0; i <= 6; i++) {
+			this.map[i] = Array();	
+			for (var j=0; j<=7; j++) {
+				this.map[i][j] = 0;	
+			}
 		}
-	}
-	canvas = document.getElementsByTagName("canvas")[0];
-	var that = this;
-	canvas.addEventListener('click', function (e) {
-		that.onclick(canvas, e);
-	});	
-	context = canvas.getContext('2d');
+		this.canvas = document.getElementsByTagName("canvas")[0];
+		var that = this;
+		this.canvas.addEventListener('click', function (e) {
+			that.onclick(that.canvas, e);
+		});	
+		this.context = this.canvas.getContext('2d');
+	};
 	
 	this.playerMove = function () {
 		if (this.move % 2 === 0) {
@@ -50,23 +51,23 @@ function Game() {
 		} else {
 			msg = "It's a draw";
 		}
-		context.save();
-		context.fillStyle = "white";
-		context.fillRect(0, 0, 150, 24);
-		context.restore();
-		context.save();
-		context.font = '14pt Helvetica';
-		context.fillText(msg, 10, 20);
-		context.restore();
+		this.context.save();
+		this.context.fillStyle = "white";
+		this.context.fillRect(0, 0, 150, 24);
+		this.context.restore();
+		this.context.save();
+		this.context.font = '14pt Helvetica';
+		this.context.fillText(msg, 10, 20);
+		this.context.restore();
 		
 		console.info(msg);
 	}
 	this.action = function(column) {
 		if (this.paused || this.won) {
-			return false;
+			return 0;
 		}
 		if (this.map[0][column] !== 0 || column < 0 || column > 6) {
-			return false;
+			return -1;
 		} else {
 			var done = false;
 			for (var i=0; i<5; i++) {
@@ -84,6 +85,7 @@ function Game() {
 		}
 		this.paused = true;
 		this.print();
+		return 1;
 	}
 	
 	this.check = function() {
@@ -113,14 +115,14 @@ function Game() {
 	}
 	
 	this.drawCircle = function (x, y, r, fill, stroke) {
-		context.save();
-		context.fillStyle = fill;
-		context.strokeStyle = stroke;
-		context.beginPath();
-		context.arc(x, y, r, 0, 2 * Math.PI, false);
-		context.stroke();
-		context.fill();
-		context.restore();
+		this.context.save();
+		this.context.fillStyle = fill;
+		this.context.strokeStyle = stroke;
+		this.context.beginPath();
+		this.context.arc(x, y, r, 0, 2 * Math.PI, false);
+		this.context.stroke();
+		this.context.fill();
+		this.context.restore();
 	};
 	this.draw = function () {
 		for (var y = 0; y < 6; y++) {
@@ -162,7 +164,7 @@ function Game() {
 		
 		for (var j = 0; j < 7; j++) {
 			if (this.onregion([x,y], 75*j + 100, 25)) {
-				console.log("clicked: " + i + " " + j);
+				console.log("clicked region " + j);
 				this.paused = false;
 				this.action(j);
 				this.rejectClick = true;
@@ -179,9 +181,16 @@ function Game() {
 		var choice = null;
 		choice = Math.floor(Math.random() * 7);
 		this.paused = false;
-		this.action(choice);
+		var done = this.action(choice);
+		while (done < 0) {
+			choice = Math.floor(Math.random() * 7);
+			done = this.action(choice);
+		}
+		
 		this.rejectClick = false;
 	};
+	this.init();
+	
 	
 	
 }
