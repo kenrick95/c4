@@ -1,3 +1,11 @@
+// http://stackoverflow.com/questions/13756482/create-copy-of-multi-dimensional-array-not-reference-javascript
+Array.prototype.clone = function() {
+    var arr = [];
+    for( var i = 0; i < this.length; i++ ) {
+        arr[i] = this[i].slice();
+    }
+    return arr;
+}
 function Game() {
 	var that = this;
 	this.map = Array();
@@ -48,6 +56,18 @@ function Game() {
 		console.log(msg);
 		this.drawMask();
 	}
+	
+	this.printState = function (state) {
+		var msg = "\n";
+		for (var i=0; i < 6; i++) {
+			for (var j=0; j<7; j++) {
+				msg += " " + state[i][j];	
+			}
+			msg += "\n";
+		}
+		console.log(msg);
+	}
+	
 	this.win = function (player) {
 		this.paused = true;
 		this.won = true;
@@ -68,7 +88,29 @@ function Game() {
 		this.context.restore();
 		
 		console.info(msg);
-	}
+	};
+	this.fillMap = function (state, column, value) {
+		var tempMap = state.clone();
+		if (tempMap[0][column] !== 0 || column < 0 || column > 6) {
+			return -1;
+		} else {
+			var done = false;
+			var row = 0;
+			for (var i=0; i<5; i++) {
+				if (tempMap[i+1][column] !== 0) {
+					done = true;
+					row = i;
+					break;
+				}
+			}
+			if (!done) {
+				row = 5;
+			}
+			tempMap[row][column] = value;
+			return tempMap;
+		}
+	};
+	
 	this.action = function(column, callback) {
 		if (this.paused || this.won) {
 			return 0;
@@ -119,7 +161,7 @@ function Game() {
 					if (i-k >= 0 && j+k < 7) temp_tr += this.map[i-k][j+k];
 				}
 				if (Math.abs(temp_r) === 4) this.win(temp_r);
-				else if (Math.abs(temp_b) === 4) this.win(temp_r);
+				else if (Math.abs(temp_b) === 4) this.win(temp_b);
 				else if (Math.abs(temp_br) === 4) this.win(temp_br);
 				else if (Math.abs(temp_tr) === 4) this.win(temp_tr);
 				
@@ -214,8 +256,7 @@ function Game() {
 			return false;
 		}
 		if (this.won) {
-			this.init();
-			return false;
+			window.location.reload();
 		}
 		var rect = canvas.getBoundingClientRect(),
 		x = e.clientX - rect.left,// - e.target.scrollTop,
@@ -240,11 +281,150 @@ function Game() {
 	
 	this.ai = function () {
 		var choice = null;
-		choice = Math.floor(Math.random() * 7);
+		// TODO: FIX AI
+		// - better evaluation function
+		
+		var state = this.map.clone();
+		//that.printState(state);
+		var depth = 0;
+		function checkState(state) {
+			var winVal = 0;
+			for (var i=0; i<6; i++) {
+				for (var j=0; j<7; j++) {
+					var temp_r = 0, temp_b = 0, temp_br = 0, temp_tr = 0;
+					for (var k=0; k<=3; k++) {
+						//from (i,j) to right
+						if (j+k < 7) temp_r += state[i][j+k];
+						
+						//from (i,j) to bottom
+						if (i+k < 6) temp_b += state[i+k][j];
+						
+						//from (i,j) to bottom-right
+						if (i+k < 6 && j+k < 7) temp_br += state[i+k][j+k];
+						
+						//from (i,j) to top-right
+						if (i-k >= 0 && j+k < 7) temp_tr += state[i-k][j+k];
+					}
+					if (Math.abs(temp_r) === 4) winVal = temp_r;
+					else if (Math.abs(temp_b) === 4) winVal = temp_b;
+					else if (Math.abs(temp_br) === 4) winVal =temp_br;
+					else if (Math.abs(temp_tr) === 4) winVal =temp_tr;
+					
+				}
+			}
+			return winVal;
+		}
+		function value(state, depth, alpha, beta) {
+			if (depth >= 4) {
+				//that.printState(state);
+				
+				// calculate value
+				var retValue = 0;
+				
+				// if win, value = +inf
+				var winVal = checkState(state);
+				if (winVal === -4) { // AI win, AI wants to win of course
+					retValue = 999999;
+				} else if (winVal === 4) { // AI lose, AI hates losing
+					retValue = -999999;
+				}
+				//console.log(alpha + " " + beta + " " + retValue);
+				return [retValue, -1];
+		
+			} else {
+				var win = checkState(state);
+				// if already won, then return the value right away
+				if (win > 0) {
+					return [-999999, -1];
+				} else if (win < 0) {
+					return [999999, -1];
+				}
+				
+				if (depth % 2 === 0) {
+					return minState(state, depth + 1, alpha, beta);
+				} else {
+					return maxState(state, depth + 1, alpha, beta);
+				}
+			}
+		}
+		function maxState(state, depth, alpha, beta) {
+			var v = -100000000007;
+			var move = -1;
+			var tempVal = null;
+			var moveQueue = Array();
+			
+			for (var j = 0; j < 7; j++) {
+				tempState = that.fillMap(state, j, -1);
+				if (tempState === -1) continue;
+				
+				tempVal = value(tempState, depth, alpha, beta);
+				if (tempVal[0] > v) {
+					v = tempVal[0];
+					move = j;
+					moveQueue = Array();
+					moveQueue.push(j);
+				} else if (tempVal[0] === v) {
+					moveQueue.push(j);
+				}
+				
+				// alpha-beta pruning
+				if (v > beta) {
+					move = choose(moveQueue);
+					return [v, move];
+				}
+				alpha = Math.max(alpha, v);
+				
+			}
+			move = choose(moveQueue);
+			
+			return [v, move];
+		}
+		function minState(state, depth, alpha, beta) {
+			var v = 100000000007;
+			var move = -1;
+			var tempVal = null;
+			var tempState = null;
+			var moveQueue = Array();
+			
+			for (var j = 0; j < 7; j++) {
+				tempState = that.fillMap(state, j, 1);
+				if (tempState === -1) continue;
+				
+				tempVal = value(tempState, depth, alpha, beta);
+				if (tempVal[0] < v) {
+					v = tempVal[0];
+					move = j;
+					moveQueue = Array();
+					moveQueue.push(j);
+				} else if (tempVal[0] === v) {
+					moveQueue.push(j);
+				}
+				
+				// alpha-beta pruning
+				if (v < alpha) {
+					move = choose(moveQueue);
+					return [v, move];
+				}
+				beta = Math.min(beta, v);
+			}
+			move = choose(moveQueue);
+			
+			return [v, move];
+		}
+		function choose(choice) {
+			return choice[Math.floor(Math.random() * choice.length)];
+		}
+		choice = maxState(state, 0, -100000000007, 100000000007)[1];
+		console.info(choice);
+		
+		//choice = Math.floor(Math.random() * 7);
 		this.paused = false;
 		var done = this.action(choice, function () {
 			that.rejectClick = false;	
 		});
+		
+		console.log("Not done");
+		// if not done, then random
 		while (done < 0) {
 			choice = Math.floor(Math.random() * 7);
 			done = this.action(choice, function () {
