@@ -1,10 +1,16 @@
 function Game() {
+	var that = this;
 	this.map = Array();
 	this.paused = false;
 	this.won = false;
 	this.rejectClick = false;
 	this.move = 0;
 	this.init = function () {
+		this.map = Array();
+		this.paused = false;
+		this.won = false;
+		this.rejectClick = false;
+		this.move = 0;
 		for (var i=0; i <= 6; i++) {
 			this.map[i] = Array();	
 			for (var j=0; j<=7; j++) {
@@ -12,11 +18,13 @@ function Game() {
 			}
 		}
 		this.canvas = document.getElementsByTagName("canvas")[0];
-		var that = this;
 		this.canvas.addEventListener('click', function (e) {
 			that.onclick(that.canvas, e);
 		});	
 		this.context = this.canvas.getContext('2d');
+		this.clear();
+		this.drawMask();
+		
 	};
 	
 	this.playerMove = function () {
@@ -38,11 +46,12 @@ function Game() {
 			msg += "\n";
 		}
 		console.log(msg);
-		this.draw();
+		this.drawMask();
 	}
 	this.win = function (player) {
 		this.paused = true;
 		this.won = true;
+		this.rejectClick = false;
 		var msg = null;
 		if (player > 0) {
 			msg = "Player 1 wins";
@@ -51,18 +60,16 @@ function Game() {
 		} else {
 			msg = "It's a draw";
 		}
+		msg += " - Click to reset";
 		this.context.save();
+		this.context.font = '14pt sans-serif';
 		this.context.fillStyle = "white";
-		this.context.fillRect(0, 0, 150, 24);
-		this.context.restore();
-		this.context.save();
-		this.context.font = '14pt Helvetica';
-		this.context.fillText(msg, 10, 20);
+		this.context.fillText(msg, 200, 20);
 		this.context.restore();
 		
 		console.info(msg);
 	}
-	this.action = function(column) {
+	this.action = function(column, callback) {
 		if (this.paused || this.won) {
 			return 0;
 		}
@@ -70,18 +77,24 @@ function Game() {
 			return -1;
 		} else {
 			var done = false;
+			var row = 0;
 			for (var i=0; i<5; i++) {
 				if (this.map[i+1][column] !== 0) {
-					this.map[i][column] = this.playerMove(this.move);
 					done = true;
+					row = i;
 					break;
 				}
 			}
 			if (!done) {
-				this.map[5][column] = this.playerMove(this.move);
+				row = 5;
 			}
-			this.move++;
-			this.check();
+			this.animate(column, this.playerMove(this.move), row, 0, function () {
+				that.map[row][column] = that.playerMove(that.move);
+				that.move++;
+				that.draw();
+				that.check();
+				callback();
+			});
 		}
 		this.paused = true;
 		this.print();
@@ -120,10 +133,28 @@ function Game() {
 		this.context.strokeStyle = stroke;
 		this.context.beginPath();
 		this.context.arc(x, y, r, 0, 2 * Math.PI, false);
-		this.context.stroke();
+		//this.context.stroke();
 		this.context.fill();
 		this.context.restore();
 	};
+	this.drawMask = function () {
+		// draw the mask
+		// http://stackoverflow.com/questions/6271419/how-to-fill-the-opposite-shape-on-canvas
+		// -->  http://stackoverflow.com/a/11770000/917957
+		
+		this.context.save();
+		this.context.fillStyle = "grey";
+		this.context.beginPath();
+		for (var y = 0; y < 6; y++) {
+			for (var x = 0; x < 7; x++) {
+				this.context.arc(75*x + 100, 75*y + 50, 25, 0, 2 * Math.PI);
+				this.context.rect(75*x + 150, 75*y, -100, 100);
+			}
+		}
+		this.context.fill();
+		this.context.restore();
+	};
+	
 	this.draw = function () {
 		for (var y = 0; y < 6; y++) {
 			for (var x = 0; x < 7; x++) {
@@ -137,6 +168,33 @@ function Game() {
 			}
 		}
 	};
+	this.clear = function () {
+		this.context.save();
+		this.context.fillStyle = "white";
+		this.context.rect(0, 0, 640, 480);
+		this.context.fill();
+		this.context.restore();
+	}
+	this.animate = function (column, move, to_row, cur_pos, callback) {
+		var fg_color = "white";
+		if (move >= 1) {
+			fg_color = "red";
+		} else if (move <= -1) {
+			fg_color = "blue";
+		}
+		if (to_row*75 >= cur_pos) {
+			this.clear();
+			this.draw();
+			this.drawCircle(75*column + 100, cur_pos + 50, 25, fg_color, "black");
+			this.drawMask();
+			requestAnimationFrame(function () {
+				that.animate(column, move, to_row, cur_pos + 25, callback);
+			});
+		} else {
+			callback();
+		}
+	}
+	
 	this.onregion = function (coord, x, radius) {
 		if ((coord[0] - x)*(coord[0] - x) <=  radius*radius) {
 			return true;
@@ -155,21 +213,24 @@ function Game() {
 		if (this.rejectClick) {
 			return false;
 		}
-		var context = canvas.getContext('2d'),
-		rect = canvas.getBoundingClientRect(),
+		if (this.won) {
+			this.init();
+			return false;
+		}
+		var rect = canvas.getBoundingClientRect(),
 		x = e.clientX - rect.left,// - e.target.scrollTop,
 		y = e.clientY - rect.top;// - e.target.scrollLeft;
 		
-		console.log("(" + x + ", " + y + ")");
+		//console.log("(" + x + ", " + y + ")");
 		
 		for (var j = 0; j < 7; j++) {
 			if (this.onregion([x,y], 75*j + 100, 25)) {
-				console.log("clicked region " + j);
+				//console.log("clicked region " + j);
 				this.paused = false;
-				this.action(j);
+				this.action(j, function () {
+					that.ai();
+				});
 				this.rejectClick = true;
-				
-				this.ai();
 				
 				break; //because there will be no 2 points that are clicked at a time
 			}
@@ -181,13 +242,17 @@ function Game() {
 		var choice = null;
 		choice = Math.floor(Math.random() * 7);
 		this.paused = false;
-		var done = this.action(choice);
+		var done = this.action(choice, function () {
+			that.rejectClick = false;	
+		});
 		while (done < 0) {
 			choice = Math.floor(Math.random() * 7);
-			done = this.action(choice);
+			done = this.action(choice, function () {
+				that.rejectClick = false;	
+			});
 		}
 		
-		this.rejectClick = false;
+		
 	};
 	this.init();
 	
@@ -196,5 +261,4 @@ function Game() {
 }
 document.addEventListener('DOMContentLoaded', function() {
 	this.game = new Game();
-	this.game.print();
 });
