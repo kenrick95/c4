@@ -211,11 +211,7 @@ function Game() {
 		}
 	};
 	this.clear = function () {
-		this.context.save();
-		this.context.fillStyle = "white";
-		this.context.rect(0, 0, 640, 480);
-		this.context.fill();
-		this.context.restore();
+		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	}
 	this.animate = function (column, move, to_row, cur_pos, callback) {
 		var fg_color = "white";
@@ -283,6 +279,8 @@ function Game() {
 		var choice = null;
 		// TODO: FIX AI
 		// - better evaluation function
+		// - more efficient winning checking (?)
+		// - history tracking (?)
 		
 		var state = this.map.clone();
 		//that.printState(state);
