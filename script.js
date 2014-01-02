@@ -13,12 +13,16 @@ function Game() {
 	this.won = false;
 	this.rejectClick = false;
 	this.move = 0;
+	this.aiHistory = Array();
+	
 	this.init = function () {
 		this.map = Array();
 		this.paused = false;
 		this.won = false;
 		this.rejectClick = false;
 		this.move = 0;
+		this.aiHistory = Array();
+		
 		for (var i=0; i <= 6; i++) {
 			this.map[i] = Array();	
 			for (var j=0; j<=7; j++) {
@@ -32,6 +36,7 @@ function Game() {
 		this.context = this.canvas.getContext('2d');
 		this.clear();
 		this.drawMask();
+		this.print();
 		
 	};
 	
@@ -41,7 +46,7 @@ function Game() {
 		} else {
 			return -1;
 		}
-	}
+	};
 	
 	this.print = function () {
 		var msg = "\n";
@@ -54,8 +59,7 @@ function Game() {
 			msg += "\n";
 		}
 		console.log(msg);
-		this.drawMask();
-	}
+	};
 	
 	this.printState = function (state) {
 		var msg = "\n";
@@ -66,7 +70,7 @@ function Game() {
 			msg += "\n";
 		}
 		console.log(msg);
-	}
+	};
 	
 	this.win = function (player) {
 		this.paused = true;
@@ -135,13 +139,13 @@ function Game() {
 				that.move++;
 				that.draw();
 				that.check();
+				that.print();
 				callback();
 			});
 		}
 		this.paused = true;
-		this.print();
 		return 1;
-	}
+	};
 	
 	this.check = function() {
 		for (var i=0; i<6; i++) {
@@ -167,7 +171,11 @@ function Game() {
 				
 			}
 		}
-	}
+		// check if draw
+		if ((this.move === 42) && (!this.won)) {
+			this.win(0);
+		}
+	};
 	
 	this.drawCircle = function (x, y, r, fill, stroke) {
 		this.context.save();
@@ -212,7 +220,7 @@ function Game() {
 	};
 	this.clear = function () {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-	}
+	};
 	this.animate = function (column, move, to_row, cur_pos, callback) {
 		var fg_color = "white";
 		if (move >= 1) {
@@ -231,7 +239,7 @@ function Game() {
 		} else {
 			callback();
 		}
-	}
+	};
 	
 	this.onregion = function (coord, x, radius) {
 		if ((coord[0] - x)*(coord[0] - x) <=  radius*radius) {
@@ -265,28 +273,28 @@ function Game() {
 				//console.log("clicked region " + j);
 				this.paused = false;
 				this.action(j, function () {
-					that.ai();
+					that.ai(-1);
 				});
 				this.rejectClick = true;
 				
 				break; //because there will be no 2 points that are clicked at a time
 			}
 		}
-		
 	};
 	
-	this.ai = function () {
+	this.ai = function (aiMoveValue) {
+		//console.log(this.aiHistory);
 		var choice = null;
-		// TODO: FIX AI
-		// - better evaluation function
-		// - more efficient winning checking (?)
-		// - history tracking (?)
 		
 		var state = this.map.clone();
 		//that.printState(state);
-		var depth = 0;
 		function checkState(state) {
+			/*if (typeof that.aiHistory[state] !== 'undefined') {
+				return that.aiHistory[state];
+			}*/
+			
 			var winVal = 0;
+			var chainVal = 0;
 			for (var i=0; i<6; i++) {
 				for (var j=0; j<7; j++) {
 					var temp_r = 0, temp_b = 0, temp_br = 0, temp_tr = 0;
@@ -303,6 +311,11 @@ function Game() {
 						//from (i,j) to top-right
 						if (i-k >= 0 && j+k < 7) temp_tr += state[i-k][j+k];
 					}
+					chainVal += temp_r * temp_r * temp_r;
+					chainVal += temp_b * temp_b * temp_b;
+					chainVal += temp_br * temp_br * temp_br;
+					chainVal += temp_tr * temp_tr * temp_tr;
+					
 					if (Math.abs(temp_r) === 4) winVal = temp_r;
 					else if (Math.abs(temp_b) === 4) winVal = temp_b;
 					else if (Math.abs(temp_br) === 4) winVal =temp_br;
@@ -310,32 +323,40 @@ function Game() {
 					
 				}
 			}
-			return winVal;
+			//that.aiHistory[state] = [winVal, chainVal];
+			return [winVal, chainVal];
 		}
 		function value(state, depth, alpha, beta) {
-			if (depth >= 4) {
+			if (depth >= 4) { // if slow (or memory consumption is high), lower the value
 				//that.printState(state);
 				
 				// calculate value
 				var retValue = 0;
 				
 				// if win, value = +inf
-				var winVal = checkState(state);
-				if (winVal === -4) { // AI win, AI wants to win of course
+				var val = checkState(state);
+				var winVal = val[0];
+				var chainVal = val[1] * aiMoveValue;
+				retValue = chainVal;
+				
+				// If it lead to winning, then do it
+				if (winVal === 4 * aiMoveValue) { // AI win, AI wants to win of course
 					retValue = 999999;
-				} else if (winVal === 4) { // AI lose, AI hates losing
-					retValue = -999999;
+				} else if (winVal === 4 * aiMoveValue * -1) { // AI lose, AI hates losing
+					retValue = 999999 * -1;
 				}
-				//console.log(alpha + " " + beta + " " + retValue);
+				retValue -= depth * depth;
+				
 				return [retValue, -1];
 		
 			} else {
-				var win = checkState(state);
+				var val = checkState(state);
+				var win = val[0];
 				// if already won, then return the value right away
-				if (win > 0) {
-					return [-999999, -1];
-				} else if (win < 0) {
-					return [999999, -1];
+				if (win === 4 * aiMoveValue) { // AI win, AI wants to win of course
+					return [999999 - depth * depth, -1];
+				} else if (win === 4 * aiMoveValue * -1) { // AI lose, AI hates losing
+					return [999999 * -1 - depth * depth, -1];
 				}
 				
 				if (depth % 2 === 0) {
@@ -352,7 +373,7 @@ function Game() {
 			var moveQueue = Array();
 			
 			for (var j = 0; j < 7; j++) {
-				tempState = that.fillMap(state, j, -1);
+				tempState = that.fillMap(state, j, aiMoveValue);
 				if (tempState === -1) continue;
 				
 				tempVal = value(tempState, depth, alpha, beta);
@@ -385,7 +406,7 @@ function Game() {
 			var moveQueue = Array();
 			
 			for (var j = 0; j < 7; j++) {
-				tempState = that.fillMap(state, j, 1);
+				tempState = that.fillMap(state, j, aiMoveValue * -1);
 				if (tempState === -1) continue;
 				
 				tempVal = value(tempState, depth, alpha, beta);
@@ -412,21 +433,23 @@ function Game() {
 		function choose(choice) {
 			return choice[Math.floor(Math.random() * choice.length)];
 		}
-		choice = maxState(state, 0, -100000000007, 100000000007)[1];
-		console.info(choice);
+		var choice_val = maxState(state, 0, -100000000007, 100000000007);
+		choice = choice_val[1];
+		var val = choice_val[0];
+		console.info("AI " + aiMoveValue + " choose column: " + choice + " (value: " + val + ")");
 		
-		//choice = Math.floor(Math.random() * 7);
 		this.paused = false;
 		var done = this.action(choice, function () {
-			that.rejectClick = false;	
+			that.rejectClick = false;
+			//that.ai(-aiMoveValue);
 		});
 		
-		console.log("Not done");
-		// if not done, then random
+		// if fail, then random
 		while (done < 0) {
+			console.error("Falling back to random agent");
 			choice = Math.floor(Math.random() * 7);
 			done = this.action(choice, function () {
-				that.rejectClick = false;	
+				that.rejectClick = false;
 			});
 		}
 		
@@ -439,4 +462,5 @@ function Game() {
 }
 document.addEventListener('DOMContentLoaded', function() {
 	this.game = new Game();
+	//this.game.ai(1);
 });
