@@ -15,3 +15,7 @@ Read https://en.wikipedia.org/wiki/Connect_Four
 Compatibility
 ----
 Tested in latest Firefox (27), Chrome (31), and IE (11). I suggest to turn on the browser console because many messages are printed there.
+
+License
+----
+This work is licensed under MIT License.
