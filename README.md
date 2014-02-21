@@ -1,7 +1,7 @@
 c4
 ==
 
-c4, stands for Connect Four, is a game in Javascript using HTML5 features (canvas).
+c4, stands for Connect Four, is a game in Javascript using HTML5 features (canvas). I also incorporates an AI using Minimax (and alpha-beta pruning), but the evaluation function is manually inserted (hard-coded), and hence the AI may not be moving using the most optimal move.
 
 Demo
 ----
