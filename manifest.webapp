@@ -1,0 +1,13 @@
+{
+    "name": "c4",
+    "developer": {
+        "name": "Kenrick",
+        "url": "http://kenrick95.org"
+    },
+    "description": "Connect Four game",
+    "icons": {
+        "128": "/icon.png"
+    },
+    "launch_path": "/index.html",
+    "default_locale": "en"
+}
