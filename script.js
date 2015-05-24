@@ -260,7 +260,8 @@ function Game() {
             return false;
         }
         if (this.won) {
-            window.location.reload();
+        	this.init();
+        	return false;
         }
         var rect = canvas.getBoundingClientRect(),
         x = e.clientX - rect.left,// - e.target.scrollTop,
