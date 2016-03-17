@@ -5,7 +5,7 @@ c4
 
 ## Play
 * [kenrick95.github.io/c4/demo](//kenrick95.github.io/c4/demo/)
-* [Windows Store](//apps.microsoft.com/windows/app/c4-connect-four/c6ebc0bb-7cd8-48ce-b538-72895b8834c6)
+* [Windows Store](http://apps.microsoft.com/windows/app/c6ebc0bb-7cd8-48ce-b538-72895b8834c6)
 
 ## How to Play?
 In each turn, drop a piece in one of the seven column.
