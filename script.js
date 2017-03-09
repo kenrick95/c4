@@ -327,9 +327,9 @@ function Game() {
         }
         if (to_row * 75 >= cur_pos) {
             this.clear();
-            this.draw();
             this.drawCircle(75 * column + 100, cur_pos + 50, 25, fg_color, "black");
             this.drawMask();
+            this.draw();
             window.requestAnimationFrame(function () {
                 that.animate(column, move, to_row, cur_pos + 25, callback);
             });
