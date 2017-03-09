@@ -8,6 +8,8 @@ Array.prototype.clone = function () {
     }
     return arr;
 };
+//Main Class of the Program
+//Near everything is self contained in this Game Class.
 function Game() {
     var that = this;
     this.map = [];
@@ -34,6 +36,11 @@ function Game() {
         this.initOnceDone = true;
     };
 
+    /**
+    *	This function is called on initialization of the script.
+    *	It sets up all variables to the appropriate values for the
+    *	start of a connect 4 game.
+    */
     this.init = function () {
         this.map = [];
         this.paused = false;
@@ -44,6 +51,7 @@ function Game() {
         this.initOnce();
 
         var i, j;
+        //Map is a double array that represents all locations on the board.
         for (i = 0; i <= 6; i++) {
             this.map[i] = [];
             for (j = 0; j <= 7; j++) {
@@ -54,7 +62,10 @@ function Game() {
         this.drawMask();
         this.print();
     };
-
+    /**
+    *	This Function returns a value based on
+    *	Who's turn it is.
+    */
     this.playerMove = function () {
         if (this.move % 2 === 0) {
             return 1;
@@ -62,6 +73,10 @@ function Game() {
         return -1;
     };
 
+    /**
+    *	This function is for printing messages to the browser Console.
+    *	It is used for debugging purposes.
+    */
     this.print = function () {
         var i, j, msg;
         msg = "\n";
@@ -76,6 +91,10 @@ function Game() {
         console.log(msg);
     };
 
+    /**
+    *	This function is for printing the board state to the browser Console.
+    *	It is used for debugging purposes.
+    */
     this.printState = function (state) {
         var i, j, msg = "\n";
         for (i = 0; i < 6; i++) {
@@ -87,6 +106,11 @@ function Game() {
         console.log(msg);
     };
 
+    /**
+    *	This function is for printing win state to the browser Console.
+    *	It is also used for displaying to the user who won as text on
+    *	the canvas.
+    */
     this.win = function (player) {
         this.paused = true;
         this.won = true;
@@ -108,17 +132,21 @@ function Game() {
 
         console.info(msg);
     };
+    /**
+    *	This function returns a modified state map that reflects
+    *	a piece being added to it.
+    */
     this.fillMap = function (state, column, value) {
-        var tempMap = state.clone();
-        if (tempMap[0][column] !== 0 || column < 0 || column > 6) {
+        var tempMap = state.clone(); // Copy current state of the board.
+        if (tempMap[0][column] !== 0 || column < 0 || column > 6) { //If the top piece is filled return.
             return -1;
         }
 
         var done = false,
             row = 0,
             i;
-        for (i = 0; i < 5; i++) {
-            if (tempMap[i + 1][column] !== 0) {
+        for (i = 0; i < 5; i++) {				//Going through the rows of the board.
+            if (tempMap[i + 1][column] !== 0) {	//If the row isn't empty
                 done = true;
                 row = i;
                 break;
@@ -132,6 +160,10 @@ function Game() {
 
     };
 
+    /**
+    *	Takes the column which was clicked and processes
+    *	what should happen based on the columns state.
+    */
     this.action = function (column, callback) {
         if (this.paused || this.won) {
             return 0;
@@ -142,6 +174,8 @@ function Game() {
 
         var done = false;
         var row = 0, i;
+
+        //Check where the row is filled up too.
         for (i = 0; i < 5; i++) {
             if (this.map[i + 1][column] !== 0) {
                 done = true;
@@ -152,6 +186,9 @@ function Game() {
         if (!done) {
             row = 5;
         }
+
+        //This embedded function is to animate the game piece
+        //Falling into place.
         this.animate(column, this.playerMove(this.move), row, 0, function () {
             that.map[row][column] = that.playerMove(that.move);
             that.move++;
@@ -164,6 +201,11 @@ function Game() {
         return 1;
     };
 
+    /**
+    *	This function checks the board state to see
+    *	if the win condition is met (4 pieces of the same color
+    *	adjacent to each other).
+    */
     this.check = function () {
         var i, j, k;
         var temp_r = 0, temp_b = 0, temp_br = 0, temp_tr = 0;
@@ -211,6 +253,10 @@ function Game() {
         }
     };
 
+    /**
+    *	This function draws the pieces of the game
+    *	which are circles.
+    */
     this.drawCircle = function (x, y, r, fill, stroke) {
         this.context.save();
         this.context.fillStyle = fill;
@@ -221,6 +267,11 @@ function Game() {
         this.context.fill();
         this.context.restore();
     };
+
+    /**
+    *	This function is for drawing out the game board
+    *	that contains the circle pieces.
+    */
     this.drawMask = function () {
         // draw the mask
         // http://stackoverflow.com/questions/6271419/how-to-fill-the-opposite-shape-on-canvas
@@ -239,7 +290,9 @@ function Game() {
         this.context.fill();
         this.context.restore();
     };
-
+    /**
+    *	This function draws everything.
+    */
     this.draw = function () {
         var x, y;
         var fg_color;
@@ -255,9 +308,17 @@ function Game() {
             }
         }
     };
+    /**
+    *	This function clears the canvas. Mainly used to simulate movement
+    *	in the animation.
+    */
     this.clear = function () {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     };
+    /**
+    *	Main animation function of the game class. This function also animates the
+    *	pieces falling to the lowest available position.
+    */
     this.animate = function (column, move, to_row, cur_pos, callback) {
         var fg_color = "transparent";
         if (move >= 1) {
@@ -277,13 +338,19 @@ function Game() {
             callback();
         }
     };
-
+    /**
+    *	This function uses the x coordinate to check if a column was selected
+    *	based on the x coordinate provided on call.
+    */
     this.onregion = function (coord, x, radius) {
         if ((coord[0] - x)*(coord[0] - x) <=  radius * radius) {
             return true;
         }
         return false;
     };
+    /**
+    * Old function used to check if a click was within a column.
+    */
     this.oncircle = function (coord, centerCoord, radius) {
         if ((coord[0] - centerCoord[0]) * (coord[0] - centerCoord[0]) <=  radius * radius
                 && (coord[1] - centerCoord[1]) * (coord[1] - centerCoord[1]) <=  radius * radius) {
@@ -292,6 +359,10 @@ function Game() {
         return false;
     };
 
+    /**
+    *	Taking in the canvas element as an input, it is called whenever the element is clicked.
+    *	It was initialized and attached to a mouse event listener at the initialization of the program.
+    */
     this.onclick = function (canvas, e) {
         if (this.rejectClick) {
             return false;
@@ -310,6 +381,8 @@ function Game() {
             if (this.onregion([x, y], 75 * j + 100, 25)) {
                 // console.log("clicked region " + j);
                 this.paused = false;
+                
+                //The Ai only moves after click.
                 valid = this.action(j, function () {
                     that.ai(-1);
                 });
@@ -321,17 +394,23 @@ function Game() {
         }
     };
 
+    /**
+    *	The AI for the game. What the player is playing against.
+    *	The Ai used a min Max alpha beta pruning algorithm to help select the most optimal move.
+    */
     this.ai = function (aiMoveValue) {
         //console.log(this.aiHistory);
         var choice = null;
 
+        //Takes a copy of the current game state, used to compute where the Ai should go.
         var state = this.map.clone();
         //that.printState(state);
+
+        //This internal function checks the state of the game.
         function checkState(state) {
             /*if (typeof that.aiHistory[state] !== 'undefined') {
                 return that.aiHistory[state];
             }*/
-
             var winVal = 0;
             var chainVal = 0;
             var i, j, k;
@@ -383,6 +462,10 @@ function Game() {
             //that.aiHistory[state] = [winVal, chainVal];
             return [winVal, chainVal];
         }
+        /**
+        *	Generates a value to helps the AI decide where to place it's piece.
+        *	Depth Represents the future, how many turns into the future does the Ai want to predict to.
+        */
         function value(state, depth, alpha, beta) {
             var val = checkState(state);
             if (depth >= 4) { // if slow (or memory consumption is high), lower the value
@@ -416,15 +499,24 @@ function Game() {
                 return [999999 * -1 - depth * depth, -1];
             }
 
+            //The following conditional helps the Ai decide how to decide its next move.
             if (depth % 2 === 0) {
                 return minState(state, depth + 1, alpha, beta);
             }
             return maxState(state, depth + 1, alpha, beta);
 
         }
+        /**
+        *	Function takes in an array of moves to go and randomly selects one to do.
+        * 	Moves that appear on this input array are equally optiimal.
+        */
         function choose(choice) {
             return choice[Math.floor(Math.random() * choice.length)];
         }
+        /**
+        *	Following Game theory, the Ai looks into the future and tries to quantify possible moves
+        *	it can do into points. This is the max point approach which checks for most points.
+        */
         function maxState(state, depth, alpha, beta) {
             var v = -100000000007;
             var move = -1;
@@ -458,6 +550,11 @@ function Game() {
 
             return [v, move];
         }
+
+        /**
+        *	Following Game theory, the Ai looks into the future and tries to quantify possible moves
+        *	it can do into points. This is the min point approach which checks for least points.
+        */
         function minState(state, depth, alpha, beta) {
             var v = 100000000007;
             var move = -1;
@@ -503,7 +600,7 @@ function Game() {
             //that.ai(-aiMoveValue);
         });
 
-        // if fail, then random
+        // if there happens to be an error choose a random column until a valid one is selected.
         while (done < 0) {
             console.error("Falling back to random agent");
             choice = Math.floor(Math.random() * 7);
@@ -513,6 +610,7 @@ function Game() {
         }
 
     };
+    //Initialize the game.
     this.init();
 }
 document.addEventListener('DOMContentLoaded', function () {
