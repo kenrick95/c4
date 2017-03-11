@@ -2,7 +2,7 @@ class PlayerAi extends Player {
   constructor(id : number) {
     super(id)
   }
-  action(state : Board) : number {
+  getAction(board : Board) : number {
     return 0
   }
 }
