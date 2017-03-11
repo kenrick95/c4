@@ -9,7 +9,7 @@ Array.prototype.clone = function () {
     return arr;
 };
 // Main Class of the Program
-function Game() {
+function LegacyGame() {
     var that = this;
     this.map = [];
     this.paused = false;
@@ -594,5 +594,5 @@ function Game() {
     this.init();
 }
 document.addEventListener('DOMContentLoaded', function () {
-    this.game = new Game();
+    this.game = new LegacyGame();
 });

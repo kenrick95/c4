@@ -1,0 +1,22 @@
+{
+  "name": "c4",
+  "version": "2.0.0",
+  "description": "Connect Four",
+  "main": "index.html",
+  "repository": "git@github.com:kenrick95/c4.git",
+  "author": "kenrick95 <kenrick95@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "gulp serve"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-debug": "^3.1.0",
+    "gulp-inject": "^4.2.0",
+    "gulp-rimraf": "^0.2.1",
+    "gulp-sourcemaps": "^2.4.1",
+    "gulp-tslint": "^7.1.0",
+    "gulp-typescript": "^3.1.5",
+    "typescript": "^2.2.1"
+  }
+}

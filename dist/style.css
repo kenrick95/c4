@@ -1,29 +1,23 @@
 @charset "utf-8";
 /* CSS Document */
-* {
-    margin:0;
-    padding: 0;
-}
-
 html, body {
     width:100%;
+    margin: 0;
+    padding: 0;
 }
-section {
+.section {
     width: 640px;
     margin: 1em auto 0 auto;
 }
-/*canvas {
-    box-shadow:0 0 1em #ddd;
-}*/
-header, footer {
+.header, .footer {
     text-align: center;
     font-family: sans-serif;
     color: #111;
 }
-header {
+.header {
     font-size: 1.5em;
     font-weight: bold;
 }
-footer {
+.footer {
     font-size: .8em;
 }
