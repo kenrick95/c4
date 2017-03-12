@@ -1,4 +1,6 @@
-class Utils {
+import {Board} from './board';
+
+export class Utils {
   static drawCircle(context : CanvasRenderingContext2D, {x = 0, y = 0, r = 0, fill = '', stroke = ''}) {
     context.save();
     context.fillStyle = fill;

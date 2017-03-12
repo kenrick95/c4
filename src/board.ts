@@ -1,9 +1,12 @@
-enum BoardPiece {
+import {Player} from './player';
+import {Utils} from './utils';
+
+export enum BoardPiece {
   EMPTY,
   PLAYER_1,
   PLAYER_2
 }
-class Board {
+export class Board {
   row: number = 6;
   column: number = 7;
   map: Array<Array<number>>;
@@ -25,23 +28,31 @@ class Board {
 
   }
 
-  applyPlayerAction(player: Player, column: number) {
+  /**
+   * 
+   * @returns is the action succesfully applied
+   * @param player current player
+   * @param column the colum in which the player want to drop a piece
+   */
+  applyPlayerAction(player: Player, column: number): boolean {
     if (this.map[0][column] !== BoardPiece.EMPTY || column < 0 || column >= this.column) {
       return false
     }
 
-    let done = false;
+    let isColumnEverFilled = false;
     let row = 0;
     for (let i = 0; i < this.row; i++) {
       if (this.map[i + 1][column] !== BoardPiece.EMPTY) {
-        done = true;
+        isColumnEverFilled = true;
         row = i;
         break;
       }
     }
-    if (!done) {
-      row = 5;
+    if (!isColumnEverFilled) {
+      row = this.row - 1;
     }
+
+    this.map[row][column] = player.boardPiece;
 
     return true
   }

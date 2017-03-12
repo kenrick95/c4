@@ -1,7 +1,9 @@
-abstract class Player {
-  id: number;
+import {Board, BoardPiece} from './board';
+
+export abstract class Player {
+  boardPiece: BoardPiece;
   abstract getAction(board : Board) : number;
-  constructor(id : number) {
-    this.id = id
+  constructor(boardPiece : BoardPiece) {
+    this.boardPiece = boardPiece
   }
 }

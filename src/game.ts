@@ -1,4 +1,9 @@
-class Game {
+import {Board, BoardPiece} from './board';
+import {Player} from './player';
+import {PlayerHuman} from './player-human';
+import {PlayerAi} from './player-ai';
+
+export class Game {
   board: Board;
   players: Array<Player>;
   currentPlayerId: number;
@@ -6,7 +11,7 @@ class Game {
 
   constructor() {
     this.board = new Board(document.querySelector('canvas'));
-    this.players = [new PlayerHuman(0), new PlayerAi(1)];
+    this.players = [new PlayerHuman(BoardPiece.PLAYER_1), new PlayerAi(BoardPiece.PLAYER_2)];
     this.currentPlayerId = 0;
     this.isMoveAllowed = false;
   }
@@ -18,8 +23,11 @@ class Game {
       return
     }
     const currentPlayer = this.players[this.currentPlayerId];
-    const action = currentPlayer.getAction(this.board);
-    this.board.applyPlayerAction(currentPlayer, action);
+    let actionSuccesful = false;
+    while (!actionSuccesful) {
+      const action = currentPlayer.getAction(this.board);
+      actionSuccesful = this.board.applyPlayerAction(currentPlayer, action);
+    }
     this.currentPlayerId = this.getNextPlayer();
   }
   private getNextPlayer() {

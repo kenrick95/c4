@@ -1,24 +1,16 @@
-'use strict';
+'use strict'
 var GulpConfig = (function () {
-    function gulpConfig() {
-        //Got tired of scrolling through all the comments so removed them
-        //Don't hurt me AC :-)
-        this.dist = './dist/';
-        this.source = './src/';
-        this.sourceApp = this.source + 'app/';
-        this.sass = this.source + 'sass/';
+  function gulpConfig () {
+    this.dist = './dist/'
+    this.source = './src/'
 
-        this.tsOutputPath = this.source + '/js';
-        this.allJavaScript = [this.source + '/js/**/*.js'];
-        this.allTypeScript = this.sourceApp + '/**/*.ts';
-        
-        this.sassOutputPath = this.source + '/css';
-        this.allCss = [this.source + '/css/**/*.css'];
-        this.allSass = this.sass + '/**/*.scss';
+    this.tsOutputPath = this.dist + '/js'
+    this.allJavaScript = [this.dist + '/js/**/*.js']
+    this.allTypeScript = this.source + '/**/*.ts'
 
-        this.typings = './typings/';
-this.libraryTypeScriptDefinitions = './typings/main/**/*.ts';
-    }
-    return gulpConfig;
-})();
-module.exports = GulpConfig;
+    this.typings = './typings/'
+    this.libraryTypeScriptDefinitions = './typings/main/**/*.ts'
+  }
+  return gulpConfig
+})()
+module.exports = GulpConfig
