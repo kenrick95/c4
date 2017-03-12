@@ -46,14 +46,52 @@ var Utils = (function () {
     Utils.getRandomColumnNumber = function () {
         return Math.floor(Math.random() * board_1.Board.column);
     };
+    Utils.choose = function (choice) {
+        return choice[Math.floor(Math.random() * choice.length)];
+    };
     Utils.animationFrame = function () {
         var resolve = null;
         var promise = new Promise(function (r) { return resolve = r; });
         window.requestAnimationFrame(resolve);
         return promise;
     };
+    Utils.clone = function (array) {
+        var arr = [];
+        for (var i = 0; i < array.length; i++) {
+            arr[i] = array[i].slice();
+        }
+        return arr;
+    };
+    Utils.getMockPlayerAction = function (map, boardPiece, column) {
+        var clonedMap = Utils.clone(map);
+        if (clonedMap[0][column] !== board_1.BoardPiece.EMPTY || column < 0 || column >= board_1.Board.column) {
+            return {
+                success: false,
+                map: clonedMap
+            };
+        }
+        var isColumnEverFilled = false;
+        var row = 0;
+        for (var i = 0; i < board_1.Board.row - 1; i++) {
+            if (clonedMap[i + 1][column] !== board_1.BoardPiece.EMPTY) {
+                isColumnEverFilled = true;
+                row = i;
+                break;
+            }
+        }
+        if (!isColumnEverFilled) {
+            row = board_1.Board.row - 1;
+        }
+        clonedMap[row][column] = boardPiece;
+        return {
+            success: true,
+            map: clonedMap
+        };
+    };
     return Utils;
 }());
+Utils.BIG_POSITIVE_NUMBER = Math.pow(10, 9) + 7;
+Utils.BIG_NEGATIVE_NUMBER = -Utils.BIG_POSITIVE_NUMBER;
 exports.Utils = Utils;
 
 //# sourceMappingURL=utils.js.map

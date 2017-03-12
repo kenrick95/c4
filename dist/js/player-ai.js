@@ -46,21 +46,162 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var player_1 = require("./player");
+var board_1 = require("./board");
 var utils_1 = require("./utils");
 var PlayerAi = (function (_super) {
     __extends(PlayerAi, _super);
     function PlayerAi(boardPiece) {
-        return _super.call(this, boardPiece) || this;
+        var _this = _super.call(this, boardPiece) || this;
+        _this.ownBoardPieceValue = _this.getBoardPieceValue(boardPiece);
+        _this.enemyBoardPiece = (boardPiece === board_1.BoardPiece.PLAYER_1) ? board_1.BoardPiece.PLAYER_2 : board_1.BoardPiece.PLAYER_1;
+        return _this;
     }
+    PlayerAi.prototype.getBoardPieceValue = function (boardPiece) {
+        return (boardPiece === board_1.BoardPiece.EMPTY)
+            ? 0
+            : boardPiece === this.boardPiece
+                ? 1
+                : -1;
+    };
+    PlayerAi.prototype.getStateValue = function (state) {
+        var winnerBoardPiece = board_1.BoardPiece.EMPTY;
+        var chainValue = 0;
+        for (var i = 0; i < board_1.Board.row; i++) {
+            for (var j = 0; j < board_1.Board.column; j++) {
+                var tempRight = 0, tempBottom = 0, tempBottomRight = 0, tempTopRight = 0;
+                for (var k = 0; k <= 3; k++) {
+                    if (j + k < board_1.Board.column) {
+                        tempRight += this.getBoardPieceValue(state[i][j + k]);
+                    }
+                    if (i + k < board_1.Board.row) {
+                        tempBottom += this.getBoardPieceValue(state[i + k][j]);
+                    }
+                    if (i + k < board_1.Board.row && j + k < board_1.Board.column) {
+                        tempBottomRight += this.getBoardPieceValue(state[i + k][j + k]);
+                    }
+                    if (i - k >= 0 && j + k < 7) {
+                        tempTopRight += this.getBoardPieceValue(state[i - k][j + k]);
+                    }
+                }
+                chainValue += tempRight * tempRight * tempRight;
+                chainValue += tempBottom * tempBottom * tempBottom;
+                chainValue += tempBottomRight * tempBottomRight * tempBottomRight;
+                chainValue += tempTopRight * tempTopRight * tempTopRight;
+                if (Math.abs(tempRight) === 4) {
+                    winnerBoardPiece = tempRight > 0 ? this.boardPiece : this.enemyBoardPiece;
+                }
+                else if (Math.abs(tempBottom) === 4) {
+                    winnerBoardPiece = tempBottom > 0 ? this.boardPiece : this.enemyBoardPiece;
+                }
+                else if (Math.abs(tempBottomRight) === 4) {
+                    winnerBoardPiece = tempBottomRight > 0 ? this.boardPiece : this.enemyBoardPiece;
+                }
+                else if (Math.abs(tempTopRight) === 4) {
+                    winnerBoardPiece = tempTopRight > 0 ? this.boardPiece : this.enemyBoardPiece;
+                }
+            }
+        }
+        return {
+            winnerBoardPiece: winnerBoardPiece,
+            chain: chainValue
+        };
+    };
+    PlayerAi.prototype.transformValues = function (returnValue, winnerBoardPiece, depth) {
+        var isWon = winnerBoardPiece === this.boardPiece;
+        var isLost = winnerBoardPiece === this.enemyBoardPiece;
+        if (isWon) {
+            returnValue = utils_1.Utils.BIG_POSITIVE_NUMBER - 100;
+        }
+        else if (isLost) {
+            returnValue = utils_1.Utils.BIG_NEGATIVE_NUMBER + 100;
+        }
+        returnValue -= depth * depth;
+        return returnValue;
+    };
+    PlayerAi.prototype.getMove = function (state, depth, alpha, beta) {
+        var stateValue = this.getStateValue(state);
+        var isWon = stateValue.winnerBoardPiece === this.boardPiece;
+        var isLost = stateValue.winnerBoardPiece === this.enemyBoardPiece;
+        if (depth >= PlayerAi.MAX_DEPTH || isWon || isLost) {
+            return {
+                value: this.transformValues(stateValue.chain * this.ownBoardPieceValue, stateValue.winnerBoardPiece, depth),
+                move: -1
+            };
+        }
+        return (depth % 2 === 0)
+            ? this.minState(state, depth + 1, alpha, beta)
+            : this.maxState(state, depth + 1, alpha, beta);
+    };
+    PlayerAi.prototype.maxState = function (state, depth, alpha, beta) {
+        var value = utils_1.Utils.BIG_NEGATIVE_NUMBER;
+        var moveQueue = [];
+        for (var column = 0; column < board_1.Board.column; column++) {
+            var _a = utils_1.Utils.getMockPlayerAction(state, this.boardPiece, column), actionSuccessful = _a.success, nextState = _a.map;
+            if (actionSuccessful) {
+                var _b = this.getMove(nextState, depth, alpha, beta), nextValue = _b.value, nextMove = _b.move;
+                if (nextValue > value) {
+                    value = nextValue;
+                    moveQueue = [column];
+                }
+                else if (nextValue === value) {
+                    moveQueue.push(column);
+                }
+                if (value > beta) {
+                    return {
+                        value: value,
+                        move: utils_1.Utils.choose(moveQueue)
+                    };
+                }
+                alpha = Math.max(alpha, value);
+            }
+        }
+        return {
+            value: value,
+            move: utils_1.Utils.choose(moveQueue)
+        };
+    };
+    PlayerAi.prototype.minState = function (state, depth, alpha, beta) {
+        var value = utils_1.Utils.BIG_POSITIVE_NUMBER;
+        var moveQueue = [];
+        for (var column = 0; column < board_1.Board.column; column++) {
+            var _a = utils_1.Utils.getMockPlayerAction(state, this.enemyBoardPiece, column), actionSuccessful = _a.success, nextState = _a.map;
+            if (actionSuccessful) {
+                var _b = this.getMove(nextState, depth, alpha, beta), nextValue = _b.value, nextMove = _b.move;
+                if (nextValue < value) {
+                    value = nextValue;
+                    moveQueue = [column];
+                }
+                else if (nextValue === value) {
+                    moveQueue.push(column);
+                }
+                if (value < alpha) {
+                    return {
+                        value: value,
+                        move: utils_1.Utils.choose(moveQueue)
+                    };
+                }
+                beta = Math.min(beta, value);
+            }
+        }
+        return {
+            value: value,
+            move: utils_1.Utils.choose(moveQueue)
+        };
+    };
     PlayerAi.prototype.getAction = function (board) {
         return __awaiter(this, void 0, void 0, function () {
+            var state, action;
             return __generator(this, function (_a) {
-                return [2 /*return*/, utils_1.Utils.getRandomColumnNumber()];
+                state = utils_1.Utils.clone(board.map);
+                action = this.maxState(state, 0, utils_1.Utils.BIG_NEGATIVE_NUMBER, utils_1.Utils.BIG_POSITIVE_NUMBER);
+                console.log("AI choose column " + action.move + " with value of " + action.value);
+                return [2 /*return*/, action.move];
             });
         });
     };
     return PlayerAi;
 }(player_1.Player));
+PlayerAi.MAX_DEPTH = 4;
 exports.PlayerAi = PlayerAi;
 
 //# sourceMappingURL=player-ai.js.map

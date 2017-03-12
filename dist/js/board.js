@@ -81,6 +81,10 @@ var Board = (function () {
                         _a.sent();
                         this.map[row][column] = player.boardPiece;
                         this.debug();
+                        return [4 /*yield*/, utils_1.Utils.animationFrame()];
+                    case 2:
+                        _a.sent();
+                        this.render();
                         return [2 /*return*/, true];
                 }
             });

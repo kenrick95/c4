@@ -59,6 +59,8 @@ export class Board {
     this.map[row][column] = player.boardPiece;
     this.debug()
 
+    await Utils.animationFrame()
+    this.render()
     return true
   }
 
@@ -136,7 +138,6 @@ export class Board {
       await Utils.animationFrame()
       doAnimation()
     }
-
   };
 
   render() {

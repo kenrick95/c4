@@ -1,6 +1,9 @@
-import { Board } from './board';
+import { Board, BoardPiece } from './board';
 
 export class Utils {
+  static BIG_POSITIVE_NUMBER = 10 ** 9 + 7;
+  static BIG_NEGATIVE_NUMBER = -Utils.BIG_POSITIVE_NUMBER;
+
   static drawCircle(context: CanvasRenderingContext2D, { x = 0, y = 0, r = 0, fill = '', stroke = '' }) {
     context.save();
     context.fillStyle = fill;
@@ -58,6 +61,10 @@ export class Utils {
   static getRandomColumnNumber(): number {
     return Math.floor(Math.random() * Board.column);
   }
+  static choose(choice: Array<any>): any {
+    return choice[Math.floor(Math.random() * choice.length)];
+  }
+
   /**
    * @see https://esdiscuss.org/topic/promises-async-functions-and-requestanimationframe-together
    */
@@ -66,5 +73,45 @@ export class Utils {
     const promise = new Promise(r => resolve = r)
     window.requestAnimationFrame(resolve)
     return promise
+  }
+
+  static clone(array: Array<Array<any>>): Array<Array<any>> {
+    let arr = []
+    for (let i = 0; i < array.length; i++) {
+      arr[i] = array[i].slice()
+    }
+    return arr;
+  }
+
+  static getMockPlayerAction(map: Array<Array<number>>, boardPiece: BoardPiece, column: number): {
+    success: boolean,
+    map: Array<Array<number>>
+  } {
+    const clonedMap = Utils.clone(map)
+    if (clonedMap[0][column] !== BoardPiece.EMPTY || column < 0 || column >= Board.column) {
+      return {
+        success: false,
+        map: clonedMap
+      }
+    }
+
+    let isColumnEverFilled = false;
+    let row = 0;
+    for (let i = 0; i < Board.row - 1; i++) {
+      if (clonedMap[i + 1][column] !== BoardPiece.EMPTY) {
+        isColumnEverFilled = true;
+        row = i;
+        break;
+      }
+    }
+    if (!isColumnEverFilled) {
+      row = Board.row - 1;
+    }
+    clonedMap[row][column] = boardPiece;
+
+    return {
+      success: true,
+      map: clonedMap
+    }
   }
 }
