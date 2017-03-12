@@ -45,12 +45,10 @@ var BoardPiece;
 })(BoardPiece = exports.BoardPiece || (exports.BoardPiece = {}));
 var Board = (function () {
     function Board(canvas) {
-        this.row = 6;
-        this.column = 7;
         this.map = [];
-        for (var i = 0; i < this.row; i++) {
+        for (var i = 0; i < Board.row; i++) {
             this.map.push([]);
-            for (var j = 0; j < this.column; j++) {
+            for (var j = 0; j < Board.column; j++) {
                 this.map[i].push(BoardPiece.EMPTY);
             }
         }
@@ -63,12 +61,12 @@ var Board = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (this.map[0][column] !== BoardPiece.EMPTY || column < 0 || column >= this.column) {
+                        if (this.map[0][column] !== BoardPiece.EMPTY || column < 0 || column >= Board.column) {
                             return [2 /*return*/, false];
                         }
                         isColumnEverFilled = false;
                         row = 0;
-                        for (i = 0; i < this.row - 1; i++) {
+                        for (i = 0; i < Board.row - 1; i++) {
                             if (this.map[i + 1][column] !== BoardPiece.EMPTY) {
                                 isColumnEverFilled = true;
                                 row = i;
@@ -76,7 +74,7 @@ var Board = (function () {
                             }
                         }
                         if (!isColumnEverFilled) {
-                            row = this.row - 1;
+                            row = Board.row - 1;
                         }
                         return [4 /*yield*/, this.animateAction(row, column, player.boardPiece)];
                     case 1:
@@ -107,14 +105,14 @@ var Board = (function () {
             if (count >= 4) {
                 return true;
             }
-            if (i < 0 || j < 0 || i >= _this.row || j >= _this.column || _this.map[i][j] !== playerPiece) {
+            if (i < 0 || j < 0 || i >= Board.row || j >= Board.column || _this.map[i][j] !== playerPiece) {
                 return false;
             }
             return isWinningSequence(i + dir[0], j + dir[1], playerPiece, dir, count + 1);
         };
         var countEmpty = 0;
-        for (var i = 0; i < this.row; i++) {
-            for (var j = 0; j < this.column; j++) {
+        for (var i = 0; i < Board.row; i++) {
+            for (var j = 0; j < Board.column; j++) {
                 var playerPiece = this.map[i][j];
                 if (playerPiece !== BoardPiece.EMPTY) {
                     for (var k = 0; k < direction.length; k++) {
@@ -182,8 +180,8 @@ var Board = (function () {
     Board.prototype.render = function () {
         utils_1.Utils.drawMask(this);
         var x, y;
-        for (y = 0; y < this.row; y++) {
-            for (x = 0; x < this.column; x++) {
+        for (y = 0; y < Board.row; y++) {
+            for (x = 0; x < Board.column; x++) {
                 utils_1.Utils.drawCircle(this.context, {
                     x: 75 * x + 100,
                     y: 75 * y + 50,
@@ -196,6 +194,8 @@ var Board = (function () {
     };
     return Board;
 }());
+Board.row = 6;
+Board.column = 7;
 exports.Board = Board;
 
 //# sourceMappingURL=board.js.map

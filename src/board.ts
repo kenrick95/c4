@@ -8,8 +8,8 @@ export enum BoardPiece {
   DRAW
 }
 export class Board {
-  row: number = 6;
-  column: number = 7;
+  static row: number = 6;
+  static column: number = 7;
   map: Array<Array<number>>;
 
   canvas: HTMLCanvasElement;
@@ -17,9 +17,9 @@ export class Board {
 
   constructor(canvas: HTMLCanvasElement) {
     this.map = []
-    for (let i = 0; i < this.row; i++) {
+    for (let i = 0; i < Board.row; i++) {
       this.map.push([])
-      for (let j = 0; j < this.column; j++) {
+      for (let j = 0; j < Board.column; j++) {
         this.map[i].push(BoardPiece.EMPTY)
       }
     }
@@ -36,13 +36,13 @@ export class Board {
    * @param column the colum in which the player want to drop a piece
    */
   async applyPlayerAction(player: Player, column: number): Promise<boolean> {
-    if (this.map[0][column] !== BoardPiece.EMPTY || column < 0 || column >= this.column) {
+    if (this.map[0][column] !== BoardPiece.EMPTY || column < 0 || column >= Board.column) {
       return false
     }
 
     let isColumnEverFilled = false;
     let row = 0;
-    for (let i = 0; i < this.row - 1; i++) {
+    for (let i = 0; i < Board.row - 1; i++) {
       if (this.map[i + 1][column] !== BoardPiece.EMPTY) {
         isColumnEverFilled = true;
         row = i;
@@ -50,7 +50,7 @@ export class Board {
       }
     }
     if (!isColumnEverFilled) {
-      row = this.row - 1;
+      row = Board.row - 1;
     }
 
     await this.animateAction(row, column, player.boardPiece)
@@ -77,18 +77,18 @@ export class Board {
       [1, 0],
       [1, 1]
     ]
-    const isWinningSequence = (i : number, j: number, playerPiece: BoardPiece, dir: Array<number>, count: number) : boolean => {
+    const isWinningSequence = (i: number, j: number, playerPiece: BoardPiece, dir: Array<number>, count: number): boolean => {
       if (count >= 4) {
         return true
       }
-      if (i < 0 || j < 0 || i >= this.row || j >= this.column || this.map[i][j] !== playerPiece) {
+      if (i < 0 || j < 0 || i >= Board.row || j >= Board.column || this.map[i][j] !== playerPiece) {
         return false
       }
       return isWinningSequence(i + dir[0], j + dir[1], playerPiece, dir, count + 1);
     }
     let countEmpty = 0
-    for (let i = 0; i < this.row; i++) {
-      for (let j = 0; j < this.column; j++) {
+    for (let i = 0; i < Board.row; i++) {
+      for (let j = 0; j < Board.column; j++) {
         const playerPiece = this.map[i][j];
         if (playerPiece !== BoardPiece.EMPTY) {
           for (let k = 0; k < direction.length; k++) {
@@ -97,7 +97,7 @@ export class Board {
               return playerPiece
             }
           }
-          
+
         } else {
           countEmpty++
         }
@@ -142,8 +142,8 @@ export class Board {
   render() {
     Utils.drawMask(this)
     let x, y;
-    for (y = 0; y < this.row; y++) {
-      for (x = 0; x < this.column; x++) {
+    for (y = 0; y < Board.row; y++) {
+      for (x = 0; x < Board.column; x++) {
         Utils.drawCircle(this.context, {
           x: 75 * x + 100,
           y: 75 * y + 50,

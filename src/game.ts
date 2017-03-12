@@ -12,7 +12,10 @@ export class Game {
 
   constructor() {
     this.board = new Board(document.querySelector('canvas'));
-    this.players = [new PlayerHuman(BoardPiece.PLAYER_1), new PlayerAi(BoardPiece.PLAYER_2)];
+    this.players = [
+      new PlayerHuman(BoardPiece.PLAYER_1, this.board),
+      new PlayerAi(BoardPiece.PLAYER_2)
+    ];
     this.currentPlayerId = 0;
     this.isMoveAllowed = false;
     this.isGameWon = false;
@@ -25,6 +28,7 @@ export class Game {
       await this.move();
       const winner = this.board.getWinner();
       if (winner !== BoardPiece.EMPTY) {
+        console.log('Game over: winner is player ', winner)
         this.isGameWon = true
         this.isMoveAllowed = false
         break
@@ -42,6 +46,9 @@ export class Game {
       this.isMoveAllowed = false;
       actionSuccesful = await this.board.applyPlayerAction(currentPlayer, action);
       this.isMoveAllowed = true;
+      if (!actionSuccesful) {
+        console.log('Move not allowed! Try again.')
+      }
     }
     this.currentPlayerId = this.getNextPlayer();
   }

@@ -55,7 +55,7 @@ var PlayerAi = (function (_super) {
     PlayerAi.prototype.getAction = function (board) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, utils_1.Utils.getRandomColumnNumber(board)];
+                return [2 /*return*/, utils_1.Utils.getRandomColumnNumber()];
             });
         });
     };

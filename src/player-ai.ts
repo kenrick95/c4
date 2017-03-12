@@ -7,6 +7,6 @@ export class PlayerAi extends Player {
     super(boardPiece)
   }
   async getAction(board: Board): Promise<number> {
-    return Utils.getRandomColumnNumber(board);
+    return Utils.getRandomColumnNumber();
   }
 }

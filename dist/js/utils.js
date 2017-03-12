@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var board_1 = require("./board");
 var Utils = (function () {
     function Utils() {
     }
@@ -19,8 +20,8 @@ var Utils = (function () {
         context.fillStyle = '#ddd';
         context.beginPath();
         var x, y;
-        for (y = 0; y < board.row; y++) {
-            for (x = 0; x < board.column; x++) {
+        for (y = 0; y < board_1.Board.row; y++) {
+            for (x = 0; x < board_1.Board.column; x++) {
                 context.arc(75 * x + 100, 75 * y + 50, 25, 0, 2 * Math.PI);
                 context.rect(75 * x + 150, 75 * y, -100, 100);
             }
@@ -31,11 +32,19 @@ var Utils = (function () {
     Utils.clearCanvas = function (board) {
         board.context.clearRect(0, 0, board.canvas.width, board.canvas.height);
     };
-    Utils.isCoordOnColumn = function (coord, x, radius) {
-        return ((coord.x - x) * (coord.x - x) <= radius * radius);
+    Utils.isCoordOnColumn = function (coord, columnXBegin, radius) {
+        return ((coord.x - columnXBegin) * (coord.x - columnXBegin) <= radius * radius);
     };
-    Utils.getRandomColumnNumber = function (board) {
-        return Math.floor(Math.random() * board.column);
+    Utils.getColumnFromCoord = function (coord) {
+        for (var i = 0; i < board_1.Board.column; i++) {
+            if (Utils.isCoordOnColumn(coord, 75 * i + 100, 25)) {
+                return i;
+            }
+        }
+        return -1;
+    };
+    Utils.getRandomColumnNumber = function () {
+        return Math.floor(Math.random() * board_1.Board.column);
     };
     Utils.animationFrame = function () {
         var resolve = null;

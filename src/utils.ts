@@ -22,8 +22,8 @@ export class Utils {
     context.fillStyle = '#ddd';
     context.beginPath();
     let x, y;
-    for (y = 0; y < board.row; y++) {
-      for (x = 0; x < board.column; x++) {
+    for (y = 0; y < Board.row; y++) {
+      for (x = 0; x < Board.column; x++) {
         context.arc(75 * x + 100, 75 * y + 50, 25, 0, 2 * Math.PI);
         context.rect(75 * x + 150, 75 * y, -100, 100);
       }
@@ -36,12 +36,27 @@ export class Utils {
     board.context.clearRect(0, 0, board.canvas.width, board.canvas.height);
   }
 
-  static isCoordOnColumn(coord: { x: number, y: number }, x: number, radius: number): boolean {
-    return ((coord.x - x) * (coord.x - x) <= radius * radius);
+  /**
+   * 
+   * @param coord Coordinate of point to be checked
+   * @param columnXBegin X-Coordinate of N-th column
+   * @param radius Radius of a piece
+   */
+  static isCoordOnColumn(coord: { x: number, y: number }, columnXBegin: number, radius: number): boolean {
+    return ((coord.x - columnXBegin) * (coord.x - columnXBegin) <= radius * radius);
   }
 
-  static getRandomColumnNumber(board: Board): number {
-    return Math.floor(Math.random() * board.column);
+  static getColumnFromCoord(coord: { x: number, y: number }) {
+    for (let i = 0; i < Board.column; i++) {
+      if (Utils.isCoordOnColumn(coord, 75 * i + 100, 25)) {
+        return i
+      }
+    }
+    return -1
+  }
+
+  static getRandomColumnNumber(): number {
+    return Math.floor(Math.random() * Board.column);
   }
   /**
    * @see https://esdiscuss.org/topic/promises-async-functions-and-requestanimationframe-together

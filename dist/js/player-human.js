@@ -49,13 +49,32 @@ var player_1 = require("./player");
 var utils_1 = require("./utils");
 var PlayerHuman = (function (_super) {
     __extends(PlayerHuman, _super);
-    function PlayerHuman(boardPiece) {
-        return _super.call(this, boardPiece) || this;
+    function PlayerHuman(boardPiece, board) {
+        var _this = _super.call(this, boardPiece) || this;
+        _this.clickPromiseResolver = null;
+        _this.board = board;
+        document.addEventListener('click', function (evt) {
+            try {
+                _this.handleClick(evt);
+            }
+            catch (e) {
+                console.error(e);
+            }
+        });
+        return _this;
     }
+    PlayerHuman.prototype.handleClick = function (event) {
+        var rect = this.board.canvas.getBoundingClientRect();
+        var x = event.clientX - rect.left;
+        var y = event.clientY - rect.top;
+        var column = utils_1.Utils.getColumnFromCoord({ x: x, y: y });
+        this.clickPromiseResolver(column);
+    };
     PlayerHuman.prototype.getAction = function (board) {
         return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
             return __generator(this, function (_a) {
-                return [2 /*return*/, utils_1.Utils.getRandomColumnNumber(board)];
+                return [2 /*return*/, new Promise(function (r) { return _this.clickPromiseResolver = r; })];
             });
         });
     };

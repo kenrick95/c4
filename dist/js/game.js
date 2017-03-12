@@ -41,7 +41,10 @@ var player_ai_1 = require("./player-ai");
 var Game = (function () {
     function Game() {
         this.board = new board_1.Board(document.querySelector('canvas'));
-        this.players = [new player_human_1.PlayerHuman(board_1.BoardPiece.PLAYER_1), new player_ai_1.PlayerAi(board_1.BoardPiece.PLAYER_2)];
+        this.players = [
+            new player_human_1.PlayerHuman(board_1.BoardPiece.PLAYER_1, this.board),
+            new player_ai_1.PlayerAi(board_1.BoardPiece.PLAYER_2)
+        ];
         this.currentPlayerId = 0;
         this.isMoveAllowed = false;
         this.isGameWon = false;
@@ -63,6 +66,7 @@ var Game = (function () {
                         _a.sent();
                         winner = this.board.getWinner();
                         if (winner !== board_1.BoardPiece.EMPTY) {
+                            console.log('Game over: winner is player ', winner);
                             this.isGameWon = true;
                             this.isMoveAllowed = false;
                             return [3 /*break*/, 3];
@@ -95,6 +99,9 @@ var Game = (function () {
                     case 3:
                         actionSuccesful = _a.sent();
                         this.isMoveAllowed = true;
+                        if (!actionSuccesful) {
+                            console.log('Move not allowed! Try again.');
+                        }
                         return [3 /*break*/, 1];
                     case 4:
                         this.currentPlayerId = this.getNextPlayer();
