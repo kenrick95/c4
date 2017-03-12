@@ -52,11 +52,11 @@ export class Board {
     if (!isColumnEverFilled) {
       row = this.row - 1;
     }
-    // animation here
+
     await this.animateAction(row, column, player.boardPiece)
 
+    // reflect player's action to the map
     this.map[row][column] = player.boardPiece;
-
     this.debug()
 
     return true
@@ -86,6 +86,7 @@ export class Board {
       }
       return isWinningSequence(i + dir[0], j + dir[1], playerPiece, dir, count + 1);
     }
+    let countEmpty = 0
     for (let i = 0; i < this.row; i++) {
       for (let j = 0; j < this.column; j++) {
         const playerPiece = this.map[i][j];
@@ -97,8 +98,13 @@ export class Board {
             }
           }
           
+        } else {
+          countEmpty++
         }
       }
+    }
+    if (countEmpty === 0) {
+      return BoardPiece.DRAW
     }
 
     return BoardPiece.EMPTY
@@ -114,7 +120,7 @@ export class Board {
   private async animateAction(newRow: number, column: number, boardPiece: BoardPiece): Promise<void> {
     const fillStyle = this.getPlayerColor(boardPiece)
     let currentY = 0
-    const doAnimation = () => {
+    const doAnimation = async () => {
       Utils.clearCanvas(this)
       Utils.drawCircle(this.context, {
         x: 75 * column + 100,
@@ -125,9 +131,10 @@ export class Board {
       })
       this.render()
       currentY += 25
-      if (newRow * 75 >= currentY) {
-        window.requestAnimationFrame(doAnimation)
-      }
+    }
+    while (newRow * 75 >= currentY) {
+      await Utils.animationFrame()
+      doAnimation()
     }
 
   };
@@ -146,6 +153,5 @@ export class Board {
         });
       }
     }
-    console.log('render')
   }
 }

@@ -26,6 +26,8 @@ export class Game {
       const winner = this.board.getWinner();
       if (winner !== BoardPiece.EMPTY) {
         this.isGameWon = true
+        this.isMoveAllowed = false
+        break
       }
     }
   }

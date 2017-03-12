@@ -64,6 +64,8 @@ var Game = (function () {
                         winner = this.board.getWinner();
                         if (winner !== board_1.BoardPiece.EMPTY) {
                             this.isGameWon = true;
+                            this.isMoveAllowed = false;
+                            return [3 /*break*/, 3];
                         }
                         return [3 /*break*/, 1];
                     case 3: return [2 /*return*/];

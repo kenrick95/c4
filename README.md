@@ -17,7 +17,16 @@ Connect four of your pieces vertically, horizontally, or diagonally before the o
 Read [Wikipedia page on Connect Four](https://en.wikipedia.org/wiki/Connect_Four)
 
 ## Compatibility
-Tested in latest Firefox (27), Chrome (31), and IE (11). Turn on browser console to see the "value" of the move chosen by AI.
+- Require browser that supports ES2015's Promise.
+- Should be good in latest Firefox, Edge, Chrome, Opera, and Safari; but not IE.
+
+## Developer notes
+Open up browser console to see the "value" of the move chosen by AI.
+
+### A bit of history
+This project was started in December 2013, way back before I took Software Engineering class in my uni. Way back before ES2015 and TypeScript was widespread. Now that it is 2017, I am excited to rewrite the whole project in TypeScript using latest EcmaScript syntax (like async..await).
+
+This rewrite has one goal: to make the player extensible, so more kind of AI or player (multiplayer, maybe?) could be implemented.
 
 ## License
 This work is licensed under MIT License.

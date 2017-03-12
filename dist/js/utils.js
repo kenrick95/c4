@@ -37,6 +37,12 @@ var Utils = (function () {
     Utils.getRandomColumnNumber = function (board) {
         return Math.floor(Math.random() * board.column);
     };
+    Utils.animationFrame = function () {
+        var resolve = null;
+        var promise = new Promise(function (r) { return resolve = r; });
+        window.requestAnimationFrame(resolve);
+        return promise;
+    };
     return Utils;
 }());
 exports.Utils = Utils;

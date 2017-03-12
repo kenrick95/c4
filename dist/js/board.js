@@ -112,6 +112,7 @@ var Board = (function () {
             }
             return isWinningSequence(i + dir[0], j + dir[1], playerPiece, dir, count + 1);
         };
+        var countEmpty = 0;
         for (var i = 0; i < this.row; i++) {
             for (var j = 0; j < this.column; j++) {
                 var playerPiece = this.map[i][j];
@@ -123,7 +124,13 @@ var Board = (function () {
                         }
                     }
                 }
+                else {
+                    countEmpty++;
+                }
             }
+        }
+        if (countEmpty === 0) {
+            return BoardPiece.DRAW;
         }
         return BoardPiece.EMPTY;
     };
@@ -139,24 +146,35 @@ var Board = (function () {
             var _this = this;
             var fillStyle, currentY, doAnimation;
             return __generator(this, function (_a) {
-                fillStyle = this.getPlayerColor(boardPiece);
-                currentY = 0;
-                doAnimation = function () {
-                    utils_1.Utils.clearCanvas(_this);
-                    utils_1.Utils.drawCircle(_this.context, {
-                        x: 75 * column + 100,
-                        y: currentY + 50,
-                        r: 25,
-                        fill: fillStyle,
-                        stroke: 'black'
-                    });
-                    _this.render();
-                    currentY += 25;
-                    if (newRow * 75 >= currentY) {
-                        window.requestAnimationFrame(doAnimation);
-                    }
-                };
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        fillStyle = this.getPlayerColor(boardPiece);
+                        currentY = 0;
+                        doAnimation = function () { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                utils_1.Utils.clearCanvas(this);
+                                utils_1.Utils.drawCircle(this.context, {
+                                    x: 75 * column + 100,
+                                    y: currentY + 50,
+                                    r: 25,
+                                    fill: fillStyle,
+                                    stroke: 'black'
+                                });
+                                this.render();
+                                currentY += 25;
+                                return [2 /*return*/];
+                            });
+                        }); };
+                        _a.label = 1;
+                    case 1:
+                        if (!(newRow * 75 >= currentY)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, utils_1.Utils.animationFrame()];
+                    case 2:
+                        _a.sent();
+                        doAnimation();
+                        return [3 /*break*/, 1];
+                    case 3: return [2 /*return*/];
+                }
             });
         });
     };
@@ -175,7 +193,6 @@ var Board = (function () {
                 });
             }
         }
-        console.log('render');
     };
     return Board;
 }());

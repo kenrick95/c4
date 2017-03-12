@@ -43,4 +43,13 @@ export class Utils {
   static getRandomColumnNumber(board: Board): number {
     return Math.floor(Math.random() * board.column);
   }
+  /**
+   * @see https://esdiscuss.org/topic/promises-async-functions-and-requestanimationframe-together
+   */
+  static animationFrame() {
+    let resolve = null
+    const promise = new Promise(r => resolve = r)
+    window.requestAnimationFrame(resolve)
+    return promise
+  }
 }
