@@ -1,7 +1,7 @@
-import {Board} from './board';
+import { Board } from './board';
 
 export class Utils {
-  static drawCircle(context : CanvasRenderingContext2D, {x = 0, y = 0, r = 0, fill = '', stroke = ''}) {
+  static drawCircle(context: CanvasRenderingContext2D, { x = 0, y = 0, r = 0, fill = '', stroke = '' }) {
     context.save();
     context.fillStyle = fill;
     context.strokeStyle = stroke;
@@ -16,10 +16,10 @@ export class Utils {
    * @param context Canvas 2D Context
    * @param board   current board
    */
-  static drawMask(board : Board) {
+  static drawMask(board: Board) {
     const context = board.context;
     context.save();
-    context.fillStyle = "#ddd";
+    context.fillStyle = '#ddd';
     context.beginPath();
     let x, y;
     for (y = 0; y < board.row; y++) {
@@ -32,11 +32,15 @@ export class Utils {
     context.restore();
   }
 
-  static clearCanvas(board : Board) {
-     board.context.clearRect(0, 0, board.canvas.width, board.canvas.height);
+  static clearCanvas(board: Board) {
+    board.context.clearRect(0, 0, board.canvas.width, board.canvas.height);
   }
 
-  static isCoordOnColumn(coord : {x: number, y: number}, x : number, radius : number) {
-    return ((coord.x - x) * (coord.x - x) <=  radius * radius);
+  static isCoordOnColumn(coord: { x: number, y: number }, x: number, radius: number): boolean {
+    return ((coord.x - x) * (coord.x - x) <= radius * radius);
+  }
+
+  static getRandomColumnNumber(board: Board): number {
+    return Math.floor(Math.random() * board.column);
   }
 }

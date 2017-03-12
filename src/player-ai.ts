@@ -1,11 +1,12 @@
-import {Player} from './player';
-import {Board, BoardPiece} from './board';
+import { Player } from './player';
+import { Board, BoardPiece } from './board';
+import { Utils } from './utils';
 
 export class PlayerAi extends Player {
-  constructor(boardPiece : BoardPiece) {
+  constructor(boardPiece: BoardPiece) {
     super(boardPiece)
   }
-  getAction(board : Board) : number {
-    return 0
+  async getAction(board: Board): Promise<number> {
+    return Utils.getRandomColumnNumber(board);
   }
 }

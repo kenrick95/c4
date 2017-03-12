@@ -16,7 +16,7 @@ var Utils = (function () {
     Utils.drawMask = function (board) {
         var context = board.context;
         context.save();
-        context.fillStyle = "#ddd";
+        context.fillStyle = '#ddd';
         context.beginPath();
         var x, y;
         for (y = 0; y < board.row; y++) {
@@ -33,6 +33,9 @@ var Utils = (function () {
     };
     Utils.isCoordOnColumn = function (coord, x, radius) {
         return ((coord.x - x) * (coord.x - x) <= radius * radius);
+    };
+    Utils.getRandomColumnNumber = function (board) {
+        return Math.floor(Math.random() * board.column);
     };
     return Utils;
 }());
