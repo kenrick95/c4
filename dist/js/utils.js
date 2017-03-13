@@ -4,11 +4,19 @@ var board_1 = require("./board");
 var Utils = (function () {
     function Utils() {
     }
-    Utils.drawCircle = function (context, _a) {
-        var _b = _a.x, x = _b === void 0 ? 0 : _b, _c = _a.y, y = _c === void 0 ? 0 : _c, _d = _a.r, r = _d === void 0 ? 0 : _d, _e = _a.fill, fill = _e === void 0 ? '' : _e, _f = _a.stroke, stroke = _f === void 0 ? '' : _f;
+    Utils.drawText = function (context, _a) {
+        var _b = _a.message, message = _b === void 0 ? '' : _b, _c = _a.x, x = _c === void 0 ? 0 : _c, _d = _a.y, y = _d === void 0 ? 0 : _d, _e = _a.fillStyle, fillStyle = _e === void 0 ? '#111' : _e, _f = _a.font, font = _f === void 0 ? '12pt sans-serif' : _f, _g = _a.maxWidth, maxWidth = _g === void 0 ? Utils.BIG_POSITIVE_NUMBER : _g;
         context.save();
-        context.fillStyle = fill;
-        context.strokeStyle = stroke;
+        context.font = font;
+        context.fillStyle = fillStyle;
+        context.fillText(message, x, y, maxWidth);
+        context.restore();
+    };
+    Utils.drawCircle = function (context, _a) {
+        var _b = _a.x, x = _b === void 0 ? 0 : _b, _c = _a.y, y = _c === void 0 ? 0 : _c, _d = _a.r, r = _d === void 0 ? 0 : _d, _e = _a.fillStyle, fillStyle = _e === void 0 ? '' : _e, _f = _a.strokeStyle, strokeStyle = _f === void 0 ? '' : _f;
+        context.save();
+        context.fillStyle = fillStyle;
+        context.strokeStyle = strokeStyle;
         context.beginPath();
         context.arc(x, y, r, 0, 2 * Math.PI, false);
         context.fill();

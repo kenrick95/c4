@@ -36,14 +36,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var board_1 = require("./board");
-var player_human_1 = require("./player-human");
 var player_ai_1 = require("./player-ai");
 var Game = (function () {
     function Game() {
         this.board = new board_1.Board(document.querySelector('canvas'));
         this.players = [
-            new player_human_1.PlayerHuman(board_1.BoardPiece.PLAYER_1, this.board),
-            new player_ai_1.PlayerAi(board_1.BoardPiece.PLAYER_2)
+            new player_ai_1.PlayerAi(board_1.BoardPiece.PLAYER_1, this.board),
+            new player_ai_1.PlayerAi(board_1.BoardPiece.PLAYER_2, this.board)
         ];
         this.currentPlayerId = 0;
         this.isMoveAllowed = false;
@@ -69,6 +68,7 @@ var Game = (function () {
                             console.log('Game over: winner is player ', winner);
                             this.isGameWon = true;
                             this.isMoveAllowed = false;
+                            this.board.announceWinner();
                             return [3 /*break*/, 3];
                         }
                         return [3 /*break*/, 1];

@@ -4,10 +4,18 @@ export class Utils {
   static BIG_POSITIVE_NUMBER = 10 ** 9 + 7;
   static BIG_NEGATIVE_NUMBER = -Utils.BIG_POSITIVE_NUMBER;
 
-  static drawCircle(context: CanvasRenderingContext2D, { x = 0, y = 0, r = 0, fill = '', stroke = '' }) {
+  static drawText(context: CanvasRenderingContext2D, { message = '', x = 0, y = 0, fillStyle = '#111', font = '12pt sans-serif', maxWidth = Utils.BIG_POSITIVE_NUMBER } ) {
+    context.save()
+    context.font = font
+    context.fillStyle = fillStyle
+    context.fillText(message, x, y, maxWidth)
+    context.restore()
+  }
+
+  static drawCircle(context: CanvasRenderingContext2D, { x = 0, y = 0, r = 0, fillStyle = '', strokeStyle = '' }) {
     context.save();
-    context.fillStyle = fill;
-    context.strokeStyle = stroke;
+    context.fillStyle = fillStyle;
+    context.strokeStyle = strokeStyle;
     context.beginPath();
     context.arc(x, y, r, 0, 2 * Math.PI, false);
     context.fill();

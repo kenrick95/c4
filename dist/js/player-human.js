@@ -50,7 +50,7 @@ var utils_1 = require("./utils");
 var PlayerHuman = (function (_super) {
     __extends(PlayerHuman, _super);
     function PlayerHuman(boardPiece, board) {
-        var _this = _super.call(this, boardPiece) || this;
+        var _this = _super.call(this, boardPiece, board) || this;
         _this.clickPromiseResolver = null;
         _this.board = board;
         document.addEventListener('click', function (evt) {

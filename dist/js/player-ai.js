@@ -50,8 +50,8 @@ var board_1 = require("./board");
 var utils_1 = require("./utils");
 var PlayerAi = (function (_super) {
     __extends(PlayerAi, _super);
-    function PlayerAi(boardPiece) {
-        var _this = _super.call(this, boardPiece) || this;
+    function PlayerAi(boardPiece, board) {
+        var _this = _super.call(this, boardPiece, board) || this;
         _this.ownBoardPieceValue = _this.getBoardPieceValue(boardPiece);
         _this.enemyBoardPiece = (boardPiece === board_1.BoardPiece.PLAYER_1) ? board_1.BoardPiece.PLAYER_2 : board_1.BoardPiece.PLAYER_1;
         return _this;
@@ -194,7 +194,7 @@ var PlayerAi = (function (_super) {
             return __generator(this, function (_a) {
                 state = utils_1.Utils.clone(board.map);
                 action = this.maxState(state, 0, utils_1.Utils.BIG_NEGATIVE_NUMBER, utils_1.Utils.BIG_POSITIVE_NUMBER);
-                console.log("AI choose column " + action.move + " with value of " + action.value);
+                console.log("AI " + this.boardPiece + " choose column " + action.move + " with value of " + action.value);
                 return [2 /*return*/, action.move];
             });
         });

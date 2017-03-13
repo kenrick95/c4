@@ -6,8 +6,8 @@ export class PlayerAi extends Player {
   static MAX_DEPTH = 4
   private ownBoardPieceValue: number;
   private enemyBoardPiece: BoardPiece;
-  constructor(boardPiece: BoardPiece) {
-    super(boardPiece)
+  constructor(boardPiece: BoardPiece, board: Board) {
+    super(boardPiece, board)
     this.ownBoardPieceValue = this.getBoardPieceValue(boardPiece)
     this.enemyBoardPiece = (boardPiece === BoardPiece.PLAYER_1) ? BoardPiece.PLAYER_2 : BoardPiece.PLAYER_1;
   }
@@ -180,7 +180,7 @@ export class PlayerAi extends Player {
   async getAction(board: Board): Promise<number> {
     const state = Utils.clone(board.map)
     const action = this.maxState(state, 0, Utils.BIG_NEGATIVE_NUMBER, Utils.BIG_POSITIVE_NUMBER);
-    console.log(`AI choose column ${action.move} with value of ${action.value}`)
+    console.log(`AI ${this.boardPiece} choose column ${action.move} with value of ${action.value}`)
     return action.move;
   }
 }

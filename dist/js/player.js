@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Player = (function () {
-    function Player(boardPiece) {
+    function Player(boardPiece, board) {
         this.boardPiece = boardPiece;
     }
     return Player;

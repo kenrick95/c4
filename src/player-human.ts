@@ -7,7 +7,7 @@ export class PlayerHuman extends Player {
   board: Board;
 
   constructor(boardPiece: BoardPiece, board: Board) {
-    super(boardPiece)
+    super(boardPiece, board)
     this.clickPromiseResolver = null
     this.board = board;
 

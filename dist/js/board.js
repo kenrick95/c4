@@ -54,6 +54,7 @@ var Board = (function () {
         }
         this.canvas = canvas;
         this.context = canvas.getContext('2d');
+        this.winnerBoardPiece = BoardPiece.EMPTY;
     }
     Board.prototype.applyPlayerAction = function (player, column) {
         return __awaiter(this, void 0, void 0, function () {
@@ -95,6 +96,9 @@ var Board = (function () {
     };
     Board.prototype.getWinner = function () {
         var _this = this;
+        if (this.winnerBoardPiece !== BoardPiece.EMPTY) {
+            return this.winnerBoardPiece;
+        }
         var direction = [
             [0, -1],
             [0, 1],
@@ -122,7 +126,7 @@ var Board = (function () {
                     for (var k = 0; k < direction.length; k++) {
                         var isWon = isWinningSequence(i + direction[k][0], j + direction[k][1], playerPiece, direction[k], 1);
                         if (isWon) {
-                            return playerPiece;
+                            return this.winnerBoardPiece = playerPiece;
                         }
                     }
                 }
@@ -132,9 +136,28 @@ var Board = (function () {
             }
         }
         if (countEmpty === 0) {
-            return BoardPiece.DRAW;
+            return this.winnerBoardPiece = BoardPiece.DRAW;
         }
         return BoardPiece.EMPTY;
+    };
+    Board.prototype.announceWinner = function () {
+        if (this.winnerBoardPiece === BoardPiece.EMPTY) {
+            return;
+        }
+        var message = 'Thank you for playing - ';
+        if (this.winnerBoardPiece === BoardPiece.DRAW) {
+            message += "It's a draw";
+        }
+        else {
+            message += "Player " + this.winnerBoardPiece + " wins";
+        }
+        message += " - Click to reset";
+        utils_1.Utils.drawText(this.context, {
+            message: message,
+            x: 150,
+            y: 20,
+            maxWidth: 400
+        });
     };
     Board.prototype.getPlayerColor = function (boardPiece) {
         switch (boardPiece) {
@@ -159,8 +182,8 @@ var Board = (function () {
                                     x: 75 * column + 100,
                                     y: currentY + 50,
                                     r: 25,
-                                    fill: fillStyle,
-                                    stroke: 'black'
+                                    fillStyle: fillStyle,
+                                    strokeStyle: 'black'
                                 });
                                 this.render();
                                 currentY += 25;
@@ -190,8 +213,8 @@ var Board = (function () {
                     x: 75 * x + 100,
                     y: 75 * y + 50,
                     r: 25,
-                    fill: this.getPlayerColor(this.map[y][x]),
-                    stroke: 'black'
+                    fillStyle: this.getPlayerColor(this.map[y][x]),
+                    strokeStyle: 'black'
                 });
             }
         }

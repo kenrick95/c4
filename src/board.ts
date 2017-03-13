@@ -11,6 +11,7 @@ export class Board {
   static row: number = 6;
   static column: number = 7;
   map: Array<Array<number>>;
+  private winnerBoardPiece: BoardPiece;
 
   canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D;
@@ -26,6 +27,7 @@ export class Board {
 
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
+    this.winnerBoardPiece = BoardPiece.EMPTY;
 
   }
 
@@ -69,6 +71,9 @@ export class Board {
   }
 
   getWinner(): BoardPiece {
+    if (this.winnerBoardPiece !== BoardPiece.EMPTY) {
+      return this.winnerBoardPiece
+    }
     const direction = [
       [0, -1],
       [0, 1],
@@ -96,7 +101,7 @@ export class Board {
           for (let k = 0; k < direction.length; k++) {
             const isWon = isWinningSequence(i + direction[k][0], j + direction[k][1], playerPiece, direction[k], 1)
             if (isWon) {
-              return playerPiece
+              return this.winnerBoardPiece = playerPiece
             }
           }
 
@@ -106,10 +111,29 @@ export class Board {
       }
     }
     if (countEmpty === 0) {
-      return BoardPiece.DRAW
+      return this.winnerBoardPiece = BoardPiece.DRAW
     }
 
     return BoardPiece.EMPTY
+  }
+
+  announceWinner() {
+    if (this.winnerBoardPiece === BoardPiece.EMPTY) {
+      return
+    }
+    let message = 'Thank you for playing - '
+    if (this.winnerBoardPiece === BoardPiece.DRAW) {
+      message += `It's a draw`
+    } else {
+      message += `Player ${this.winnerBoardPiece} wins`
+    }
+    message += " - Click to reset";
+    Utils.drawText(this.context, {
+      message,
+      x: 150,
+      y: 20,
+      maxWidth: 400
+    })
   }
 
   private getPlayerColor(boardPiece: BoardPiece): string {
@@ -128,8 +152,8 @@ export class Board {
         x: 75 * column + 100,
         y: currentY + 50,
         r: 25,
-        fill: fillStyle,
-        stroke: 'black'
+        fillStyle: fillStyle,
+        strokeStyle: 'black'
       })
       this.render()
       currentY += 25
@@ -149,8 +173,8 @@ export class Board {
           x: 75 * x + 100,
           y: 75 * y + 50,
           r: 25,
-          fill: this.getPlayerColor(this.map[y][x]),
-          stroke: 'black'
+          fillStyle: this.getPlayerColor(this.map[y][x]),
+          strokeStyle: 'black'
         });
       }
     }
