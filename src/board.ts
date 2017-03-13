@@ -17,6 +17,12 @@ export class Board {
   context: CanvasRenderingContext2D;
 
   constructor(canvas: HTMLCanvasElement) {
+    this.canvas = canvas;
+    this.context = canvas.getContext('2d');
+    this.reset()
+  }
+
+  reset() {
     this.map = []
     for (let i = 0; i < Board.row; i++) {
       this.map.push([])
@@ -24,11 +30,8 @@ export class Board {
         this.map[i].push(BoardPiece.EMPTY)
       }
     }
-
-    this.canvas = canvas;
-    this.context = canvas.getContext('2d');
     this.winnerBoardPiece = BoardPiece.EMPTY;
-
+    Utils.clearCanvas(this)
   }
 
   /**

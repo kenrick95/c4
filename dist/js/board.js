@@ -45,6 +45,11 @@ var BoardPiece;
 })(BoardPiece = exports.BoardPiece || (exports.BoardPiece = {}));
 var Board = (function () {
     function Board(canvas) {
+        this.canvas = canvas;
+        this.context = canvas.getContext('2d');
+        this.reset();
+    }
+    Board.prototype.reset = function () {
         this.map = [];
         for (var i = 0; i < Board.row; i++) {
             this.map.push([]);
@@ -52,10 +57,9 @@ var Board = (function () {
                 this.map[i].push(BoardPiece.EMPTY);
             }
         }
-        this.canvas = canvas;
-        this.context = canvas.getContext('2d');
         this.winnerBoardPiece = BoardPiece.EMPTY;
-    }
+        utils_1.Utils.clearCanvas(this);
+    };
     Board.prototype.applyPlayerAction = function (player, column) {
         return __awaiter(this, void 0, void 0, function () {
             var isColumnEverFilled, row, i;

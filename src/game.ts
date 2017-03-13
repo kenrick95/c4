@@ -2,6 +2,7 @@ import { Board, BoardPiece } from './board';
 import { Player } from './player';
 import { PlayerHuman } from './player-human';
 import { PlayerAi } from './player-ai';
+import { Utils } from './utils';
 
 export class Game {
   board: Board;
@@ -13,15 +14,20 @@ export class Game {
   constructor() {
     this.board = new Board(document.querySelector('canvas'));
     this.players = [
-      new PlayerAi(BoardPiece.PLAYER_1, this.board),
+      new PlayerHuman(BoardPiece.PLAYER_1, this.board),
       new PlayerAi(BoardPiece.PLAYER_2, this.board)
     ];
     this.currentPlayerId = 0;
+    this.reset()
+  }
+  reset() {
     this.isMoveAllowed = false;
     this.isGameWon = false;
+    this.board.reset()
     this.board.render()
     this.board.debug()
   }
+
   async start() {
     this.isMoveAllowed = true;
     while (!this.isGameWon) {
@@ -58,5 +64,14 @@ export class Game {
   }
 }
 
-const game = new Game()
-game.start()
+document.addEventListener('DOMContentLoaded', () => {
+  const game = new Game()
+  game.start()
+  document.querySelector('canvas').addEventListener('click', async () => {
+    if (game.isGameWon) {
+      game.reset()
+      await Utils.animationFrame()
+      game.start()
+    }
+  })
+})

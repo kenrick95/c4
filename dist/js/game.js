@@ -34,22 +34,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var board_1 = require("./board");
+var player_human_1 = require("./player-human");
 var player_ai_1 = require("./player-ai");
+var utils_1 = require("./utils");
 var Game = (function () {
     function Game() {
         this.board = new board_1.Board(document.querySelector('canvas'));
         this.players = [
-            new player_ai_1.PlayerAi(board_1.BoardPiece.PLAYER_1, this.board),
+            new player_human_1.PlayerHuman(board_1.BoardPiece.PLAYER_1, this.board),
             new player_ai_1.PlayerAi(board_1.BoardPiece.PLAYER_2, this.board)
         ];
         this.currentPlayerId = 0;
+        this.reset();
+    }
+    Game.prototype.reset = function () {
         this.isMoveAllowed = false;
         this.isGameWon = false;
+        this.board.reset();
         this.board.render();
         this.board.debug();
-    }
+    };
     Game.prototype.start = function () {
         return __awaiter(this, void 0, void 0, function () {
             var winner;
@@ -116,7 +123,24 @@ var Game = (function () {
     return Game;
 }());
 exports.Game = Game;
-var game = new Game();
-game.start();
+document.addEventListener('DOMContentLoaded', function () {
+    var game = new Game();
+    game.start();
+    document.querySelector('canvas').addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!game.isGameWon) return [3 /*break*/, 2];
+                    game.reset();
+                    return [4 /*yield*/, utils_1.Utils.animationFrame()];
+                case 1:
+                    _a.sent();
+                    game.start();
+                    _a.label = 2;
+                case 2: return [2 /*return*/];
+            }
+        });
+    }); });
+});
 
 //# sourceMappingURL=game.js.map
