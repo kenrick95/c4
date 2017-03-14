@@ -3,11 +3,11 @@ import { Board, BoardPiece } from './board';
 import { Utils } from './utils';
 
 export class PlayerAi extends Player {
-  static MAX_DEPTH = 4
+  static readonly MAX_DEPTH = 4
   private ownBoardPieceValue: number;
   private enemyBoardPiece: BoardPiece;
-  constructor(boardPiece: BoardPiece, board: Board) {
-    super(boardPiece, board)
+  constructor(boardPiece: BoardPiece, canvas: HTMLCanvasElement) {
+    super(boardPiece, canvas)
     this.ownBoardPieceValue = this.getBoardPieceValue(boardPiece)
     this.enemyBoardPiece = (boardPiece === BoardPiece.PLAYER_1) ? BoardPiece.PLAYER_2 : BoardPiece.PLAYER_1;
   }
@@ -21,22 +21,22 @@ export class PlayerAi extends Player {
   private getStateValue(state: Array<Array<number>>): { winnerBoardPiece: BoardPiece, chain: number } {
     let winnerBoardPiece = BoardPiece.EMPTY;
     let chainValue = 0;
-    for (let i = 0; i < Board.row; i++) {
-      for (let j = 0; j < Board.column; j++) {
+    for (let i = 0; i < Board.ROWS; i++) {
+      for (let j = 0; j < Board.COLUMNS; j++) {
         let tempRight = 0, tempBottom = 0, tempBottomRight = 0, tempTopRight = 0;
         for (let k = 0; k <= 3; k++) {
           // from (i,j) to right
-          if (j + k < Board.column) {
+          if (j + k < Board.COLUMNS) {
             tempRight += this.getBoardPieceValue(state[i][j + k]);
           }
 
           // from (i,j) to bottom
-          if (i + k < Board.row) {
+          if (i + k < Board.ROWS) {
             tempBottom += this.getBoardPieceValue(state[i + k][j]);
           }
 
           // from (i,j) to bottom-right
-          if (i + k < Board.row && j + k < Board.column) {
+          if (i + k < Board.ROWS && j + k < Board.COLUMNS) {
             tempBottomRight += this.getBoardPieceValue(state[i + k][j + k]);
           }
 
@@ -117,7 +117,7 @@ export class PlayerAi extends Player {
   } {
     let value = Utils.BIG_NEGATIVE_NUMBER;
     let moveQueue: Array<number> = [];
-    for (let column = 0; column < Board.column; column++) {
+    for (let column = 0; column < Board.COLUMNS; column++) {
       const { success: actionSuccessful, map: nextState } = Utils.getMockPlayerAction(state, this.boardPiece, column);
       if (actionSuccessful) {
         const { value: nextValue, move: nextMove } = this.getMove(nextState, depth, alpha, beta);
@@ -150,7 +150,7 @@ export class PlayerAi extends Player {
   } {
     let value = Utils.BIG_POSITIVE_NUMBER;
     let moveQueue: Array<number> = [];
-    for (let column = 0; column < Board.column; column++) {
+    for (let column = 0; column < Board.COLUMNS; column++) {
       const { success: actionSuccessful, map: nextState } = Utils.getMockPlayerAction(state, this.enemyBoardPiece, column);
       if (actionSuccessful) {
         const { value: nextValue, move: nextMove } = this.getMove(nextState, depth, alpha, beta);

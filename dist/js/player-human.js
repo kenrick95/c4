@@ -49,11 +49,10 @@ var player_1 = require("./player");
 var utils_1 = require("./utils");
 var PlayerHuman = (function (_super) {
     __extends(PlayerHuman, _super);
-    function PlayerHuman(boardPiece, board) {
-        var _this = _super.call(this, boardPiece, board) || this;
+    function PlayerHuman(boardPiece, canvas) {
+        var _this = _super.call(this, boardPiece, canvas) || this;
         _this.clickPromiseResolver = null;
-        _this.board = board;
-        document.addEventListener('click', function (evt) {
+        canvas.addEventListener('click', function (evt) {
             try {
                 _this.handleClick(evt);
             }
@@ -64,7 +63,7 @@ var PlayerHuman = (function (_super) {
         return _this;
     }
     PlayerHuman.prototype.handleClick = function (event) {
-        var rect = this.board.canvas.getBoundingClientRect();
+        var rect = this.canvas.getBoundingClientRect();
         var x = event.clientX - rect.left;
         var y = event.clientY - rect.top;
         var column = utils_1.Utils.getColumnFromCoord({ x: x, y: y });

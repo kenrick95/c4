@@ -12,10 +12,11 @@ export class Game {
   isGameWon: boolean;
 
   constructor() {
-    this.board = new Board(document.querySelector('canvas'));
+    const canvas = document.querySelector('canvas')
+    this.board = new Board(canvas);
     this.players = [
-      new PlayerHuman(BoardPiece.PLAYER_1, this.board),
-      new PlayerAi(BoardPiece.PLAYER_2, this.board)
+      new PlayerHuman(BoardPiece.PLAYER_1, canvas),
+      new PlayerAi(BoardPiece.PLAYER_2, canvas)
     ];
     this.currentPlayerId = 0;
     this.reset()

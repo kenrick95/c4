@@ -25,13 +25,14 @@ var Utils = (function () {
     Utils.drawMask = function (board) {
         var context = board.context;
         context.save();
-        context.fillStyle = '#ddd';
+        context.fillStyle = board_1.Board.MASK_COLOR;
         context.beginPath();
-        var x, y;
-        for (y = 0; y < board_1.Board.row; y++) {
-            for (x = 0; x < board_1.Board.column; x++) {
-                context.arc(75 * x + 100, 75 * y + 50, 25, 0, 2 * Math.PI);
-                context.rect(75 * x + 150, 75 * y, -100, 100);
+        var doubleRadius = 2 * board_1.Board.PIECE_RADIUS;
+        var tripleRadius = 3 * board_1.Board.PIECE_RADIUS;
+        for (var y = 0; y < board_1.Board.ROWS; y++) {
+            for (var x = 0; x < board_1.Board.COLUMNS; x++) {
+                context.arc(tripleRadius * x + board_1.Board.MASK_X_BEGIN + doubleRadius, tripleRadius * y + board_1.Board.MASK_Y_BEGIN + doubleRadius, board_1.Board.PIECE_RADIUS, 0, 2 * Math.PI);
+                context.rect(tripleRadius * x + board_1.Board.MASK_X_BEGIN + 2 * doubleRadius, tripleRadius * y + board_1.Board.MASK_Y_BEGIN, -2 * doubleRadius, 2 * doubleRadius);
             }
         }
         context.fill();
@@ -44,15 +45,15 @@ var Utils = (function () {
         return ((coord.x - columnXBegin) * (coord.x - columnXBegin) <= radius * radius);
     };
     Utils.getColumnFromCoord = function (coord) {
-        for (var i = 0; i < board_1.Board.column; i++) {
-            if (Utils.isCoordOnColumn(coord, 75 * i + 100, 25)) {
+        for (var i = 0; i < board_1.Board.COLUMNS; i++) {
+            if (Utils.isCoordOnColumn(coord, 3 * board_1.Board.PIECE_RADIUS * i + board_1.Board.MASK_X_BEGIN + 2 * board_1.Board.PIECE_RADIUS, board_1.Board.PIECE_RADIUS)) {
                 return i;
             }
         }
         return -1;
     };
     Utils.getRandomColumnNumber = function () {
-        return Math.floor(Math.random() * board_1.Board.column);
+        return Math.floor(Math.random() * board_1.Board.COLUMNS);
     };
     Utils.choose = function (choice) {
         return choice[Math.floor(Math.random() * choice.length)];
@@ -72,7 +73,7 @@ var Utils = (function () {
     };
     Utils.getMockPlayerAction = function (map, boardPiece, column) {
         var clonedMap = Utils.clone(map);
-        if (clonedMap[0][column] !== board_1.BoardPiece.EMPTY || column < 0 || column >= board_1.Board.column) {
+        if (clonedMap[0][column] !== board_1.BoardPiece.EMPTY || column < 0 || column >= board_1.Board.COLUMNS) {
             return {
                 success: false,
                 map: clonedMap
@@ -80,7 +81,7 @@ var Utils = (function () {
         }
         var isColumnEverFilled = false;
         var row = 0;
-        for (var i = 0; i < board_1.Board.row - 1; i++) {
+        for (var i = 0; i < board_1.Board.ROWS - 1; i++) {
             if (clonedMap[i + 1][column] !== board_1.BoardPiece.EMPTY) {
                 isColumnEverFilled = true;
                 row = i;
@@ -88,7 +89,7 @@ var Utils = (function () {
             }
         }
         if (!isColumnEverFilled) {
-            row = board_1.Board.row - 1;
+            row = board_1.Board.ROWS - 1;
         }
         clonedMap[row][column] = boardPiece;
         return {

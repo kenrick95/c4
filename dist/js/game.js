@@ -42,10 +42,11 @@ var player_ai_1 = require("./player-ai");
 var utils_1 = require("./utils");
 var Game = (function () {
     function Game() {
-        this.board = new board_1.Board(document.querySelector('canvas'));
+        var canvas = document.querySelector('canvas');
+        this.board = new board_1.Board(canvas);
         this.players = [
-            new player_human_1.PlayerHuman(board_1.BoardPiece.PLAYER_1, this.board),
-            new player_ai_1.PlayerAi(board_1.BoardPiece.PLAYER_2, this.board)
+            new player_human_1.PlayerHuman(board_1.BoardPiece.PLAYER_1, canvas),
+            new player_ai_1.PlayerAi(board_1.BoardPiece.PLAYER_2, canvas)
         ];
         this.currentPlayerId = 0;
         this.reset();

@@ -1,10 +1,13 @@
 import { Board, BoardPiece } from './board';
 
 export class Utils {
-  static BIG_POSITIVE_NUMBER = 10 ** 9 + 7;
-  static BIG_NEGATIVE_NUMBER = -Utils.BIG_POSITIVE_NUMBER;
+  static readonly BIG_POSITIVE_NUMBER = 10 ** 9 + 7;
+  static readonly BIG_NEGATIVE_NUMBER = -Utils.BIG_POSITIVE_NUMBER;
 
-  static drawText(context: CanvasRenderingContext2D, { message = '', x = 0, y = 0, fillStyle = '#111', font = '12pt sans-serif', maxWidth = Utils.BIG_POSITIVE_NUMBER } ) {
+  static drawText(context: CanvasRenderingContext2D, {
+      message = '', x = 0, y = 0, fillStyle = '#111',
+      font = '12pt sans-serif', maxWidth = Utils.BIG_POSITIVE_NUMBER
+    } ) {
     context.save()
     context.font = font
     context.fillStyle = fillStyle
@@ -13,13 +16,13 @@ export class Utils {
   }
 
   static drawCircle(context: CanvasRenderingContext2D, { x = 0, y = 0, r = 0, fillStyle = '', strokeStyle = '' }) {
-    context.save();
-    context.fillStyle = fillStyle;
-    context.strokeStyle = strokeStyle;
-    context.beginPath();
-    context.arc(x, y, r, 0, 2 * Math.PI, false);
-    context.fill();
-    context.restore();
+    context.save()
+    context.fillStyle = fillStyle
+    context.strokeStyle = strokeStyle
+    context.beginPath()
+    context.arc(x, y, r, 0, 2 * Math.PI, false)
+    context.fill()
+    context.restore()
   }
   /**
    * @see http://stackoverflow.com/a/11770000/917957
@@ -28,23 +31,26 @@ export class Utils {
    * @param board   current board
    */
   static drawMask(board: Board) {
-    const context = board.context;
-    context.save();
-    context.fillStyle = '#ddd';
-    context.beginPath();
-    let x, y;
-    for (y = 0; y < Board.row; y++) {
-      for (x = 0; x < Board.column; x++) {
-        context.arc(75 * x + 100, 75 * y + 50, 25, 0, 2 * Math.PI);
-        context.rect(75 * x + 150, 75 * y, -100, 100);
+    const context = board.context
+    context.save()
+    context.fillStyle = Board.MASK_COLOR
+    context.beginPath()
+    const doubleRadius = 2 * Board.PIECE_RADIUS
+    const tripleRadius = 3 * Board.PIECE_RADIUS
+    for (let y = 0; y < Board.ROWS; y++) {
+      for (let x = 0; x < Board.COLUMNS; x++) {
+        context.arc(tripleRadius * x + Board.MASK_X_BEGIN + doubleRadius,
+          tripleRadius * y + Board.MASK_Y_BEGIN + doubleRadius, Board.PIECE_RADIUS, 0, 2 * Math.PI)
+        context.rect(tripleRadius * x + Board.MASK_X_BEGIN + 2 * doubleRadius,
+          tripleRadius * y + Board.MASK_Y_BEGIN, -2 * doubleRadius,  2 * doubleRadius)
       }
     }
-    context.fill();
-    context.restore();
+    context.fill()
+    context.restore()
   }
 
   static clearCanvas(board: Board) {
-    board.context.clearRect(0, 0, board.canvas.width, board.canvas.height);
+    board.context.clearRect(0, 0, board.canvas.width, board.canvas.height)
   }
 
   /**
@@ -54,12 +60,12 @@ export class Utils {
    * @param radius Radius of a piece
    */
   static isCoordOnColumn(coord: { x: number, y: number }, columnXBegin: number, radius: number): boolean {
-    return ((coord.x - columnXBegin) * (coord.x - columnXBegin) <= radius * radius);
+    return ((coord.x - columnXBegin) * (coord.x - columnXBegin) <= radius * radius)
   }
 
   static getColumnFromCoord(coord: { x: number, y: number }) {
-    for (let i = 0; i < Board.column; i++) {
-      if (Utils.isCoordOnColumn(coord, 75 * i + 100, 25)) {
+    for (let i = 0; i < Board.COLUMNS; i++) {
+      if (Utils.isCoordOnColumn(coord, 3 * Board.PIECE_RADIUS * i + Board.MASK_X_BEGIN + 2 * Board.PIECE_RADIUS, Board.PIECE_RADIUS)) {
         return i
       }
     }
@@ -67,10 +73,10 @@ export class Utils {
   }
 
   static getRandomColumnNumber(): number {
-    return Math.floor(Math.random() * Board.column);
+    return Math.floor(Math.random() * Board.COLUMNS)
   }
   static choose(choice: Array<any>): any {
-    return choice[Math.floor(Math.random() * choice.length)];
+    return choice[Math.floor(Math.random() * choice.length)]
   }
 
   /**
@@ -88,7 +94,7 @@ export class Utils {
     for (let i = 0; i < array.length; i++) {
       arr[i] = array[i].slice()
     }
-    return arr;
+    return arr
   }
 
   static getMockPlayerAction(map: Array<Array<number>>, boardPiece: BoardPiece, column: number): {
@@ -96,26 +102,26 @@ export class Utils {
     map: Array<Array<number>>
   } {
     const clonedMap = Utils.clone(map)
-    if (clonedMap[0][column] !== BoardPiece.EMPTY || column < 0 || column >= Board.column) {
+    if (clonedMap[0][column] !== BoardPiece.EMPTY || column < 0 || column >= Board.COLUMNS) {
       return {
         success: false,
         map: clonedMap
       }
     }
 
-    let isColumnEverFilled = false;
-    let row = 0;
-    for (let i = 0; i < Board.row - 1; i++) {
+    let isColumnEverFilled = false
+    let row = 0
+    for (let i = 0; i < Board.ROWS - 1; i++) {
       if (clonedMap[i + 1][column] !== BoardPiece.EMPTY) {
-        isColumnEverFilled = true;
-        row = i;
-        break;
+        isColumnEverFilled = true
+        row = i
+        break
       }
     }
     if (!isColumnEverFilled) {
-      row = Board.row - 1;
+      row = Board.ROWS - 1
     }
-    clonedMap[row][column] = boardPiece;
+    clonedMap[row][column] = boardPiece
 
     return {
       success: true,

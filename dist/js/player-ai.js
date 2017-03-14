@@ -50,8 +50,8 @@ var board_1 = require("./board");
 var utils_1 = require("./utils");
 var PlayerAi = (function (_super) {
     __extends(PlayerAi, _super);
-    function PlayerAi(boardPiece, board) {
-        var _this = _super.call(this, boardPiece, board) || this;
+    function PlayerAi(boardPiece, canvas) {
+        var _this = _super.call(this, boardPiece, canvas) || this;
         _this.ownBoardPieceValue = _this.getBoardPieceValue(boardPiece);
         _this.enemyBoardPiece = (boardPiece === board_1.BoardPiece.PLAYER_1) ? board_1.BoardPiece.PLAYER_2 : board_1.BoardPiece.PLAYER_1;
         return _this;
@@ -66,17 +66,17 @@ var PlayerAi = (function (_super) {
     PlayerAi.prototype.getStateValue = function (state) {
         var winnerBoardPiece = board_1.BoardPiece.EMPTY;
         var chainValue = 0;
-        for (var i = 0; i < board_1.Board.row; i++) {
-            for (var j = 0; j < board_1.Board.column; j++) {
+        for (var i = 0; i < board_1.Board.ROWS; i++) {
+            for (var j = 0; j < board_1.Board.COLUMNS; j++) {
                 var tempRight = 0, tempBottom = 0, tempBottomRight = 0, tempTopRight = 0;
                 for (var k = 0; k <= 3; k++) {
-                    if (j + k < board_1.Board.column) {
+                    if (j + k < board_1.Board.COLUMNS) {
                         tempRight += this.getBoardPieceValue(state[i][j + k]);
                     }
-                    if (i + k < board_1.Board.row) {
+                    if (i + k < board_1.Board.ROWS) {
                         tempBottom += this.getBoardPieceValue(state[i + k][j]);
                     }
-                    if (i + k < board_1.Board.row && j + k < board_1.Board.column) {
+                    if (i + k < board_1.Board.ROWS && j + k < board_1.Board.COLUMNS) {
                         tempBottomRight += this.getBoardPieceValue(state[i + k][j + k]);
                     }
                     if (i - k >= 0 && j + k < 7) {
@@ -135,7 +135,7 @@ var PlayerAi = (function (_super) {
     PlayerAi.prototype.maxState = function (state, depth, alpha, beta) {
         var value = utils_1.Utils.BIG_NEGATIVE_NUMBER;
         var moveQueue = [];
-        for (var column = 0; column < board_1.Board.column; column++) {
+        for (var column = 0; column < board_1.Board.COLUMNS; column++) {
             var _a = utils_1.Utils.getMockPlayerAction(state, this.boardPiece, column), actionSuccessful = _a.success, nextState = _a.map;
             if (actionSuccessful) {
                 var _b = this.getMove(nextState, depth, alpha, beta), nextValue = _b.value, nextMove = _b.move;
@@ -163,7 +163,7 @@ var PlayerAi = (function (_super) {
     PlayerAi.prototype.minState = function (state, depth, alpha, beta) {
         var value = utils_1.Utils.BIG_POSITIVE_NUMBER;
         var moveQueue = [];
-        for (var column = 0; column < board_1.Board.column; column++) {
+        for (var column = 0; column < board_1.Board.COLUMNS; column++) {
             var _a = utils_1.Utils.getMockPlayerAction(state, this.enemyBoardPiece, column), actionSuccessful = _a.success, nextState = _a.map;
             if (actionSuccessful) {
                 var _b = this.getMove(nextState, depth, alpha, beta), nextValue = _b.value, nextMove = _b.move;

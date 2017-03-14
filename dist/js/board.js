@@ -46,14 +46,16 @@ var BoardPiece;
 var Board = (function () {
     function Board(canvas) {
         this.canvas = canvas;
+        this.canvas.width = Board.CANVAS_WIDTH;
+        this.canvas.height = Board.CANVAS_HEIGHT;
         this.context = canvas.getContext('2d');
         this.reset();
     }
     Board.prototype.reset = function () {
         this.map = [];
-        for (var i = 0; i < Board.row; i++) {
+        for (var i = 0; i < Board.ROWS; i++) {
             this.map.push([]);
-            for (var j = 0; j < Board.column; j++) {
+            for (var j = 0; j < Board.COLUMNS; j++) {
                 this.map[i].push(BoardPiece.EMPTY);
             }
         }
@@ -66,12 +68,12 @@ var Board = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (this.map[0][column] !== BoardPiece.EMPTY || column < 0 || column >= Board.column) {
+                        if (this.map[0][column] !== BoardPiece.EMPTY || column < 0 || column >= Board.COLUMNS) {
                             return [2 /*return*/, false];
                         }
                         isColumnEverFilled = false;
                         row = 0;
-                        for (i = 0; i < Board.row - 1; i++) {
+                        for (i = 0; i < Board.ROWS - 1; i++) {
                             if (this.map[i + 1][column] !== BoardPiece.EMPTY) {
                                 isColumnEverFilled = true;
                                 row = i;
@@ -79,7 +81,7 @@ var Board = (function () {
                             }
                         }
                         if (!isColumnEverFilled) {
-                            row = Board.row - 1;
+                            row = Board.ROWS - 1;
                         }
                         return [4 /*yield*/, this.animateAction(row, column, player.boardPiece)];
                     case 1:
@@ -117,14 +119,14 @@ var Board = (function () {
             if (count >= 4) {
                 return true;
             }
-            if (i < 0 || j < 0 || i >= Board.row || j >= Board.column || _this.map[i][j] !== playerPiece) {
+            if (i < 0 || j < 0 || i >= Board.ROWS || j >= Board.COLUMNS || _this.map[i][j] !== playerPiece) {
                 return false;
             }
             return isWinningSequence(i + dir[0], j + dir[1], playerPiece, dir, count + 1);
         };
         var countEmpty = 0;
-        for (var i = 0; i < Board.row; i++) {
-            for (var j = 0; j < Board.column; j++) {
+        for (var i = 0; i < Board.ROWS; i++) {
+            for (var j = 0; j < Board.COLUMNS; j++) {
                 var playerPiece = this.map[i][j];
                 if (playerPiece !== BoardPiece.EMPTY) {
                     for (var k = 0; k < direction.length; k++) {
@@ -155,18 +157,18 @@ var Board = (function () {
         else {
             message += "Player " + this.winnerBoardPiece + " wins";
         }
-        message += " - Click to reset";
+        message += ' - Click to reset';
         utils_1.Utils.drawText(this.context, {
             message: message,
-            x: 150,
-            y: 20,
-            maxWidth: 400
+            x: Board.MESSAGE_X_BEGIN,
+            y: Board.MESSAGE_Y_BEGIN,
+            maxWidth: Board.MESSAGE_WIDTH
         });
     };
     Board.prototype.getPlayerColor = function (boardPiece) {
         switch (boardPiece) {
-            case BoardPiece.PLAYER_1: return '#ff4136';
-            case BoardPiece.PLAYER_2: return '#0074d9';
+            case BoardPiece.PLAYER_1: return Board.PLAYER_1_COLOR;
+            case BoardPiece.PLAYER_2: return Board.PLAYER_2_COLOR;
             default: return 'transparent';
         }
     };
@@ -183,20 +185,20 @@ var Board = (function () {
                             return __generator(this, function (_a) {
                                 utils_1.Utils.clearCanvas(this);
                                 utils_1.Utils.drawCircle(this.context, {
-                                    x: 75 * column + 100,
-                                    y: currentY + 50,
-                                    r: 25,
+                                    x: 3 * Board.PIECE_RADIUS * column + Board.MASK_X_BEGIN + 2 * Board.PIECE_RADIUS,
+                                    y: currentY + Board.MASK_Y_BEGIN + 2 * Board.PIECE_RADIUS,
+                                    r: Board.PIECE_RADIUS,
                                     fillStyle: fillStyle,
                                     strokeStyle: 'black'
                                 });
                                 this.render();
-                                currentY += 25;
+                                currentY += Board.PIECE_RADIUS;
                                 return [2 /*return*/];
                             });
                         }); };
                         _a.label = 1;
                     case 1:
-                        if (!(newRow * 75 >= currentY)) return [3 /*break*/, 3];
+                        if (!(newRow * 3 * Board.PIECE_RADIUS >= currentY)) return [3 /*break*/, 3];
                         return [4 /*yield*/, utils_1.Utils.animationFrame()];
                     case 2:
                         _a.sent();
@@ -210,13 +212,12 @@ var Board = (function () {
     ;
     Board.prototype.render = function () {
         utils_1.Utils.drawMask(this);
-        var x, y;
-        for (y = 0; y < Board.row; y++) {
-            for (x = 0; x < Board.column; x++) {
+        for (var y = 0; y < Board.ROWS; y++) {
+            for (var x = 0; x < Board.COLUMNS; x++) {
                 utils_1.Utils.drawCircle(this.context, {
-                    x: 75 * x + 100,
-                    y: 75 * y + 50,
-                    r: 25,
+                    x: 3 * Board.PIECE_RADIUS * x + Board.MASK_X_BEGIN + 2 * Board.PIECE_RADIUS,
+                    y: 3 * Board.PIECE_RADIUS * y + Board.MASK_Y_BEGIN + 2 * Board.PIECE_RADIUS,
+                    r: Board.PIECE_RADIUS,
                     fillStyle: this.getPlayerColor(this.map[y][x]),
                     strokeStyle: 'black'
                 });
@@ -225,8 +226,19 @@ var Board = (function () {
     };
     return Board;
 }());
-Board.row = 6;
-Board.column = 7;
+Board.ROWS = 6;
+Board.COLUMNS = 7;
+Board.CANVAS_HEIGHT = 480;
+Board.CANVAS_WIDTH = 640;
+Board.PLAYER_1_COLOR = '#ff4136';
+Board.PLAYER_2_COLOR = '#0074d9';
+Board.PIECE_RADIUS = 25;
+Board.MASK_COLOR = '#dddddd';
+Board.MASK_X_BEGIN = Math.max(0, Board.CANVAS_WIDTH - (3 * Board.COLUMNS + 1) * Board.PIECE_RADIUS) / 2;
+Board.MASK_Y_BEGIN = Math.max(0, Board.CANVAS_HEIGHT - (3 * Board.ROWS + 1) * Board.PIECE_RADIUS) / 2;
+Board.MESSAGE_WIDTH = 400;
+Board.MESSAGE_X_BEGIN = (Board.CANVAS_WIDTH - Board.MESSAGE_WIDTH) / 2;
+Board.MESSAGE_Y_BEGIN = 20;
 exports.Board = Board;
 
 //# sourceMappingURL=board.js.map

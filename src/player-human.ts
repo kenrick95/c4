@@ -4,14 +4,12 @@ import { Utils } from './utils';
 
 export class PlayerHuman extends Player {
   clickPromiseResolver: any;
-  board: Board;
 
-  constructor(boardPiece: BoardPiece, board: Board) {
-    super(boardPiece, board)
+  constructor(boardPiece: BoardPiece, canvas: HTMLCanvasElement) {
+    super(boardPiece, canvas)
     this.clickPromiseResolver = null
-    this.board = board;
 
-    document.addEventListener('click', (evt) => {
+    canvas.addEventListener('click', (evt) => {
       try {
         this.handleClick(evt)
       } catch (e) {
@@ -21,7 +19,7 @@ export class PlayerHuman extends Player {
   }
 
   private handleClick(event: MouseEvent) {
-    const rect = this.board.canvas.getBoundingClientRect()
+    const rect = this.canvas.getBoundingClientRect()
     const x = event.clientX - rect.left
     const y = event.clientY - rect.top
     const column = Utils.getColumnFromCoord({x: x, y: y})
