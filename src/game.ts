@@ -1,6 +1,7 @@
 import { Board, BoardPiece } from './board';
 import { Player } from './player';
 import { PlayerHuman } from './player-human';
+import { PlayerHumanFlyweb } from './player-human-flyweb';
 import { PlayerAi } from './player-ai';
 import { Utils } from './utils';
 
@@ -15,7 +16,7 @@ export class Game {
     const canvas = document.querySelector('canvas')
     this.board = new Board(canvas);
     this.players = [
-      new PlayerHuman(BoardPiece.PLAYER_1, canvas),
+      new PlayerHumanFlyweb(BoardPiece.PLAYER_1, canvas),
       new PlayerAi(BoardPiece.PLAYER_2, canvas)
     ];
     this.currentPlayerId = 0;

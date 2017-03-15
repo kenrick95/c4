@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var board_1 = require("./board");
-var player_human_1 = require("./player-human");
+var player_human_flyweb_1 = require("./player-human-flyweb");
 var player_ai_1 = require("./player-ai");
 var utils_1 = require("./utils");
 var Game = (function () {
@@ -45,7 +45,7 @@ var Game = (function () {
         var canvas = document.querySelector('canvas');
         this.board = new board_1.Board(canvas);
         this.players = [
-            new player_human_1.PlayerHuman(board_1.BoardPiece.PLAYER_1, canvas),
+            new player_human_flyweb_1.PlayerHumanFlyweb(board_1.BoardPiece.PLAYER_1, canvas),
             new player_ai_1.PlayerAi(board_1.BoardPiece.PLAYER_2, canvas)
         ];
         this.currentPlayerId = 0;
