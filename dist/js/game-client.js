@@ -47,22 +47,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var board_1 = require("./board");
-var game_base_1 = require("./game-base");
-var player_human_flyweb_1 = require("./player-human-flyweb");
 var player_human_flyweb_client_1 = require("./player-human-flyweb-client");
+var player_ai_1 = require("./player-ai");
 var utils_1 = require("./utils");
-var Game = (function (_super) {
-    __extends(Game, _super);
-    function Game(players, canvas) {
+var game_base_1 = require("./game-base");
+var GameClient = (function (_super) {
+    __extends(GameClient, _super);
+    function GameClient(players, canvas) {
         return _super.call(this, players, canvas) || this;
     }
-    return Game;
+    return GameClient;
 }(game_base_1.GameBase));
-exports.Game = Game;
+exports.GameClient = GameClient;
 document.addEventListener('DOMContentLoaded', function () {
     var canvas = document.querySelector('canvas');
-    var game = new Game([
-        new player_human_flyweb_1.PlayerHumanFlyweb(board_1.BoardPiece.PLAYER_1, canvas),
+    var game = new GameClient([
+        new player_ai_1.PlayerAi(board_1.BoardPiece.PLAYER_1, canvas),
         new player_human_flyweb_client_1.PlayerHumanFlywebClient(board_1.BoardPiece.PLAYER_2, canvas)
     ], canvas);
     game.start();
@@ -83,4 +83,4 @@ document.addEventListener('DOMContentLoaded', function () {
     }); });
 });
 
-//# sourceMappingURL=game.js.map
+//# sourceMappingURL=game-client.js.map

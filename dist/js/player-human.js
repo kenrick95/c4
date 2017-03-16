@@ -67,7 +67,10 @@ var PlayerHuman = (function (_super) {
         var x = event.clientX - rect.left;
         var y = event.clientY - rect.top;
         var column = utils_1.Utils.getColumnFromCoord({ x: x, y: y });
-        this.clickPromiseResolver(column);
+        console.log(this.boardPiece, this.clickPromiseResolver);
+        if (this.clickPromiseResolver) {
+            this.clickPromiseResolver(column);
+        }
     };
     PlayerHuman.prototype.getAction = function (board) {
         return __awaiter(this, void 0, void 0, function () {

@@ -23,7 +23,11 @@ export class PlayerHuman extends Player {
     const x = event.clientX - rect.left
     const y = event.clientY - rect.top
     const column = Utils.getColumnFromCoord({x: x, y: y})
-    this.clickPromiseResolver(column)
+    console.log(this.boardPiece, this.clickPromiseResolver)
+    if (this.clickPromiseResolver) {
+      this.clickPromiseResolver(column)
+    }
+    
   }
 
   async getAction(board: Board): Promise<number> {

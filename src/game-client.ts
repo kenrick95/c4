@@ -1,20 +1,19 @@
-import { Board, BoardPiece } from './board';
-import { GameBase } from './game-base';
+import { BoardPiece } from './board';
 import { Player } from './player';
-import { PlayerHumanFlyweb } from './player-human-flyweb';
 import { PlayerHumanFlywebClient } from './player-human-flyweb-client';
+import { PlayerAi } from './player-ai';
 import { Utils } from './utils';
+import { GameBase } from './game-base';
 
-export class Game extends GameBase {
+export class GameClient extends GameBase {
   constructor(players: Array<Player>, canvas: HTMLCanvasElement) {
     super(players, canvas)
   }
 }
-
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.querySelector('canvas')
-  const game = new Game([
-    new PlayerHumanFlyweb(BoardPiece.PLAYER_1, canvas),
+  const game = new GameClient([
+    new PlayerAi(BoardPiece.PLAYER_1, canvas),
     new PlayerHumanFlywebClient(BoardPiece.PLAYER_2, canvas)
   ], canvas)
   game.start()

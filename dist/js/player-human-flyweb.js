@@ -51,9 +51,30 @@ var PlayerHumanFlyweb = (function (_super) {
     function PlayerHumanFlyweb(boardPiece, canvas) {
         var _this = _super.call(this, boardPiece, canvas) || this;
         _this.BASE_URL = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+        _this.browser = navigator;
         _this.initServer();
         return _this;
     }
+    PlayerHumanFlyweb.prototype.fetch = function (evt, url) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, contentType, blob, headers;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, fetch(this.BASE_URL + url)];
+                    case 1:
+                        response = _a.sent();
+                        contentType = response.headers.get('Content-Type');
+                        return [4 /*yield*/, response.blob()];
+                    case 2:
+                        blob = _a.sent();
+                        headers = { 'Content-Type': contentType };
+                        console.log('Response is: ', url);
+                        evt.respondWith(new Promise(function (r) { return r(new Response(blob, { headers: headers })); }));
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     PlayerHumanFlyweb.prototype.initServer = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
@@ -61,41 +82,29 @@ var PlayerHumanFlyweb = (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!('publishServer' in navigator)) {
-                            window.alert('FlyWeb requires Firefox Developer Edition ');
+                        if (!('publishServer' in this.browser)) {
+                            window.alert('FlyWeb requires Firefox Developer Edition and enabling a flag at about:config');
                             return [2 /*return*/, false];
                         }
-                        return [4 /*yield*/, navigator.publishServer('c4 - Connect Four')];
+                        return [4 /*yield*/, this.browser.publishServer('c4 - Connect Four')];
                     case 1:
                         server = _a.sent();
                         server.onfetch = function (evt) { return __awaiter(_this, void 0, void 0, function () {
-                            var urlParts, url, params, _a, response, contentType, _b, _c, _d, _e, _f;
-                            return __generator(this, function (_g) {
-                                switch (_g.label) {
-                                    case 0:
-                                        urlParts = evt.request.url.split('?');
-                                        url = urlParts[0];
-                                        params = new URLSearchParams(urlParts[1]);
-                                        console.log('Requested for url: ', url, params);
-                                        _a = url;
-                                        return [3 /*break*/, 1];
-                                    case 1: return [4 /*yield*/, fetch(this.BASE_URL + url)];
-                                    case 2:
-                                        response = _g.sent();
-                                        contentType = response.headers.get('Content-Type');
-                                        console.log('my response: ', response);
-                                        _c = (_b = evt).respondWith;
-                                        _e = Response.bind;
-                                        return [4 /*yield*/, response.blob()];
-                                    case 3:
-                                        _c.apply(_b, [new (_e.apply(Response, [void 0, _g.sent(), {
-                                                    headers: {
-                                                        'Content-Type': contentType
-                                                    }
-                                                }]))()]);
-                                        _g.label = 4;
-                                    case 4: return [2 /*return*/];
+                            var urlParts, url, params;
+                            return __generator(this, function (_a) {
+                                urlParts = evt.request.url.split('?');
+                                url = urlParts[0];
+                                params = new URLSearchParams(urlParts[1]);
+                                console.log('Requested for url: ', url, params);
+                                switch (url) {
+                                    case '/dist/game.js':
+                                        this.fetch(evt, '/dist/game-client.js');
+                                        break;
+                                    default: {
+                                        this.fetch(evt, url);
+                                    }
                                 }
+                                return [2 /*return*/];
                             });
                         }); };
                         return [2 /*return*/];

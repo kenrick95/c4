@@ -36,7 +36,6 @@ gulp.task('compile-ts', function () {
   var sourceTsFiles = [config.allTypeScript, // path to typescript files
     config.libraryTypeScriptDefinitions] // reference to library .d.ts files
 
-
   var tsResult = gulp.src(sourceTsFiles)
     .pipe(sourcemaps.init())
     .pipe(tsProject())
@@ -47,8 +46,8 @@ gulp.task('compile-ts', function () {
     .pipe(gulp.dest(config.tsOutputPath))
 })
 
-gulp.task('bundle', ['compile-ts'], function () {
-  return gulp.src(config.tsOutputPath + '/game.js', { read: false }) // no need of reading file because browserify does.
+var bundleFile = function (mainFilePath) {
+  return gulp.src(mainFilePath, { read: false }) // no need of reading file because browserify does.
 
     // transform file objects using gulp-tap plugin
     .pipe(tap(function (file) {
@@ -68,6 +67,15 @@ gulp.task('bundle', ['compile-ts'], function () {
     .pipe(sourcemaps.write('./'))
 
     .pipe(gulp.dest('dist'))
+}
+gulp.task('bundle-only-main', function () {
+  return bundleFile(config.tsOutputPath + '/game.js')
+})
+gulp.task('bundle-only-client', function () {
+  return bundleFile(config.tsOutputPath + '/game-client.js')
+})
+gulp.task('bundle', ['compile-ts'], function () {
+  return gulp.start('bundle-only-main', 'bundle-only-client')
 })
 
 /**
