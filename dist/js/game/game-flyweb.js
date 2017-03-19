@@ -57,6 +57,7 @@ var GameFlyweb = (function (_super) {
         _this.BASE_URL = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
         _this.browser = navigator;
         _this.isAcceptingPlayer = true;
+        console.log('clientMode', clientMode);
         if (clientMode) {
             _this.playerSlave = players[0];
             _this.playerMaster = players[1];
@@ -73,6 +74,7 @@ var GameFlyweb = (function (_super) {
         this.handleClientWs();
     };
     GameFlyweb.prototype.handleClientWs = function () {
+        var _this = this;
         var socket = new WebSocket('ws://' + window.location.host + '/api/ws');
         this.playerMaster.socket = socket;
         socket.onopen = function (evt) {
@@ -90,6 +92,12 @@ var GameFlyweb = (function (_super) {
             var message = JSON.parse(evt.data);
             if (!message) {
                 return;
+            }
+            if (message.type === 'start') {
+                alert('Welcome! Connection to Player 1 has been established.');
+            }
+            else if (message.type === 'move') {
+                _this.playerSlave.doAction(message.data.column);
             }
         };
     };
@@ -124,14 +132,15 @@ var GameFlyweb = (function (_super) {
         this.playerMaster.socket = socket;
         socket.onopen = function (evt) {
             console.log('socket.onopen()', evt, socket);
-            socket.send({
-                type: 'start',
-                data: {
-                    accepted: _this.isAcceptingPlayer
-                }
-            });
             if (_this.isAcceptingPlayer) {
                 _this.isAcceptingPlayer = false;
+                socket.send(JSON.stringify({
+                    type: 'start',
+                    data: {
+                        accepted: _this.isAcceptingPlayer
+                    }
+                }));
+                alert('Connection to Player 2 has been established.');
             }
             else {
                 socket.close();
@@ -210,13 +219,23 @@ var GameFlyweb = (function (_super) {
 }(game_base_1.GameBase));
 function initGameFlyweb(_a) {
     var _this = this;
-    var clientMode = (_a === void 0 ? { clientMode: false } : _a).clientMode;
+    var _b = _a.clientMode, clientMode = _b === void 0 ? false : _b;
     document.addEventListener('DOMContentLoaded', function () {
         var canvas = document.querySelector('canvas');
-        var game = new GameFlyweb([
-            new player_1.PlayerFlywebMaster(board_1.BoardPiece.PLAYER_1, canvas),
-            new player_1.PlayerFlywebSlave(board_1.BoardPiece.PLAYER_2, canvas)
-        ], canvas);
+        var players = null;
+        if (clientMode) {
+            players = [
+                new player_1.PlayerFlywebSlave(board_1.BoardPiece.PLAYER_1, canvas),
+                new player_1.PlayerFlywebMaster(board_1.BoardPiece.PLAYER_2, canvas)
+            ];
+        }
+        else {
+            players = [
+                new player_1.PlayerFlywebMaster(board_1.BoardPiece.PLAYER_1, canvas),
+                new player_1.PlayerFlywebSlave(board_1.BoardPiece.PLAYER_2, canvas)
+            ];
+        }
+        var game = new GameFlyweb(players, canvas, clientMode);
         game.start();
         canvas.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {

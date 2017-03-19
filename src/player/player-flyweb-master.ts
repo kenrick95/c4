@@ -12,18 +12,18 @@ export class PlayerFlywebMaster extends PlayerHuman {
   }
 
   doAction(column: number) {
-    if (!this.clickPromiseResolver) {
+    if (this.clickPromiseResolver) {
       this.clickPromiseResolver(column)
     }
     if (!this.socket) {
       throw Error("PlayerFlywebMaster need WebSocket object")
     }
-    this.socket.send({
+    this.socket.send(JSON.stringify({
       type: 'move',
       data: {
         column: column
       }
-    })
+    }))
   }
 
   async getAction(board: Board): Promise<number> {

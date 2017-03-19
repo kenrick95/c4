@@ -54,7 +54,7 @@ var PlayerFlywebSlave = (function (_super) {
         return _this;
     }
     PlayerFlywebSlave.prototype.doAction = function (column) {
-        if (!this.actionPromiseResolver) {
+        if (this.actionPromiseResolver) {
             this.actionPromiseResolver(column);
         }
     };

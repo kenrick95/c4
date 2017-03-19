@@ -54,18 +54,18 @@ var PlayerFlywebMaster = (function (_super) {
         return _this;
     }
     PlayerFlywebMaster.prototype.doAction = function (column) {
-        if (!this.clickPromiseResolver) {
+        if (this.clickPromiseResolver) {
             this.clickPromiseResolver(column);
         }
         if (!this.socket) {
             throw Error("PlayerFlywebMaster need WebSocket object");
         }
-        this.socket.send({
+        this.socket.send(JSON.stringify({
             type: 'move',
             data: {
                 column: column
             }
-        });
+        }));
     };
     PlayerFlywebMaster.prototype.getAction = function (board) {
         return __awaiter(this, void 0, void 0, function () {

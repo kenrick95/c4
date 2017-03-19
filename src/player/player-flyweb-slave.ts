@@ -11,7 +11,7 @@ export class PlayerFlywebSlave extends Player {
   }
 
   doAction(column: number) {
-    if (!this.actionPromiseResolver) {
+    if (this.actionPromiseResolver) {
       this.actionPromiseResolver(column)
     }
   }

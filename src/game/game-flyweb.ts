@@ -14,6 +14,7 @@ class GameFlyweb extends GameBase {
 
   constructor(players: Array<Player>, canvas: HTMLCanvasElement, clientMode = false) {
     super(players, canvas)
+    console.log('clientMode', clientMode)
     if (clientMode) {
       this.playerSlave = <PlayerFlywebSlave>players[0]
       this.playerMaster = <PlayerFlywebMaster>players[1]
@@ -51,6 +52,12 @@ class GameFlyweb extends GameBase {
       if (!message) {
         return
       }
+
+      if (message.type === 'start') {
+        alert('Welcome! Connection to Player 1 has been established.')
+      } else if (message.type === 'move') {
+        this.playerSlave.doAction(message.data.column)
+      }
     }
   }
 
@@ -69,18 +76,19 @@ class GameFlyweb extends GameBase {
   }
   handleWsServer(evt: IFlyWebSocketEvent) {
     const socket = evt.accept()
-    this.playerMaster.socket = socket // playerMaster needs socket!
+    this.playerMaster.socket = socket
 
     socket.onopen = (evt) => {
       console.log('socket.onopen()', evt, socket)
-      socket.send({
-        type: 'start',
-        data: {
-          accepted: this.isAcceptingPlayer
-        }
-      })
       if (this.isAcceptingPlayer) {
         this.isAcceptingPlayer = false
+        socket.send(JSON.stringify({
+          type: 'start',
+          data: {
+            accepted: this.isAcceptingPlayer
+          }
+        }))
+        alert('Connection to Player 2 has been established.')
       } else {
         socket.close()
       }
@@ -139,13 +147,23 @@ class GameFlyweb extends GameBase {
   }
 }
 
-export function initGameFlyweb({ clientMode } = { clientMode: false}) {
+export function initGameFlyweb({ clientMode = false}) {
   document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.querySelector('canvas')
-    const game = new GameFlyweb([
-      new PlayerFlywebMaster(BoardPiece.PLAYER_1, canvas),
-      new PlayerFlywebSlave(BoardPiece.PLAYER_2, canvas)
-    ], canvas)
+    let players: Array<Player> = null
+    if (clientMode) {
+      players = [
+        new PlayerFlywebSlave(BoardPiece.PLAYER_1, canvas),
+        new PlayerFlywebMaster(BoardPiece.PLAYER_2, canvas)
+      ]
+    } else {
+      players = [
+        new PlayerFlywebMaster(BoardPiece.PLAYER_1, canvas),
+        new PlayerFlywebSlave(BoardPiece.PLAYER_2, canvas)
+      ]
+    }
+
+    const game = new GameFlyweb(players, canvas, clientMode)
     game.start()
     canvas.addEventListener('click', async () => {
       if (game.isGameWon) {
