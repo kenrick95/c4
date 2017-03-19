@@ -57,7 +57,6 @@ var GameFlyweb = (function (_super) {
         _this.BASE_URL = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
         _this.browser = navigator;
         _this.isAcceptingPlayer = true;
-        console.log('clientMode', clientMode);
         if (clientMode) {
             _this.playerSlave = players[0];
             _this.playerMaster = players[1];

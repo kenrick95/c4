@@ -29,10 +29,13 @@ This project was started in December 2013, way back before I took Software Engin
 I think this rewrite has one goal: to make the player extensible, so more kind of AI or player (multiplayer, maybe?) could be implemented. At the time of writing this paragraph, the rewrite project is now on par with the old project in terms of features and functionalities.
 
 ### To-dos
-- Refactor magic numbers to constants and variables
-- Make the game mobile responsive
-- Make options of players to game: Human vs Human (offline), Human vs Human (online), Ai vs Ai (?)
-- Implement other kind of players: better AI? better Human? :grin:
+- [x] Refactor magic numbers to constants and variables
+- [x Make the game mobile responsive
+- [ ] Make game mode chooser
+- [x] Game mode: Human vs Human (offline)
+- [ ] Game mode: Human vs Human (local network, via Flyweb) [in progress]
+- [x] Game mode: Ai vs Ai
+- [ ] Implement other kind of players: better AI? better Human? :grin:
 
 ## License
 This work is licensed under MIT License.

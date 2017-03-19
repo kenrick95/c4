@@ -10,17 +10,19 @@ export enum BoardPiece {
 export class Board {
   static readonly ROWS: number = 6;
   static readonly COLUMNS: number = 7;
-  static readonly CANVAS_HEIGHT: number = 480;
-  static readonly CANVAS_WIDTH: number = 640;
   static readonly PLAYER_1_COLOR: string = '#ff4136';
   static readonly PLAYER_2_COLOR: string = '#0074d9';
-  static readonly PIECE_RADIUS: number = 25;
+  static readonly PIECE_STROKE_STYLE: string = 'black';
   static readonly MASK_COLOR: string = '#dddddd';
-  static readonly MASK_X_BEGIN: number = Math.max(0, Board.CANVAS_WIDTH - (3 * Board.COLUMNS + 1) * Board.PIECE_RADIUS) / 2;
-  static readonly MASK_Y_BEGIN: number = Math.max(0, Board.CANVAS_HEIGHT - (3 * Board.ROWS + 1) * Board.PIECE_RADIUS) / 2;
-  static readonly MESSAGE_WIDTH: number = 400;
-  static readonly MESSAGE_X_BEGIN: number = (Board.CANVAS_WIDTH - Board.MESSAGE_WIDTH) / 2;
-  static readonly MESSAGE_Y_BEGIN: number = 20;
+  static CANVAS_HEIGHT: number;
+  static CANVAS_WIDTH: number;
+  static PIECE_RADIUS: number;
+  static MASK_X_BEGIN: number;
+  static MASK_Y_BEGIN: number;
+  static MESSAGE_WIDTH: number;
+  static MESSAGE_X_BEGIN: number;
+  static MESSAGE_Y_BEGIN: number;
+  static SCALE: number;
 
   map: Array<Array<number>>;
   private winnerBoardPiece: BoardPiece;
@@ -30,10 +32,11 @@ export class Board {
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas
-    this.canvas.width = Board.CANVAS_WIDTH
-    this.canvas.height = Board.CANVAS_HEIGHT
     this.context = canvas.getContext('2d')
+    this.getBoardScale()
+    this.initConstants()
     this.reset()
+    this.onresize()
   }
 
   reset() {
@@ -46,6 +49,37 @@ export class Board {
     }
     this.winnerBoardPiece = BoardPiece.EMPTY
     Utils.clearCanvas(this)
+  }
+
+  getBoardScale() {
+    return (window.innerWidth < 640)
+      ? Board.SCALE = 0.5
+      : Board.SCALE = 1.0
+  }
+  initConstants() {
+    Board.CANVAS_HEIGHT = Board.SCALE * 480;
+    Board.CANVAS_WIDTH = Board.SCALE * 640;
+    Board.PIECE_RADIUS = Board.SCALE * 25;
+    Board.MASK_X_BEGIN = Math.max(0, Board.CANVAS_WIDTH - (3 * Board.COLUMNS + 1) * Board.PIECE_RADIUS) / 2;
+    Board.MASK_Y_BEGIN = Math.max(0, Board.CANVAS_HEIGHT - (3 * Board.ROWS + 1) * Board.PIECE_RADIUS) / 2;
+    Board.MESSAGE_WIDTH = Board.SCALE * 400;
+    Board.MESSAGE_X_BEGIN = (Board.CANVAS_WIDTH - Board.MESSAGE_WIDTH) / 2;
+    Board.MESSAGE_Y_BEGIN = Board.SCALE * 20;
+    this.canvas.width = Board.CANVAS_WIDTH
+    this.canvas.height = Board.CANVAS_HEIGHT
+  }
+
+  onresize() {
+    let prevBoardScale = Board.SCALE
+    Utils.onresize().add(() => {
+      this.getBoardScale()
+      if (prevBoardScale !== Board.SCALE) {
+        prevBoardScale = Board.SCALE
+        this.initConstants()
+        Utils.clearCanvas(this)
+        this.render()
+      }
+    })
   }
 
   /**
@@ -170,7 +204,7 @@ export class Board {
         y: currentY + Board.MASK_Y_BEGIN + 2 * Board.PIECE_RADIUS,
         r: Board.PIECE_RADIUS,
         fillStyle: fillStyle,
-        strokeStyle: 'black'
+        strokeStyle: Board.PIECE_STROKE_STYLE
       })
       this.render()
       currentY += Board.PIECE_RADIUS
@@ -190,7 +224,7 @@ export class Board {
           y: 3 * Board.PIECE_RADIUS * y + Board.MASK_Y_BEGIN + 2 * Board.PIECE_RADIUS,
           r: Board.PIECE_RADIUS,
           fillStyle: this.getPlayerColor(this.map[y][x]),
-          strokeStyle: 'black'
+          strokeStyle: Board.PIECE_STROKE_STYLE
         })
       }
     }

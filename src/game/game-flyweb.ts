@@ -14,7 +14,6 @@ class GameFlyweb extends GameBase {
 
   constructor(players: Array<Player>, canvas: HTMLCanvasElement, clientMode = false) {
     super(players, canvas)
-    console.log('clientMode', clientMode)
     if (clientMode) {
       this.playerSlave = <PlayerFlywebSlave>players[0]
       this.playerMaster = <PlayerFlywebMaster>players[1]
@@ -97,6 +96,7 @@ class GameFlyweb extends GameBase {
     socket.onclose = (evt) => {
       console.log('socket.onclose()', evt)
       this.isAcceptingPlayer = true
+      // TODO: reset game
     }
 
     socket.onerror = (evt) => {
@@ -168,6 +168,7 @@ export function initGameFlyweb({ clientMode = false}) {
     canvas.addEventListener('click', async () => {
       if (game.isGameWon) {
         game.reset()
+        // TODO propagate "reset" to the other player (for consistency of state)
         await Utils.animationFrame()
         game.start()
       }

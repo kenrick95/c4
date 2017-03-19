@@ -46,10 +46,11 @@ var BoardPiece;
 var Board = (function () {
     function Board(canvas) {
         this.canvas = canvas;
-        this.canvas.width = Board.CANVAS_WIDTH;
-        this.canvas.height = Board.CANVAS_HEIGHT;
         this.context = canvas.getContext('2d');
+        this.getBoardScale();
+        this.initConstants();
         this.reset();
+        this.onresize();
     }
     Board.prototype.reset = function () {
         this.map = [];
@@ -61,6 +62,36 @@ var Board = (function () {
         }
         this.winnerBoardPiece = BoardPiece.EMPTY;
         utils_1.Utils.clearCanvas(this);
+    };
+    Board.prototype.getBoardScale = function () {
+        return (window.innerWidth < 640)
+            ? Board.SCALE = 0.5
+            : Board.SCALE = 1.0;
+    };
+    Board.prototype.initConstants = function () {
+        Board.CANVAS_HEIGHT = Board.SCALE * 480;
+        Board.CANVAS_WIDTH = Board.SCALE * 640;
+        Board.PIECE_RADIUS = Board.SCALE * 25;
+        Board.MASK_X_BEGIN = Math.max(0, Board.CANVAS_WIDTH - (3 * Board.COLUMNS + 1) * Board.PIECE_RADIUS) / 2;
+        Board.MASK_Y_BEGIN = Math.max(0, Board.CANVAS_HEIGHT - (3 * Board.ROWS + 1) * Board.PIECE_RADIUS) / 2;
+        Board.MESSAGE_WIDTH = Board.SCALE * 400;
+        Board.MESSAGE_X_BEGIN = (Board.CANVAS_WIDTH - Board.MESSAGE_WIDTH) / 2;
+        Board.MESSAGE_Y_BEGIN = Board.SCALE * 20;
+        this.canvas.width = Board.CANVAS_WIDTH;
+        this.canvas.height = Board.CANVAS_HEIGHT;
+    };
+    Board.prototype.onresize = function () {
+        var _this = this;
+        var prevBoardScale = Board.SCALE;
+        utils_1.Utils.onresize().add(function () {
+            _this.getBoardScale();
+            if (prevBoardScale !== Board.SCALE) {
+                prevBoardScale = Board.SCALE;
+                _this.initConstants();
+                utils_1.Utils.clearCanvas(_this);
+                _this.render();
+            }
+        });
     };
     Board.prototype.applyPlayerAction = function (player, column) {
         return __awaiter(this, void 0, void 0, function () {
@@ -189,7 +220,7 @@ var Board = (function () {
                                     y: currentY + Board.MASK_Y_BEGIN + 2 * Board.PIECE_RADIUS,
                                     r: Board.PIECE_RADIUS,
                                     fillStyle: fillStyle,
-                                    strokeStyle: 'black'
+                                    strokeStyle: Board.PIECE_STROKE_STYLE
                                 });
                                 this.render();
                                 currentY += Board.PIECE_RADIUS;
@@ -219,7 +250,7 @@ var Board = (function () {
                     y: 3 * Board.PIECE_RADIUS * y + Board.MASK_Y_BEGIN + 2 * Board.PIECE_RADIUS,
                     r: Board.PIECE_RADIUS,
                     fillStyle: this.getPlayerColor(this.map[y][x]),
-                    strokeStyle: 'black'
+                    strokeStyle: Board.PIECE_STROKE_STYLE
                 });
             }
         }
@@ -228,17 +259,10 @@ var Board = (function () {
 }());
 Board.ROWS = 6;
 Board.COLUMNS = 7;
-Board.CANVAS_HEIGHT = 480;
-Board.CANVAS_WIDTH = 640;
 Board.PLAYER_1_COLOR = '#ff4136';
 Board.PLAYER_2_COLOR = '#0074d9';
-Board.PIECE_RADIUS = 25;
+Board.PIECE_STROKE_STYLE = 'black';
 Board.MASK_COLOR = '#dddddd';
-Board.MASK_X_BEGIN = Math.max(0, Board.CANVAS_WIDTH - (3 * Board.COLUMNS + 1) * Board.PIECE_RADIUS) / 2;
-Board.MASK_Y_BEGIN = Math.max(0, Board.CANVAS_HEIGHT - (3 * Board.ROWS + 1) * Board.PIECE_RADIUS) / 2;
-Board.MESSAGE_WIDTH = 400;
-Board.MESSAGE_X_BEGIN = (Board.CANVAS_WIDTH - Board.MESSAGE_WIDTH) / 2;
-Board.MESSAGE_Y_BEGIN = 20;
 exports.Board = Board;
 
 //# sourceMappingURL=board.js.map

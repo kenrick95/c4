@@ -6,8 +6,8 @@ export class Utils {
 
   static drawText(context: CanvasRenderingContext2D, {
       message = '', x = 0, y = 0, fillStyle = '#111',
-      font = '12pt sans-serif', maxWidth = Utils.BIG_POSITIVE_NUMBER
-    } ) {
+    font = '12pt sans-serif', maxWidth = Utils.BIG_POSITIVE_NUMBER
+    }) {
     context.save()
     context.font = font
     context.fillStyle = fillStyle
@@ -42,7 +42,7 @@ export class Utils {
         context.arc(tripleRadius * x + Board.MASK_X_BEGIN + doubleRadius,
           tripleRadius * y + Board.MASK_Y_BEGIN + doubleRadius, Board.PIECE_RADIUS, 0, 2 * Math.PI)
         context.rect(tripleRadius * x + Board.MASK_X_BEGIN + 2 * doubleRadius,
-          tripleRadius * y + Board.MASK_Y_BEGIN, -2 * doubleRadius,  2 * doubleRadius)
+          tripleRadius * y + Board.MASK_Y_BEGIN, -2 * doubleRadius, 2 * doubleRadius)
       }
     }
     context.fill()
@@ -126,6 +126,55 @@ export class Utils {
     return {
       success: true,
       map: clonedMap
+    }
+  }
+
+  /**
+   * From Mozilla Developer Network
+   * https://developer.mozilla.org/en-US/docs/Web/Events/resize
+   */
+  static onresize() {
+    var callbacks: Array<Function> = [],
+      running = false;
+
+    // fired on resize event
+    function resize() {
+      if (!running) {
+        running = true;
+
+        if (window.requestAnimationFrame) {
+          window.requestAnimationFrame(runCallbacks);
+        } else {
+          setTimeout(runCallbacks, 66);
+        }
+      }
+
+    }
+
+    // run the actual callbacks
+    function runCallbacks() {
+      callbacks.forEach(function (callback) {
+        callback();
+      });
+      running = false;
+    }
+
+    // adds callback to loop
+    function addCallback(callback: Function) {
+      if (callback) {
+        callbacks.push(callback);
+      }
+
+    }
+
+    return {
+      // public method to add additional callback
+      add: function (callback: Function) {
+        if (!callbacks.length) {
+          window.addEventListener('resize', resize);
+        }
+        addCallback(callback);
+      }
     }
   }
 }

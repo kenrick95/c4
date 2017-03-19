@@ -97,6 +97,39 @@ var Utils = (function () {
             map: clonedMap
         };
     };
+    Utils.onresize = function () {
+        var callbacks = [], running = false;
+        function resize() {
+            if (!running) {
+                running = true;
+                if (window.requestAnimationFrame) {
+                    window.requestAnimationFrame(runCallbacks);
+                }
+                else {
+                    setTimeout(runCallbacks, 66);
+                }
+            }
+        }
+        function runCallbacks() {
+            callbacks.forEach(function (callback) {
+                callback();
+            });
+            running = false;
+        }
+        function addCallback(callback) {
+            if (callback) {
+                callbacks.push(callback);
+            }
+        }
+        return {
+            add: function (callback) {
+                if (!callbacks.length) {
+                    window.addEventListener('resize', resize);
+                }
+                addCallback(callback);
+            }
+        };
+    };
     return Utils;
 }());
 Utils.BIG_POSITIVE_NUMBER = Math.pow(10, 9) + 7;
