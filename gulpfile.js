@@ -69,10 +69,10 @@ var bundleFile = function (mainFilePath) {
     .pipe(gulp.dest('dist'))
 }
 gulp.task('bundle-only-main', function () {
-  return bundleFile(config.tsOutputPath + '/game.js')
+  return bundleFile(config.tsOutputPath + '/app.js')
 })
 gulp.task('bundle-only-client', function () {
-  return bundleFile(config.tsOutputPath + '/game-client.js')
+  return bundleFile(config.tsOutputPath + '/app-flyweb-client.js')
 })
 gulp.task('bundle', ['compile-ts'], function () {
   return gulp.start('bundle-only-main', 'bundle-only-client')

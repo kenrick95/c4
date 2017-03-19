@@ -1,0 +1,1 @@
+{"version":3,"sources":["app.ts"],"names":[],"mappings":";;AAAA,6BAA+B;AAC/B,IAAI,CAAC,cAAc,CAAC,EAAC,UAAU,EAAE,KAAK,EAAC,CAAC,CAAA","file":"app.js","sourcesContent":["import * as Game from './game';\r\nGame.initGameFlyweb({clientMode: false})\r\n"]}

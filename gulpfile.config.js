@@ -6,7 +6,7 @@ var GulpConfig = (function () {
 
     this.tsOutputPath = this.dist + '/js'
     this.allJavaScript = [this.dist + '/js/**/*.js']
-    this.allTypeScript = this.source + '/*.ts'
+    this.allTypeScript = this.source + '/**/*.ts'
 
     this.typings = './typings/'
     this.libraryTypeScriptDefinitions = './typings/main/**/*.ts'
