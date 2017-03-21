@@ -44,7 +44,7 @@ class GameFlyweb extends GameBase {
       socket.close()
     }
 
-    socket.onmessage = (evt) => {
+    socket.onmessage = async (evt) => {
       console.log('socket.onmessage()', evt)
 
       var message = JSON.parse(evt.data)
@@ -56,6 +56,10 @@ class GameFlyweb extends GameBase {
         alert('Welcome! Connection to Player 1 has been established.')
       } else if (message.type === 'move') {
         this.playerSlave.doAction(message.data.column)
+      } else if (message.type === 'reset') {
+        this.reset()
+        await Utils.animationFrame()
+        this.start()
       }
     }
   }
@@ -96,7 +100,7 @@ class GameFlyweb extends GameBase {
     socket.onclose = (evt) => {
       console.log('socket.onclose()', evt)
       this.isAcceptingPlayer = true
-      // TODO: reset game
+      this.reset()
     }
 
     socket.onerror = (evt) => {
@@ -105,14 +109,20 @@ class GameFlyweb extends GameBase {
       socket.close()
     }
 
-    socket.onmessage = (evt) => {
+    socket.onmessage = async (evt) => {
       console.log('socket.onmessage()', evt)
       const message = JSON.parse(evt.data)
       if (!message) {
         return
       }
 
-      this.playerSlave.doAction(message.data.column)
+      if (message.type === 'move') {
+        this.playerSlave.doAction(message.data.column)
+      } else if (message.type === 'reset') {
+        this.reset()
+        await Utils.animationFrame()
+        this.start()
+      }
     }
   }
   async initServer() {
@@ -168,7 +178,14 @@ export function initGameFlyweb({ clientMode = false}) {
     canvas.addEventListener('click', async () => {
       if (game.isGameWon) {
         game.reset()
-        // TODO propagate "reset" to the other player (for consistency of state)
+        if (game.playerMaster && game.playerMaster.socket) {
+          game.playerMaster.socket.send(JSON.stringify({
+            type: 'reset',
+            data: {
+              reset: true
+            }
+          }))
+        }
         await Utils.animationFrame()
         game.start()
       }

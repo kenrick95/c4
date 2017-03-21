@@ -86,19 +86,35 @@ var GameFlyweb = (function (_super) {
             console.log('socket.onerror()', evt);
             socket.close();
         };
-        socket.onmessage = function (evt) {
-            console.log('socket.onmessage()', evt);
-            var message = JSON.parse(evt.data);
-            if (!message) {
-                return;
-            }
-            if (message.type === 'start') {
-                alert('Welcome! Connection to Player 1 has been established.');
-            }
-            else if (message.type === 'move') {
-                _this.playerSlave.doAction(message.data.column);
-            }
-        };
+        socket.onmessage = function (evt) { return __awaiter(_this, void 0, void 0, function () {
+            var message;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log('socket.onmessage()', evt);
+                        message = JSON.parse(evt.data);
+                        if (!message) {
+                            return [2 /*return*/];
+                        }
+                        if (!(message.type === 'start')) return [3 /*break*/, 1];
+                        alert('Welcome! Connection to Player 1 has been established.');
+                        return [3 /*break*/, 4];
+                    case 1:
+                        if (!(message.type === 'move')) return [3 /*break*/, 2];
+                        this.playerSlave.doAction(message.data.column);
+                        return [3 /*break*/, 4];
+                    case 2:
+                        if (!(message.type === 'reset')) return [3 /*break*/, 4];
+                        this.reset();
+                        return [4 /*yield*/, utils_1.Utils.animationFrame()];
+                    case 3:
+                        _a.sent();
+                        this.start();
+                        _a.label = 4;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        }); };
     };
     GameFlyweb.prototype.fetch = function (evt, url) {
         return __awaiter(this, void 0, void 0, function () {
@@ -148,20 +164,38 @@ var GameFlyweb = (function (_super) {
         socket.onclose = function (evt) {
             console.log('socket.onclose()', evt);
             _this.isAcceptingPlayer = true;
+            _this.reset();
         };
         socket.onerror = function (evt) {
             console.log('socket.onerror()', evt);
             _this.isAcceptingPlayer = true;
             socket.close();
         };
-        socket.onmessage = function (evt) {
-            console.log('socket.onmessage()', evt);
-            var message = JSON.parse(evt.data);
-            if (!message) {
-                return;
-            }
-            _this.playerSlave.doAction(message.data.column);
-        };
+        socket.onmessage = function (evt) { return __awaiter(_this, void 0, void 0, function () {
+            var message;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log('socket.onmessage()', evt);
+                        message = JSON.parse(evt.data);
+                        if (!message) {
+                            return [2 /*return*/];
+                        }
+                        if (!(message.type === 'move')) return [3 /*break*/, 1];
+                        this.playerSlave.doAction(message.data.column);
+                        return [3 /*break*/, 3];
+                    case 1:
+                        if (!(message.type === 'reset')) return [3 /*break*/, 3];
+                        this.reset();
+                        return [4 /*yield*/, utils_1.Utils.animationFrame()];
+                    case 2:
+                        _a.sent();
+                        this.start();
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        }); };
     };
     GameFlyweb.prototype.initServer = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -242,6 +276,14 @@ function initGameFlyweb(_a) {
                     case 0:
                         if (!game.isGameWon) return [3 /*break*/, 2];
                         game.reset();
+                        if (game.playerMaster && game.playerMaster.socket) {
+                            game.playerMaster.socket.send(JSON.stringify({
+                                type: 'reset',
+                                data: {
+                                    reset: true
+                                }
+                            }));
+                        }
                         return [4 /*yield*/, utils_1.Utils.animationFrame()];
                     case 1:
                         _a.sent();
