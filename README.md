@@ -37,5 +37,8 @@ I think this rewrite has one goal: to make the player extensible, so more kind o
 - [x] Game mode: Ai vs Ai
 - [ ] Implement other kind of players: better AI? better Human? :grin:
 
+### Bugs
+- [ ] On FlyWeb mode, there could be inconsistent game state due to race condition, maybe?
+
 ## License
 This work is licensed under MIT License.
