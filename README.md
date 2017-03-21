@@ -30,12 +30,15 @@ I think this rewrite has one goal: to make the player extensible, so more kind o
 
 ### To-dos
 - [x] Refactor magic numbers to constants and variables
-- [x Make the game mobile responsive
-- [ ] Make game mode chooser
+- [x] Make the game mobile responsive
+- [x] Make game mode chooser
 - [x] Game mode: Human vs Human (offline)
-- [ ] Game mode: Human vs Human (local network, via Flyweb) [in progress]
+- [x] Game mode: Human vs Human (local network, via Flyweb)
 - [x] Game mode: Ai vs Ai
 - [ ] Implement other kind of players: better AI? better Human? :grin:
+- [ ] Add game title to welcome screen (mode selector)
+- [ ] Refactor out winning message to write on DOM
+- [ ] Add how to play at welcome screen (mode selector)
 
 ### Bugs
 - [ ] On FlyWeb mode, there could be inconsistent game state due to race condition, maybe?

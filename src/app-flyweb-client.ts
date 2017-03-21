@@ -1,2 +1,4 @@
 import * as Game from './game';
-Game.initGameFlyweb({clientMode: true})
+document.addEventListener('DOMContentLoaded', () => {
+  Game.initGameFlyweb({ clientMode: true })
+})

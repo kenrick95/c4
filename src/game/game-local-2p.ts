@@ -9,19 +9,17 @@ class GameLocal2p extends GameBase {
   }
 }
 export function initGameLocal2p() {
-  document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.querySelector('canvas')
-    const game = new GameLocal2p([
-      new PlayerHuman(BoardPiece.PLAYER_1, canvas),
-      new PlayerHuman(BoardPiece.PLAYER_2, canvas)
-    ], canvas)
-    game.start()
-    canvas.addEventListener('click', async () => {
-      if (game.isGameWon) {
-        game.reset()
-        await Utils.animationFrame()
-        game.start()
-      }
-    })
+  const canvas = document.querySelector('canvas')
+  const game = new GameLocal2p([
+    new PlayerHuman(BoardPiece.PLAYER_1, canvas),
+    new PlayerHuman(BoardPiece.PLAYER_2, canvas)
+  ], canvas)
+  game.start()
+  canvas.addEventListener('click', async () => {
+    if (game.isGameWon) {
+      game.reset()
+      await Utils.animationFrame()
+      game.start()
+    }
   })
 }

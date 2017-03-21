@@ -9,19 +9,17 @@ class GameLocalAi extends GameBase {
   }
 }
 export function initGameLocalAi() {
-  document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.querySelector('canvas')
-    const game = new GameLocalAi([
-      new PlayerHuman(BoardPiece.PLAYER_1, canvas),
-      new PlayerAi(BoardPiece.PLAYER_2, canvas)
-    ], canvas)
-    game.start()
-    canvas.addEventListener('click', async () => {
-      if (game.isGameWon) {
-        game.reset()
-        await Utils.animationFrame()
-        game.start()
-      }
-    })
+  const canvas = document.querySelector('canvas')
+  const game = new GameLocalAi([
+    new PlayerHuman(BoardPiece.PLAYER_1, canvas),
+    new PlayerAi(BoardPiece.PLAYER_2, canvas)
+  ], canvas)
+  game.start()
+  canvas.addEventListener('click', async () => {
+    if (game.isGameWon) {
+      game.reset()
+      await Utils.animationFrame()
+      game.start()
+    }
   })
 }

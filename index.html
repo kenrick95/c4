@@ -2,23 +2,34 @@
 <html>
 
 <head>
-	<meta charset="utf-8">
-	<title>c4</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link href="dist/style.css" rel="stylesheet">
+  <meta charset="utf-8">
+  <title>c4</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="dist/style.css" rel="stylesheet">
 </head>
 
 <body>
-	<header class="header">
-		c4<br><small>Connect Four</small>
-	</header>
-	<section class="section">
-		<canvas class="section-canvas"></canvas>
-	</section>
-	<footer class="footer">
-		By <a href="http://kenrick95.org">Kenrick95</a>. Fork this project at <a href="https://github.com/kenrick95/c4">GitHub</a>.
-	</footer>
-	<script src="dist/app.js"></script>
+  <header class="header">
+    <h1>c4 - Connect Four</h1>
+  </header>
+  <section class="section">
+    <div class="section-message"></div>
+    <canvas class="section-canvas"></canvas>
+  </section>
+  
+  <div class="mode">
+    <div class="mode-chooser">
+      <h1>Mode chooser</h1>
+      <label><input class="mode-chooser-input" type="radio" name="mode" value="offline-ai" checked> Offline: Human player vs AI player</label><br />
+      <label><input class="mode-chooser-input" type="radio" name="mode" value="offline-human"> Offline: Human player vs human player</label><br />
+      <label><input class="mode-chooser-input" type="radio" name="mode" value="local-flyweb"> Local network (via FlyWeb): Human player vs human player</label><br />
+      <button class="mode-chooser-submit">Submit</button>
+    </div>
+  </div>
+  <footer class="footer">
+    By <a href="http://kenrick95.org">Kenrick95</a>. Fork this project at <a href="https://github.com/kenrick95/c4">GitHub</a>.
+  </footer>
+  <script src="dist/app.js"></script>
 </body>
 
 </html>

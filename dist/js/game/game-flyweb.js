@@ -253,47 +253,45 @@ var GameFlyweb = (function (_super) {
 function initGameFlyweb(_a) {
     var _this = this;
     var _b = _a.clientMode, clientMode = _b === void 0 ? false : _b;
-    document.addEventListener('DOMContentLoaded', function () {
-        var canvas = document.querySelector('canvas');
-        var players = null;
-        if (clientMode) {
-            players = [
-                new player_1.PlayerFlywebSlave(board_1.BoardPiece.PLAYER_1, canvas),
-                new player_1.PlayerFlywebMaster(board_1.BoardPiece.PLAYER_2, canvas)
-            ];
-        }
-        else {
-            players = [
-                new player_1.PlayerFlywebMaster(board_1.BoardPiece.PLAYER_1, canvas),
-                new player_1.PlayerFlywebSlave(board_1.BoardPiece.PLAYER_2, canvas)
-            ];
-        }
-        var game = new GameFlyweb(players, canvas, clientMode);
-        game.start();
-        canvas.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!game.isGameWon) return [3 /*break*/, 2];
-                        game.reset();
-                        if (game.playerMaster && game.playerMaster.socket) {
-                            game.playerMaster.socket.send(JSON.stringify({
-                                type: 'reset',
-                                data: {
-                                    reset: true
-                                }
-                            }));
-                        }
-                        return [4 /*yield*/, utils_1.Utils.animationFrame()];
-                    case 1:
-                        _a.sent();
-                        game.start();
-                        _a.label = 2;
-                    case 2: return [2 /*return*/];
-                }
-            });
-        }); });
-    });
+    var canvas = document.querySelector('canvas');
+    var players = null;
+    if (clientMode) {
+        players = [
+            new player_1.PlayerFlywebSlave(board_1.BoardPiece.PLAYER_1, canvas),
+            new player_1.PlayerFlywebMaster(board_1.BoardPiece.PLAYER_2, canvas)
+        ];
+    }
+    else {
+        players = [
+            new player_1.PlayerFlywebMaster(board_1.BoardPiece.PLAYER_1, canvas),
+            new player_1.PlayerFlywebSlave(board_1.BoardPiece.PLAYER_2, canvas)
+        ];
+    }
+    var game = new GameFlyweb(players, canvas, clientMode);
+    game.start();
+    canvas.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!game.isGameWon) return [3 /*break*/, 2];
+                    game.reset();
+                    if (game.playerMaster && game.playerMaster.socket) {
+                        game.playerMaster.socket.send(JSON.stringify({
+                            type: 'reset',
+                            data: {
+                                reset: true
+                            }
+                        }));
+                    }
+                    return [4 /*yield*/, utils_1.Utils.animationFrame()];
+                case 1:
+                    _a.sent();
+                    game.start();
+                    _a.label = 2;
+                case 2: return [2 /*return*/];
+            }
+        });
+    }); });
 }
 exports.initGameFlyweb = initGameFlyweb;
 

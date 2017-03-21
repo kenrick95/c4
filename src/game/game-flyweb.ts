@@ -158,37 +158,35 @@ class GameFlyweb extends GameBase {
 }
 
 export function initGameFlyweb({ clientMode = false}) {
-  document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.querySelector('canvas')
-    let players: Array<Player> = null
-    if (clientMode) {
-      players = [
-        new PlayerFlywebSlave(BoardPiece.PLAYER_1, canvas),
-        new PlayerFlywebMaster(BoardPiece.PLAYER_2, canvas)
-      ]
-    } else {
-      players = [
-        new PlayerFlywebMaster(BoardPiece.PLAYER_1, canvas),
-        new PlayerFlywebSlave(BoardPiece.PLAYER_2, canvas)
-      ]
-    }
+  const canvas = document.querySelector('canvas')
+  let players: Array<Player> = null
+  if (clientMode) {
+    players = [
+      new PlayerFlywebSlave(BoardPiece.PLAYER_1, canvas),
+      new PlayerFlywebMaster(BoardPiece.PLAYER_2, canvas)
+    ]
+  } else {
+    players = [
+      new PlayerFlywebMaster(BoardPiece.PLAYER_1, canvas),
+      new PlayerFlywebSlave(BoardPiece.PLAYER_2, canvas)
+    ]
+  }
 
-    const game = new GameFlyweb(players, canvas, clientMode)
-    game.start()
-    canvas.addEventListener('click', async () => {
-      if (game.isGameWon) {
-        game.reset()
-        if (game.playerMaster && game.playerMaster.socket) {
-          game.playerMaster.socket.send(JSON.stringify({
-            type: 'reset',
-            data: {
-              reset: true
-            }
-          }))
-        }
-        await Utils.animationFrame()
-        game.start()
+  const game = new GameFlyweb(players, canvas, clientMode)
+  game.start()
+  canvas.addEventListener('click', async () => {
+    if (game.isGameWon) {
+      game.reset()
+      if (game.playerMaster && game.playerMaster.socket) {
+        game.playerMaster.socket.send(JSON.stringify({
+          type: 'reset',
+          data: {
+            reset: true
+          }
+        }))
       }
-    })
+      await Utils.animationFrame()
+      game.start()
+    }
   })
 }

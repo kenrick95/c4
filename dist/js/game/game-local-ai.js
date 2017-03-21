@@ -58,29 +58,27 @@ var GameLocalAi = (function (_super) {
 }(game_base_1.GameBase));
 function initGameLocalAi() {
     var _this = this;
-    document.addEventListener('DOMContentLoaded', function () {
-        var canvas = document.querySelector('canvas');
-        var game = new GameLocalAi([
-            new player_1.PlayerHuman(board_1.BoardPiece.PLAYER_1, canvas),
-            new player_1.PlayerAi(board_1.BoardPiece.PLAYER_2, canvas)
-        ], canvas);
-        game.start();
-        canvas.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!game.isGameWon) return [3 /*break*/, 2];
-                        game.reset();
-                        return [4 /*yield*/, utils_1.Utils.animationFrame()];
-                    case 1:
-                        _a.sent();
-                        game.start();
-                        _a.label = 2;
-                    case 2: return [2 /*return*/];
-                }
-            });
-        }); });
-    });
+    var canvas = document.querySelector('canvas');
+    var game = new GameLocalAi([
+        new player_1.PlayerHuman(board_1.BoardPiece.PLAYER_1, canvas),
+        new player_1.PlayerAi(board_1.BoardPiece.PLAYER_2, canvas)
+    ], canvas);
+    game.start();
+    canvas.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!game.isGameWon) return [3 /*break*/, 2];
+                    game.reset();
+                    return [4 /*yield*/, utils_1.Utils.animationFrame()];
+                case 1:
+                    _a.sent();
+                    game.start();
+                    _a.label = 2;
+                case 2: return [2 /*return*/];
+            }
+        });
+    }); });
 }
 exports.initGameLocalAi = initGameLocalAi;
 
