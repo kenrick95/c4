@@ -8,7 +8,11 @@ html, body {
   color: #111;
 }
 h1 {
-  font-size: 1.2em;
+  font-size: 1.5em;
+  margin: .5em 0;
+}
+h2 {
+  font-size: 1.3em;
   margin: .5em 0;
 }
 .section {
@@ -31,18 +35,15 @@ h1 {
   flex: 0 1 auto;
   text-align: left;
   background: white;
-  border-radius: 1em;
-  padding: 1.5em;
+  border-radius: 0.5em;
+  margin: 0.5em;
+  padding: 0.5em 1em 1em 1em;
 }
 .invisible {
   opacity: 0;
 }
 .hidden {
   display: none;
-}
-.header {
-  font-size: 1.5em;
-  font-weight: bold;
 }
 .footer {
   font-size: .8em;

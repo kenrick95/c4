@@ -36,9 +36,9 @@ I think this rewrite has one goal: to make the player extensible, so more kind o
 - [x] Game mode: Human vs Human (local network, via Flyweb)
 - [x] Game mode: Ai vs Ai
 - [ ] Implement other kind of players: better AI? better Human? :grin:
-- [ ] Add game title to welcome screen (mode selector)
+- [x] Add game title to welcome screen (mode selector)
 - [ ] Refactor out winning message to write on DOM
-- [ ] Add how to play at welcome screen (mode selector)
+- [x] Add how to play at welcome screen (mode selector)
 
 ### Bugs
 - [ ] On FlyWeb mode, there could be inconsistent game state due to race condition, maybe?
