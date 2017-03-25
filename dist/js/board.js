@@ -181,20 +181,15 @@ var Board = (function () {
         if (this.winnerBoardPiece === BoardPiece.EMPTY) {
             return;
         }
-        var message = 'Thank you for playing - ';
+        var message = '<h1>Thank you for playing.</h1>';
         if (this.winnerBoardPiece === BoardPiece.DRAW) {
             message += "It's a draw";
         }
         else {
             message += "Player " + this.winnerBoardPiece + " wins";
         }
-        message += ' - Click to reset';
-        utils_1.Utils.drawText(this.context, {
-            message: message,
-            x: Board.MESSAGE_X_BEGIN,
-            y: Board.MESSAGE_Y_BEGIN,
-            maxWidth: Board.MESSAGE_WIDTH
-        });
+        message += '.<br />After dismissing this message, click the board to reset game.';
+        utils_1.Utils.showMessage(message);
     };
     Board.prototype.getPlayerColor = function (boardPiece) {
         switch (boardPiece) {

@@ -4,15 +4,22 @@ export class Utils {
   static readonly BIG_POSITIVE_NUMBER = 10 ** 9 + 7;
   static readonly BIG_NEGATIVE_NUMBER = -Utils.BIG_POSITIVE_NUMBER;
 
-  static drawText(context: CanvasRenderingContext2D, {
-      message = '', x = 0, y = 0, fillStyle = '#111',
-    font = '12pt sans-serif', maxWidth = Utils.BIG_POSITIVE_NUMBER
-    }) {
-    context.save()
-    context.font = font
-    context.fillStyle = fillStyle
-    context.fillText(message, x, y, maxWidth)
-    context.restore()
+  static showMessage(message = '') {
+    const messageDOM = document.querySelector('.message')
+    messageDOM.classList.remove('hidden')
+
+    const messageContentDOM = document.querySelector('.message-body-content')
+    messageContentDOM.innerHTML = message
+
+    const messageDismissDOM = document.querySelector('.message-body-dismiss')
+    const dismissHandler = () => {
+      messageDOM.classList.add('invisible')
+      messageDOM.addEventListener('transitionend', () => {
+        messageDOM.classList.add('hidden')
+      })
+      messageDismissDOM.removeEventListener('click', dismissHandler)
+    }
+    messageDismissDOM.addEventListener('click', dismissHandler)
   }
 
   static drawCircle(context: CanvasRenderingContext2D, { x = 0, y = 0, r = 0, fillStyle = '', strokeStyle = '' }) {

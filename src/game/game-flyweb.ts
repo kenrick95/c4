@@ -53,7 +53,7 @@ class GameFlyweb extends GameBase {
       }
 
       if (message.type === 'start') {
-        alert('Welcome! Connection to Player 1 has been established.')
+        Utils.showMessage('<h1>Welcome!</h1>Connection to Player 1 has been established.')
       } else if (message.type === 'move') {
         this.playerSlave.doAction(message.data.column)
       } else if (message.type === 'reset') {
@@ -91,7 +91,7 @@ class GameFlyweb extends GameBase {
             accepted: this.isAcceptingPlayer
           }
         }))
-        alert('Connection to Player 2 has been established.')
+        Utils.showMessage('Connection to Player 2 has been established.')
       } else {
         socket.close()
       }
@@ -127,7 +127,7 @@ class GameFlyweb extends GameBase {
   }
   async initServer() {
     if (!('publishServer' in this.browser)) {
-      window.alert('FlyWeb requires Firefox Developer Edition and enabling a flag at about:config')
+      Utils.showMessage('<h1>Attention!</h1> FlyWeb requires Firefox Developer Edition or Nightly and enabling "dom.flyweb.enabled" flag at about:config')
       return false
     }
     const server = await this.browser.publishServer('c4 - Connect Four')

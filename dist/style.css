@@ -18,7 +18,7 @@ h2 {
 .section {
   margin: 1em auto 0 auto;
 }
-.mode {
+.mode, .message {
   position: absolute;
   left: 0;
   top: 0;
@@ -29,15 +29,16 @@ h2 {
   justify-content: center;
   align-items: center;
   background: rgba(0, 0, 0, .7);
-  transition: opacity .5s ease-in;
+  transition: opacity .2s ease-in;
 }
-.mode-chooser {
+.mode-chooser, .message-body {
   flex: 0 1 auto;
   text-align: left;
   background: white;
   border-radius: 0.5em;
   margin: 0.5em;
   padding: 0.5em 1em 1em 1em;
+  max-width: 30em;
 }
 .invisible {
   opacity: 0;

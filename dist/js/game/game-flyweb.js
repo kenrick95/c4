@@ -97,7 +97,7 @@ var GameFlyweb = (function (_super) {
                             return [2 /*return*/];
                         }
                         if (!(message.type === 'start')) return [3 /*break*/, 1];
-                        alert('Welcome! Connection to Player 1 has been established.');
+                        utils_1.Utils.showMessage('<h1>Welcome!</h1>Connection to Player 1 has been established.');
                         return [3 /*break*/, 4];
                     case 1:
                         if (!(message.type === 'move')) return [3 /*break*/, 2];
@@ -155,7 +155,7 @@ var GameFlyweb = (function (_super) {
                         accepted: _this.isAcceptingPlayer
                     }
                 }));
-                alert('Connection to Player 2 has been established.');
+                utils_1.Utils.showMessage('Connection to Player 2 has been established.');
             }
             else {
                 socket.close();
@@ -205,7 +205,7 @@ var GameFlyweb = (function (_super) {
                 switch (_a.label) {
                     case 0:
                         if (!('publishServer' in this.browser)) {
-                            window.alert('FlyWeb requires Firefox Developer Edition and enabling a flag at about:config');
+                            utils_1.Utils.showMessage('<h1>Attention!</h1> FlyWeb requires Firefox Developer Edition or Nightly and enabling "dom.flyweb.enabled" flag at about:config');
                             return [2 /*return*/, false];
                         }
                         return [4 /*yield*/, this.browser.publishServer('c4 - Connect Four')];
