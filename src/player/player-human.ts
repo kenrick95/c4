@@ -19,7 +19,7 @@ export class PlayerHuman extends Player {
   }
 
   doAction(column: number) {
-    if (this.clickPromiseResolver) {
+    if (this.clickPromiseResolver && 0 <= column && column < Board.COLUMNS) {
       this.clickPromiseResolver(column)
     }
   }

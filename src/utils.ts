@@ -16,6 +16,7 @@ export class Utils {
       messageDOM.classList.add('invisible')
       messageDOM.addEventListener('transitionend', () => {
         messageDOM.classList.add('hidden')
+        messageDOM.classList.remove('invisible')
       })
       messageDismissDOM.removeEventListener('click', dismissHandler)
     }

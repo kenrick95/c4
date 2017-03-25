@@ -57,6 +57,7 @@ var GameFlyweb = (function (_super) {
         _this.BASE_URL = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
         _this.browser = navigator;
         _this.isAcceptingPlayer = true;
+        _this.clientMode = clientMode;
         if (clientMode) {
             _this.playerSlave = players[0];
             _this.playerMaster = players[1];
@@ -69,6 +70,17 @@ var GameFlyweb = (function (_super) {
         }
         return _this;
     }
+    GameFlyweb.prototype.afterMove = function (action) {
+        if ((this.clientMode && this.currentPlayerId === 1) || (!this.clientMode && this.currentPlayerId === 0)) {
+            this.playerMaster.socket.send(JSON.stringify({
+                type: 'move',
+                data: {
+                    column: action,
+                    from: this.currentPlayerId === 0 ? 'server' : 'client'
+                }
+            }));
+        }
+    };
     GameFlyweb.prototype.initClient = function () {
         this.handleClientWs();
     };
@@ -77,13 +89,13 @@ var GameFlyweb = (function (_super) {
         var socket = new WebSocket('ws://' + window.location.host + '/api/ws');
         this.playerMaster.socket = socket;
         socket.onopen = function (evt) {
-            console.log('socket.onopen()', evt);
+            console.log('client socket.onopen()', evt);
         };
         socket.onclose = function (evt) {
-            console.log('socket.onclose()', evt);
+            console.log('client socket.onclose()', evt);
         };
         socket.onerror = function (evt) {
-            console.log('socket.onerror()', evt);
+            console.log('client socket.onerror()', evt);
             socket.close();
         };
         socket.onmessage = function (evt) { return __awaiter(_this, void 0, void 0, function () {
@@ -91,13 +103,17 @@ var GameFlyweb = (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('socket.onmessage()', evt);
+                        console.log('client socket.onmessage()', evt);
                         message = JSON.parse(evt.data);
                         if (!message) {
                             return [2 /*return*/];
                         }
+                        if (message.from === 'client') {
+                            return [2 /*return*/];
+                        }
                         if (!(message.type === 'start')) return [3 /*break*/, 1];
                         utils_1.Utils.showMessage('<h1>Welcome!</h1>Connection to Player 1 has been established.');
+                        this.start();
                         return [3 /*break*/, 4];
                     case 1:
                         if (!(message.type === 'move')) return [3 /*break*/, 2];
@@ -146,7 +162,7 @@ var GameFlyweb = (function (_super) {
         var socket = evt.accept();
         this.playerMaster.socket = socket;
         socket.onopen = function (evt) {
-            console.log('socket.onopen()', evt, socket);
+            console.log('server socket.onopen()', evt, socket);
             if (_this.isAcceptingPlayer) {
                 _this.isAcceptingPlayer = false;
                 socket.send(JSON.stringify({
@@ -155,19 +171,20 @@ var GameFlyweb = (function (_super) {
                         accepted: _this.isAcceptingPlayer
                     }
                 }));
-                utils_1.Utils.showMessage('Connection to Player 2 has been established.');
+                utils_1.Utils.showMessage('<h1>Welcome!</h1>Connection to Player 2 has been established.');
+                _this.start();
             }
             else {
                 socket.close();
             }
         };
         socket.onclose = function (evt) {
-            console.log('socket.onclose()', evt);
+            console.log('server socket.onclose()', evt);
             _this.isAcceptingPlayer = true;
             _this.reset();
         };
         socket.onerror = function (evt) {
-            console.log('socket.onerror()', evt);
+            console.log('server socket.onerror()', evt);
             _this.isAcceptingPlayer = true;
             socket.close();
         };
@@ -176,9 +193,12 @@ var GameFlyweb = (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('socket.onmessage()', evt);
+                        console.log('server socket.onmessage()', evt);
                         message = JSON.parse(evt.data);
                         if (!message) {
+                            return [2 /*return*/];
+                        }
+                        if (message.from === 'server') {
                             return [2 /*return*/];
                         }
                         if (!(message.type === 'move')) return [3 /*break*/, 1];
@@ -205,7 +225,7 @@ var GameFlyweb = (function (_super) {
                 switch (_a.label) {
                     case 0:
                         if (!('publishServer' in this.browser)) {
-                            utils_1.Utils.showMessage('<h1>Attention!</h1> FlyWeb requires Firefox Developer Edition or Nightly and enabling "dom.flyweb.enabled" flag at about:config');
+                            utils_1.Utils.showMessage("<h1>Attention!</h1>\n        FlyWeb requires Firefox Developer Edition or Nightly,\n        and enabling \"dom.flyweb.enabled\" flag at about:config");
                             return [2 /*return*/, false];
                         }
                         return [4 /*yield*/, this.browser.publishServer('c4 - Connect Four')];
@@ -219,7 +239,7 @@ var GameFlyweb = (function (_super) {
                                         urlParts = evt.request.url.split('?');
                                         url = urlParts[0];
                                         params = new URLSearchParams(urlParts[1]);
-                                        console.log('Requested for url: ', url, params);
+                                        console.log('me Requested for url: ', url, params);
                                         _a = url;
                                         switch (_a) {
                                             case '/dist/app.js': return [3 /*break*/, 1];
@@ -268,7 +288,7 @@ function initGameFlyweb(_a) {
         ];
     }
     var game = new GameFlyweb(players, canvas, clientMode);
-    game.start();
+    utils_1.Utils.showMessage('<h1>Welcome!</h1>Waiting for Player 2 to connect.');
     canvas.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {

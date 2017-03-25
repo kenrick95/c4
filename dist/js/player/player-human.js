@@ -46,6 +46,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var player_1 = require("./player");
+var board_1 = require("../board");
 var utils_1 = require("../utils");
 var PlayerHuman = (function (_super) {
     __extends(PlayerHuman, _super);
@@ -63,7 +64,7 @@ var PlayerHuman = (function (_super) {
         return _this;
     }
     PlayerHuman.prototype.doAction = function (column) {
-        if (this.clickPromiseResolver) {
+        if (this.clickPromiseResolver && 0 <= column && column < board_1.Board.COLUMNS) {
             this.clickPromiseResolver(column);
         }
     };

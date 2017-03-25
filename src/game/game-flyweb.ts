@@ -11,9 +11,11 @@ class GameFlyweb extends GameBase {
   isAcceptingPlayer: boolean = true;
   playerMaster: PlayerFlywebMaster;
   playerSlave: PlayerFlywebSlave;
+  clientMode: boolean;
 
   constructor(players: Array<Player>, canvas: HTMLCanvasElement, clientMode = false) {
     super(players, canvas)
+    this.clientMode = clientMode
     if (clientMode) {
       this.playerSlave = <PlayerFlywebSlave>players[0]
       this.playerMaster = <PlayerFlywebMaster>players[1]
@@ -24,6 +26,19 @@ class GameFlyweb extends GameBase {
       this.initServer()
     }
   }
+
+  afterMove(action: number) {
+    if ((this.clientMode && this.currentPlayerId === 1) || (!this.clientMode && this.currentPlayerId === 0)) {
+      this.playerMaster.socket.send(JSON.stringify({
+        type: 'move',
+        data: {
+          column: action,
+          from: this.currentPlayerId === 0 ? 'server' : 'client'
+        }
+      }))
+    }
+  }
+
   initClient() {
     this.handleClientWs()
   }
@@ -32,28 +47,32 @@ class GameFlyweb extends GameBase {
     this.playerMaster.socket = socket
 
     socket.onopen = (evt) => {
-      console.log('socket.onopen()', evt)
+      console.log('client socket.onopen()', evt)
     }
 
     socket.onclose = (evt) => {
-      console.log('socket.onclose()', evt)
+      console.log('client socket.onclose()', evt)
     }
 
     socket.onerror = (evt) => {
-      console.log('socket.onerror()', evt)
+      console.log('client socket.onerror()', evt)
       socket.close()
     }
 
     socket.onmessage = async (evt) => {
-      console.log('socket.onmessage()', evt)
+      console.log('client socket.onmessage()', evt)
 
       var message = JSON.parse(evt.data)
       if (!message) {
         return
       }
+      if (message.from === 'client') {
+        return
+      }
 
       if (message.type === 'start') {
         Utils.showMessage('<h1>Welcome!</h1>Connection to Player 1 has been established.')
+        this.start()
       } else if (message.type === 'move') {
         this.playerSlave.doAction(message.data.column)
       } else if (message.type === 'reset') {
@@ -82,7 +101,7 @@ class GameFlyweb extends GameBase {
     this.playerMaster.socket = socket
 
     socket.onopen = (evt) => {
-      console.log('socket.onopen()', evt, socket)
+      console.log('server socket.onopen()', evt, socket)
       if (this.isAcceptingPlayer) {
         this.isAcceptingPlayer = false
         socket.send(JSON.stringify({
@@ -91,28 +110,32 @@ class GameFlyweb extends GameBase {
             accepted: this.isAcceptingPlayer
           }
         }))
-        Utils.showMessage('Connection to Player 2 has been established.')
+        Utils.showMessage('<h1>Welcome!</h1>Connection to Player 2 has been established.')
+        this.start()
       } else {
         socket.close()
       }
     }
 
     socket.onclose = (evt) => {
-      console.log('socket.onclose()', evt)
+      console.log('server socket.onclose()', evt)
       this.isAcceptingPlayer = true
       this.reset()
     }
 
     socket.onerror = (evt) => {
-      console.log('socket.onerror()', evt)
+      console.log('server socket.onerror()', evt)
       this.isAcceptingPlayer = true
       socket.close()
     }
 
     socket.onmessage = async (evt) => {
-      console.log('socket.onmessage()', evt)
+      console.log('server socket.onmessage()', evt)
       const message = JSON.parse(evt.data)
       if (!message) {
+        return
+      }
+      if (message.from === 'server') {
         return
       }
 
@@ -127,7 +150,9 @@ class GameFlyweb extends GameBase {
   }
   async initServer() {
     if (!('publishServer' in this.browser)) {
-      Utils.showMessage('<h1>Attention!</h1> FlyWeb requires Firefox Developer Edition or Nightly and enabling "dom.flyweb.enabled" flag at about:config')
+      Utils.showMessage(`<h1>Attention!</h1>
+        FlyWeb requires Firefox Developer Edition or Nightly,
+        and enabling "dom.flyweb.enabled" flag at about:config`)
       return false
     }
     const server = await this.browser.publishServer('c4 - Connect Four')
@@ -136,7 +161,7 @@ class GameFlyweb extends GameBase {
 
       var url = urlParts[0];
       var params = new URLSearchParams(urlParts[1]);
-      console.log('Requested for url: ', url, params)
+      console.log('me Requested for url: ', url, params)
 
       switch (url) {
         case '/dist/app.js':
@@ -173,7 +198,7 @@ export function initGameFlyweb({ clientMode = false}) {
   }
 
   const game = new GameFlyweb(players, canvas, clientMode)
-  game.start()
+  Utils.showMessage('<h1>Welcome!</h1>Waiting for Player 2 to connect.')
   canvas.addEventListener('click', async () => {
     if (game.isGameWon) {
       game.reset()

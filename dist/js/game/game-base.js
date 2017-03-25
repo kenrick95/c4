@@ -102,6 +102,9 @@ var GameBase = (function () {
                         if (!actionSuccesful) {
                             console.log('Move not allowed! Try again.');
                         }
+                        else {
+                            this.afterMove(action);
+                        }
                         return [3 /*break*/, 1];
                     case 4:
                         this.currentPlayerId = this.getNextPlayer();
@@ -109,6 +112,8 @@ var GameBase = (function () {
                 }
             });
         });
+    };
+    GameBase.prototype.afterMove = function (action) {
     };
     GameBase.prototype.getNextPlayer = function () {
         return (this.currentPlayerId === 0) ? 1 : 0;

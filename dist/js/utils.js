@@ -15,6 +15,7 @@ var Utils = (function () {
             messageDOM.classList.add('invisible');
             messageDOM.addEventListener('transitionend', function () {
                 messageDOM.classList.add('hidden');
+                messageDOM.classList.remove('invisible');
             });
             messageDismissDOM.removeEventListener('click', dismissHandler);
         };
