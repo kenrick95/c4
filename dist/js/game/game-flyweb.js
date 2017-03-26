@@ -112,7 +112,7 @@ var GameFlyweb = (function (_super) {
                             return [2 /*return*/];
                         }
                         if (!(message.type === 'start')) return [3 /*break*/, 1];
-                        utils_1.Utils.showMessage('<h1>Welcome!</h1>Connection to Player 1 has been established.');
+                        utils_1.Utils.showMessage('<h1>Welcome!</h1>Connection to Player 1 has been established. Game started!');
                         this.start();
                         return [3 /*break*/, 4];
                     case 1:
@@ -171,7 +171,7 @@ var GameFlyweb = (function (_super) {
                         accepted: _this.isAcceptingPlayer
                     }
                 }));
-                utils_1.Utils.showMessage('<h1>Welcome!</h1>Connection to Player 2 has been established.');
+                utils_1.Utils.showMessage('<h1>Welcome!</h1>Connection to Player 2 has been established. Game started!');
                 _this.start();
             }
             else {
@@ -288,7 +288,7 @@ function initGameFlyweb(_a) {
         ];
     }
     var game = new GameFlyweb(players, canvas, clientMode);
-    utils_1.Utils.showMessage('<h1>Welcome!</h1>Waiting for Player 2 to connect.');
+    utils_1.Utils.showMessage('<h1>Welcome!</h1>Game will start after Player 2 has been connected.');
     canvas.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {

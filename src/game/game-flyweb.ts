@@ -71,7 +71,7 @@ class GameFlyweb extends GameBase {
       }
 
       if (message.type === 'start') {
-        Utils.showMessage('<h1>Welcome!</h1>Connection to Player 1 has been established.')
+        Utils.showMessage('<h1>Welcome!</h1>Connection to Player 1 has been established. Game started!')
         this.start()
       } else if (message.type === 'move') {
         this.playerSlave.doAction(message.data.column)
@@ -110,7 +110,7 @@ class GameFlyweb extends GameBase {
             accepted: this.isAcceptingPlayer
           }
         }))
-        Utils.showMessage('<h1>Welcome!</h1>Connection to Player 2 has been established.')
+        Utils.showMessage('<h1>Welcome!</h1>Connection to Player 2 has been established. Game started!')
         this.start()
       } else {
         socket.close()
@@ -198,7 +198,7 @@ export function initGameFlyweb({ clientMode = false}) {
   }
 
   const game = new GameFlyweb(players, canvas, clientMode)
-  Utils.showMessage('<h1>Welcome!</h1>Waiting for Player 2 to connect.')
+  Utils.showMessage('<h1>Welcome!</h1>Game will start after Player 2 has been connected.')
   canvas.addEventListener('click', async () => {
     if (game.isGameWon) {
       game.reset()
