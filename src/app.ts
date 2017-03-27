@@ -19,8 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (chosenMode === 'offline-human') {
       Game.initGameLocal2p()
-    }
-    else if (chosenMode === 'local-flyweb') {
+    } else if (chosenMode === 'local-flyweb') {
       Game.initGameFlyweb({ clientMode: false })
     } else if (chosenMode === 'offline-ai') {
       Game.initGameLocalAi()
