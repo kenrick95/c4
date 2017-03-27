@@ -1,0 +1,80 @@
+@charset "utf-8";
+@font-face {
+  font-family: system-font;
+  font-style: normal;
+  font-weight: 400;
+  src: local(".SFNSText-Regular"), local(".HelveticaNeueDeskInterface-Regular"), local(".LucidaGrandeUI"), local("Segoe UI"), local("Ubuntu"), local("Roboto-Regular"), local("DroidSans"), local("Tahoma");
+}
+@font-face {
+  font-family: system-font;
+  font-style: normal;
+  font-weight: 700;
+  src: local(".SFNSText-Bold"), local(".HelveticaNeueDeskInterface-Bold"), local(".LucidaGrandeUI"), local("Segoe UI Bold"), local("Ubuntu Bold"), local("Roboto-Bold"), local("DroidSans-Bold"), local("Tahoma Bold");
+}
+html, body {
+  width:100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-family: system-font;
+  color: #111;
+}
+button {
+  font-family: system-font;
+  font-size: .9em;
+  margin-top: .5em;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #76c9eb;
+  background: #96d2eb;
+}
+button:hover {
+  cursor: pointer;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+  border: 1px solid #51b4db;
+  background: #76c9eb;
+}
+h1 {
+  font-size: 1.5em;
+  margin: .5em 0;
+}
+h2 {
+  font-size: 1.3em;
+  margin: .5em 0;
+}
+.section {
+  margin: 1em auto 0 auto;
+}
+.mode, .message {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, .7);
+  transition: opacity .2s ease-in;
+  box-shadow: 0 3px 9px rgba(0,0,0,.5);
+}
+.mode-chooser, .message-body {
+  flex: 0 1 auto;
+  text-align: left;
+  background: white;
+  border-radius: 0.5em;
+  margin: 0.5em;
+  padding: 0.5em 1em 1em 1em;
+  max-width: 30em;
+}
+.invisible {
+  opacity: 0;
+}
+.hidden {
+  display: none;
+}
+.footer {
+  font-size: .8em;
+}

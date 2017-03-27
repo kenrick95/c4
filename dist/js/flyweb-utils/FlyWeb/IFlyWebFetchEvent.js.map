@@ -1,0 +1,1 @@
+{"version":3,"sources":["flyweb-utils/FlyWeb/IFlyWebFetchEvent.ts"],"names":[],"mappings":";;AAIC,CAAC","file":"IFlyWebFetchEvent.js","sourcesContent":["export interface IFlyWebFetchEvent extends Event {\r\n  request: Request;\r\n\r\n  respondWith(response: Promise<Response>): void;\r\n};\r\n"]}

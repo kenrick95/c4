@@ -1,0 +1,1 @@
+{"version":3,"sources":["game/index.ts"],"names":[],"mappings":";;;;;AAAA,mCAA8B;AAC9B,qCAAgC;AAChC,qCAAgC","file":"index.js","sourcesContent":["export * from './game-flyweb';\r\nexport * from './game-local-2p';\r\nexport * from './game-local-ai';\r\n"]}
