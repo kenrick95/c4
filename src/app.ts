@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const board = new Board(document.querySelector('canvas'))
   board.render()
 
+  if (!('publishServer' in navigator)) {
+    document.querySelector('.mode-chooser-input-flyweb').setAttribute('disabled', 'disabled')
+  }
+
   document.querySelector('.mode-chooser-submit').addEventListener('click', () => {
     const modeDOM = document.querySelector('.mode')
     const modeInputDOMs = <NodeListOf<HTMLInputElement>>document.querySelectorAll('.mode-chooser-input')
