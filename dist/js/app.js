@@ -6,9 +6,13 @@ document.addEventListener('DOMContentLoaded', function () {
     var board = new board_1.Board(document.querySelector('canvas'));
     board.render();
     if (!('publishServer' in navigator)) {
-        document.querySelector('.mode-chooser-input-flyweb').setAttribute('disabled', 'disabled');
+        document
+            .querySelector('.mode-chooser-input-flyweb')
+            .setAttribute('disabled', 'disabled');
     }
-    document.querySelector('.mode-chooser-submit').addEventListener('click', function () {
+    document
+        .querySelector('.mode-chooser-submit')
+        .addEventListener('click', function () {
         var modeDOM = document.querySelector('.mode');
         var modeInputDOMs = document.querySelectorAll('.mode-chooser-input');
         var chosenMode = null;

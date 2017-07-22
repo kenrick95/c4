@@ -55,7 +55,9 @@ var Utils = (function () {
     };
     Utils.getColumnFromCoord = function (coord) {
         for (var i = 0; i < board_1.Board.COLUMNS; i++) {
-            if (Utils.isCoordOnColumn(coord, 3 * board_1.Board.PIECE_RADIUS * i + board_1.Board.MASK_X_BEGIN + 2 * board_1.Board.PIECE_RADIUS, board_1.Board.PIECE_RADIUS)) {
+            if (Utils.isCoordOnColumn(coord, 3 * board_1.Board.PIECE_RADIUS * i +
+                board_1.Board.MASK_X_BEGIN +
+                2 * board_1.Board.PIECE_RADIUS, board_1.Board.PIECE_RADIUS)) {
                 return i;
             }
         }
@@ -69,7 +71,7 @@ var Utils = (function () {
     };
     Utils.animationFrame = function () {
         var resolve = null;
-        var promise = new Promise(function (r) { return resolve = r; });
+        var promise = new Promise(function (r) { return (resolve = r); });
         window.requestAnimationFrame(resolve);
         return promise;
     };
@@ -82,7 +84,9 @@ var Utils = (function () {
     };
     Utils.getMockPlayerAction = function (map, boardPiece, column) {
         var clonedMap = Utils.clone(map);
-        if (clonedMap[0][column] !== board_1.BoardPiece.EMPTY || column < 0 || column >= board_1.Board.COLUMNS) {
+        if (clonedMap[0][column] !== board_1.BoardPiece.EMPTY ||
+            column < 0 ||
+            column >= board_1.Board.COLUMNS) {
             return {
                 success: false,
                 map: clonedMap
@@ -139,10 +143,10 @@ var Utils = (function () {
             }
         };
     };
+    Utils.BIG_POSITIVE_NUMBER = Math.pow(10, 9) + 7;
+    Utils.BIG_NEGATIVE_NUMBER = -Utils.BIG_POSITIVE_NUMBER;
     return Utils;
 }());
-Utils.BIG_POSITIVE_NUMBER = Math.pow(10, 9) + 7;
-Utils.BIG_NEGATIVE_NUMBER = -Utils.BIG_POSITIVE_NUMBER;
 exports.Utils = Utils;
 
 //# sourceMappingURL=utils.js.map

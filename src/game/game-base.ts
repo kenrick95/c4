@@ -1,33 +1,33 @@
-import { Board, BoardPiece } from '../board';
-import { Player } from '../player';
-import { Utils } from '../utils';
+import { Board, BoardPiece } from '../board'
+import { Player } from '../player'
+import { Utils } from '../utils'
 
 export abstract class GameBase {
-  board: Board;
-  players: Array<Player>;
-  currentPlayerId: number;
-  isMoveAllowed: boolean;
-  isGameWon: boolean;
+  board: Board
+  players: Array<Player>
+  currentPlayerId: number
+  isMoveAllowed: boolean
+  isGameWon: boolean
 
   constructor(players: Array<Player>, canvas: HTMLCanvasElement) {
-    this.board = new Board(canvas);
-    this.players = players;
-    this.currentPlayerId = 0;
+    this.board = new Board(canvas)
+    this.players = players
+    this.currentPlayerId = 0
     this.reset()
   }
   reset() {
-    this.isMoveAllowed = false;
-    this.isGameWon = false;
+    this.isMoveAllowed = false
+    this.isGameWon = false
     this.board.reset()
     this.board.render()
     this.board.debug()
   }
 
   async start() {
-    this.isMoveAllowed = true;
+    this.isMoveAllowed = true
     while (!this.isGameWon) {
-      await this.move();
-      const winner = this.board.getWinner();
+      await this.move()
+      const winner = this.board.getWinner()
       if (winner !== BoardPiece.EMPTY) {
         console.log('Game over: winner is player ', winner)
         this.isGameWon = true
@@ -46,7 +46,10 @@ export abstract class GameBase {
     while (!actionSuccesful) {
       const action = await currentPlayer.getAction(this.board)
       this.isMoveAllowed = false
-      actionSuccesful = await this.board.applyPlayerAction(currentPlayer, action)
+      actionSuccesful = await this.board.applyPlayerAction(
+        currentPlayer,
+        action
+      )
       this.isMoveAllowed = true
       if (!actionSuccesful) {
         console.log('Move not allowed! Try again.')
@@ -61,6 +64,6 @@ export abstract class GameBase {
   }
 
   private getNextPlayer() {
-    return (this.currentPlayerId === 0) ? 1 : 0;
+    return this.currentPlayerId === 0 ? 1 : 0
   }
 }

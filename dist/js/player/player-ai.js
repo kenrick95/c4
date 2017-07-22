@@ -18,8 +18,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -53,15 +53,16 @@ var PlayerAi = (function (_super) {
     function PlayerAi(boardPiece, canvas) {
         var _this = _super.call(this, boardPiece, canvas) || this;
         _this.ownBoardPieceValue = _this.getBoardPieceValue(boardPiece);
-        _this.enemyBoardPiece = (boardPiece === board_1.BoardPiece.PLAYER_1) ? board_1.BoardPiece.PLAYER_2 : board_1.BoardPiece.PLAYER_1;
+        _this.enemyBoardPiece =
+            boardPiece === board_1.BoardPiece.PLAYER_1
+                ? board_1.BoardPiece.PLAYER_2
+                : board_1.BoardPiece.PLAYER_1;
         return _this;
     }
     PlayerAi.prototype.getBoardPieceValue = function (boardPiece) {
-        return (boardPiece === board_1.BoardPiece.EMPTY)
+        return boardPiece === board_1.BoardPiece.EMPTY
             ? 0
-            : boardPiece === this.boardPiece
-                ? 1
-                : -1;
+            : boardPiece === this.boardPiece ? 1 : -1;
     };
     PlayerAi.prototype.getStateValue = function (state) {
         var winnerBoardPiece = board_1.BoardPiece.EMPTY;
@@ -88,16 +89,20 @@ var PlayerAi = (function (_super) {
                 chainValue += tempBottomRight * tempBottomRight * tempBottomRight;
                 chainValue += tempTopRight * tempTopRight * tempTopRight;
                 if (Math.abs(tempRight) === 4) {
-                    winnerBoardPiece = tempRight > 0 ? this.boardPiece : this.enemyBoardPiece;
+                    winnerBoardPiece =
+                        tempRight > 0 ? this.boardPiece : this.enemyBoardPiece;
                 }
                 else if (Math.abs(tempBottom) === 4) {
-                    winnerBoardPiece = tempBottom > 0 ? this.boardPiece : this.enemyBoardPiece;
+                    winnerBoardPiece =
+                        tempBottom > 0 ? this.boardPiece : this.enemyBoardPiece;
                 }
                 else if (Math.abs(tempBottomRight) === 4) {
-                    winnerBoardPiece = tempBottomRight > 0 ? this.boardPiece : this.enemyBoardPiece;
+                    winnerBoardPiece =
+                        tempBottomRight > 0 ? this.boardPiece : this.enemyBoardPiece;
                 }
                 else if (Math.abs(tempTopRight) === 4) {
-                    winnerBoardPiece = tempTopRight > 0 ? this.boardPiece : this.enemyBoardPiece;
+                    winnerBoardPiece =
+                        tempTopRight > 0 ? this.boardPiece : this.enemyBoardPiece;
                 }
             }
         }
@@ -128,7 +133,7 @@ var PlayerAi = (function (_super) {
                 move: -1
             };
         }
-        return (depth % 2 === 0)
+        return depth % 2 === 0
             ? this.minState(state, depth + 1, alpha, beta)
             : this.maxState(state, depth + 1, alpha, beta);
     };
@@ -194,14 +199,15 @@ var PlayerAi = (function (_super) {
             return __generator(this, function (_a) {
                 state = utils_1.Utils.clone(board.map);
                 action = this.maxState(state, 0, utils_1.Utils.BIG_NEGATIVE_NUMBER, utils_1.Utils.BIG_POSITIVE_NUMBER);
-                console.log("AI " + this.boardPiece + " choose column " + action.move + " with value of " + action.value);
-                return [2 /*return*/, action.move];
+                console.log("AI " + this
+                    .boardPiece + " choose column " + action.move + " with value of " + action.value);
+                return [2, action.move];
             });
         });
     };
+    PlayerAi.MAX_DEPTH = 4;
     return PlayerAi;
 }(player_1.Player));
-PlayerAi.MAX_DEPTH = 4;
 exports.PlayerAi = PlayerAi;
 
 //# sourceMappingURL=player-ai.js.map

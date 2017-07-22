@@ -1,1 +1,1 @@
-export * from './INavigator';
+export * from './INavigator'

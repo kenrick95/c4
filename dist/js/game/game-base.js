@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -59,8 +59,8 @@ var GameBase = (function () {
                         this.isMoveAllowed = true;
                         _a.label = 1;
                     case 1:
-                        if (!!this.isGameWon) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.move()];
+                        if (!!this.isGameWon) return [3, 3];
+                        return [4, this.move()];
                     case 2:
                         _a.sent();
                         winner = this.board.getWinner();
@@ -69,10 +69,10 @@ var GameBase = (function () {
                             this.isGameWon = true;
                             this.isMoveAllowed = false;
                             this.board.announceWinner();
-                            return [3 /*break*/, 3];
+                            return [3, 3];
                         }
-                        return [3 /*break*/, 1];
-                    case 3: return [2 /*return*/];
+                        return [3, 1];
+                    case 3: return [2];
                 }
             });
         });
@@ -84,18 +84,18 @@ var GameBase = (function () {
                 switch (_a.label) {
                     case 0:
                         if (!this.isMoveAllowed) {
-                            return [2 /*return*/];
+                            return [2];
                         }
                         currentPlayer = this.players[this.currentPlayerId];
                         actionSuccesful = false;
                         _a.label = 1;
                     case 1:
-                        if (!!actionSuccesful) return [3 /*break*/, 4];
-                        return [4 /*yield*/, currentPlayer.getAction(this.board)];
+                        if (!!actionSuccesful) return [3, 4];
+                        return [4, currentPlayer.getAction(this.board)];
                     case 2:
                         action = _a.sent();
                         this.isMoveAllowed = false;
-                        return [4 /*yield*/, this.board.applyPlayerAction(currentPlayer, action)];
+                        return [4, this.board.applyPlayerAction(currentPlayer, action)];
                     case 3:
                         actionSuccesful = _a.sent();
                         this.isMoveAllowed = true;
@@ -105,10 +105,10 @@ var GameBase = (function () {
                         else {
                             this.afterMove(action);
                         }
-                        return [3 /*break*/, 1];
+                        return [3, 1];
                     case 4:
                         this.currentPlayerId = this.getNextPlayer();
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
@@ -116,7 +116,7 @@ var GameBase = (function () {
     GameBase.prototype.afterMove = function (action) {
     };
     GameBase.prototype.getNextPlayer = function () {
-        return (this.currentPlayerId === 0) ? 1 : 0;
+        return this.currentPlayerId === 0 ? 1 : 0;
     };
     return GameBase;
 }());

@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -64,16 +64,16 @@ var Board = (function () {
         utils_1.Utils.clearCanvas(this);
     };
     Board.prototype.getBoardScale = function () {
-        return (window.innerWidth < 640)
-            ? Board.SCALE = 0.5
-            : Board.SCALE = 1.0;
+        return window.innerWidth < 640 ? (Board.SCALE = 0.5) : (Board.SCALE = 1.0);
     };
     Board.prototype.initConstants = function () {
         Board.CANVAS_HEIGHT = Board.SCALE * 480;
         Board.CANVAS_WIDTH = Board.SCALE * 640;
         Board.PIECE_RADIUS = Board.SCALE * 25;
-        Board.MASK_X_BEGIN = Math.max(0, Board.CANVAS_WIDTH - (3 * Board.COLUMNS + 1) * Board.PIECE_RADIUS) / 2;
-        Board.MASK_Y_BEGIN = Math.max(0, Board.CANVAS_HEIGHT - (3 * Board.ROWS + 1) * Board.PIECE_RADIUS) / 2;
+        Board.MASK_X_BEGIN =
+            Math.max(0, Board.CANVAS_WIDTH - (3 * Board.COLUMNS + 1) * Board.PIECE_RADIUS) / 2;
+        Board.MASK_Y_BEGIN =
+            Math.max(0, Board.CANVAS_HEIGHT - (3 * Board.ROWS + 1) * Board.PIECE_RADIUS) / 2;
         Board.MESSAGE_WIDTH = Board.SCALE * 400;
         Board.MESSAGE_X_BEGIN = (Board.CANVAS_WIDTH - Board.MESSAGE_WIDTH) / 2;
         Board.MESSAGE_Y_BEGIN = Board.SCALE * 20;
@@ -99,8 +99,10 @@ var Board = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (this.map[0][column] !== BoardPiece.EMPTY || column < 0 || column >= Board.COLUMNS) {
-                            return [2 /*return*/, false];
+                        if (this.map[0][column] !== BoardPiece.EMPTY ||
+                            column < 0 ||
+                            column >= Board.COLUMNS) {
+                            return [2, false];
                         }
                         isColumnEverFilled = false;
                         row = 0;
@@ -114,16 +116,16 @@ var Board = (function () {
                         if (!isColumnEverFilled) {
                             row = Board.ROWS - 1;
                         }
-                        return [4 /*yield*/, this.animateAction(row, column, player.boardPiece)];
+                        return [4, this.animateAction(row, column, player.boardPiece)];
                     case 1:
                         _a.sent();
                         this.map[row][column] = player.boardPiece;
                         this.debug();
-                        return [4 /*yield*/, utils_1.Utils.animationFrame()];
+                        return [4, utils_1.Utils.animationFrame()];
                     case 2:
                         _a.sent();
                         this.render();
-                        return [2 /*return*/, true];
+                        return [2, true];
                 }
             });
         });
@@ -150,7 +152,11 @@ var Board = (function () {
             if (count >= 4) {
                 return true;
             }
-            if (i < 0 || j < 0 || i >= Board.ROWS || j >= Board.COLUMNS || _this.map[i][j] !== playerPiece) {
+            if (i < 0 ||
+                j < 0 ||
+                i >= Board.ROWS ||
+                j >= Board.COLUMNS ||
+                _this.map[i][j] !== playerPiece) {
                 return false;
             }
             return isWinningSequence(i + dir[0], j + dir[1], playerPiece, dir, count + 1);
@@ -163,7 +169,7 @@ var Board = (function () {
                     for (var k = 0; k < direction.length; k++) {
                         var isWon = isWinningSequence(i + direction[k][0], j + direction[k][1], playerPiece, direction[k], 1);
                         if (isWon) {
-                            return this.winnerBoardPiece = playerPiece;
+                            return (this.winnerBoardPiece = playerPiece);
                         }
                     }
                 }
@@ -173,7 +179,7 @@ var Board = (function () {
             }
         }
         if (countEmpty === 0) {
-            return this.winnerBoardPiece = BoardPiece.DRAW;
+            return (this.winnerBoardPiece = BoardPiece.DRAW);
         }
         return BoardPiece.EMPTY;
     };
@@ -188,14 +194,18 @@ var Board = (function () {
         else {
             message += "Player " + this.winnerBoardPiece + " wins";
         }
-        message += '.<br />After dismissing this message, click the board to reset game.';
+        message +=
+            '.<br />After dismissing this message, click the board to reset game.';
         utils_1.Utils.showMessage(message);
     };
     Board.prototype.getPlayerColor = function (boardPiece) {
         switch (boardPiece) {
-            case BoardPiece.PLAYER_1: return Board.PLAYER_1_COLOR;
-            case BoardPiece.PLAYER_2: return Board.PLAYER_2_COLOR;
-            default: return 'transparent';
+            case BoardPiece.PLAYER_1:
+                return Board.PLAYER_1_COLOR;
+            case BoardPiece.PLAYER_2:
+                return Board.PLAYER_2_COLOR;
+            default:
+                return 'transparent';
         }
     };
     Board.prototype.animateAction = function (newRow, column, boardPiece) {
@@ -211,7 +221,9 @@ var Board = (function () {
                             return __generator(this, function (_a) {
                                 utils_1.Utils.clearCanvas(this);
                                 utils_1.Utils.drawCircle(this.context, {
-                                    x: 3 * Board.PIECE_RADIUS * column + Board.MASK_X_BEGIN + 2 * Board.PIECE_RADIUS,
+                                    x: 3 * Board.PIECE_RADIUS * column +
+                                        Board.MASK_X_BEGIN +
+                                        2 * Board.PIECE_RADIUS,
                                     y: currentY + Board.MASK_Y_BEGIN + 2 * Board.PIECE_RADIUS,
                                     r: Board.PIECE_RADIUS,
                                     fillStyle: fillStyle,
@@ -219,30 +231,33 @@ var Board = (function () {
                                 });
                                 this.render();
                                 currentY += Board.PIECE_RADIUS;
-                                return [2 /*return*/];
+                                return [2];
                             });
                         }); };
                         _a.label = 1;
                     case 1:
-                        if (!(newRow * 3 * Board.PIECE_RADIUS >= currentY)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, utils_1.Utils.animationFrame()];
+                        if (!(newRow * 3 * Board.PIECE_RADIUS >= currentY)) return [3, 3];
+                        return [4, utils_1.Utils.animationFrame()];
                     case 2:
                         _a.sent();
                         doAnimation();
-                        return [3 /*break*/, 1];
-                    case 3: return [2 /*return*/];
+                        return [3, 1];
+                    case 3: return [2];
                 }
             });
         });
     };
-    ;
     Board.prototype.render = function () {
         utils_1.Utils.drawMask(this);
         for (var y = 0; y < Board.ROWS; y++) {
             for (var x = 0; x < Board.COLUMNS; x++) {
                 utils_1.Utils.drawCircle(this.context, {
-                    x: 3 * Board.PIECE_RADIUS * x + Board.MASK_X_BEGIN + 2 * Board.PIECE_RADIUS,
-                    y: 3 * Board.PIECE_RADIUS * y + Board.MASK_Y_BEGIN + 2 * Board.PIECE_RADIUS,
+                    x: 3 * Board.PIECE_RADIUS * x +
+                        Board.MASK_X_BEGIN +
+                        2 * Board.PIECE_RADIUS,
+                    y: 3 * Board.PIECE_RADIUS * y +
+                        Board.MASK_Y_BEGIN +
+                        2 * Board.PIECE_RADIUS,
                     r: Board.PIECE_RADIUS,
                     fillStyle: this.getPlayerColor(this.map[y][x]),
                     strokeStyle: Board.PIECE_STROKE_STYLE
@@ -250,14 +265,14 @@ var Board = (function () {
             }
         }
     };
+    Board.ROWS = 6;
+    Board.COLUMNS = 7;
+    Board.PLAYER_1_COLOR = '#ef453b';
+    Board.PLAYER_2_COLOR = '#0059ff';
+    Board.PIECE_STROKE_STYLE = 'black';
+    Board.MASK_COLOR = '#d8d8d8';
     return Board;
 }());
-Board.ROWS = 6;
-Board.COLUMNS = 7;
-Board.PLAYER_1_COLOR = '#ef453b';
-Board.PLAYER_2_COLOR = '#0059ff';
-Board.PIECE_STROKE_STYLE = 'black';
-Board.MASK_COLOR = '#d8d8d8';
 exports.Board = Board;
 
 //# sourceMappingURL=board.js.map
