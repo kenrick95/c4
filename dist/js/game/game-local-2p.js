@@ -59,6 +59,10 @@ var GameLocal2p = (function (_super) {
 function initGameLocal2p() {
     var _this = this;
     var canvas = document.querySelector('canvas');
+    if (!canvas) {
+        console.error('Canvas DOM is null');
+        return;
+    }
     var game = new GameLocal2p([
         new player_1.PlayerHuman(board_1.BoardPiece.PLAYER_1, canvas),
         new player_1.PlayerHuman(board_1.BoardPiece.PLAYER_2, canvas)

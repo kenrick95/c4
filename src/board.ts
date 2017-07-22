@@ -32,7 +32,7 @@ export class Board {
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas
-    this.context = canvas.getContext('2d')
+    this.context = <CanvasRenderingContext2D>canvas.getContext('2d')
     this.getBoardScale()
     this.initConstants()
     this.reset()

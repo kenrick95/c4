@@ -275,7 +275,11 @@ function initGameFlyweb(_a) {
     var _this = this;
     var _b = _a.clientMode, clientMode = _b === void 0 ? false : _b;
     var canvas = document.querySelector('canvas');
-    var players = null;
+    if (!canvas) {
+        console.error('Canvas DOM is null');
+        return;
+    }
+    var players = [];
     if (clientMode) {
         players = [
             new player_1.PlayerFlywebSlave(board_1.BoardPiece.PLAYER_1, canvas),

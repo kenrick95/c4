@@ -80,9 +80,9 @@ export class PlayerAi extends Player {
   /**
    * @return transformed value, so the AI could take a "lower hanging fruit",
    *          i.e. a reward in closer future worth more than the same reward in distant future
-   * @param returnValue 
-   * @param winnerBoardPiece 
-   * @param depth 
+   * @param returnValue
+   * @param winnerBoardPiece
+   * @param depth
    */
   private transformValues(
     returnValue: number,

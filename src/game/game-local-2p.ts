@@ -10,6 +10,10 @@ class GameLocal2p extends GameBase {
 }
 export function initGameLocal2p() {
   const canvas = document.querySelector('canvas')
+  if (!canvas) {
+    console.error('Canvas DOM is null')
+    return
+  }
   const game = new GameLocal2p(
     [
       new PlayerHuman(BoardPiece.PLAYER_1, canvas),

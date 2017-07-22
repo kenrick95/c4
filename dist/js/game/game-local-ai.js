@@ -59,6 +59,10 @@ var GameLocalAi = (function (_super) {
 function initGameLocalAi() {
     var _this = this;
     var canvas = document.querySelector('canvas');
+    if (!canvas) {
+        console.error('Canvas DOM is null');
+        return;
+    }
     var game = new GameLocalAi([
         new player_1.PlayerHuman(board_1.BoardPiece.PLAYER_1, canvas),
         new player_1.PlayerAi(board_1.BoardPiece.PLAYER_2, canvas)

@@ -7,10 +7,22 @@ var Utils = (function () {
     Utils.showMessage = function (message) {
         if (message === void 0) { message = ''; }
         var messageDOM = document.querySelector('.message');
+        if (!messageDOM) {
+            console.error('Message DOM is null!');
+            return;
+        }
         messageDOM.classList.remove('hidden');
         var messageContentDOM = document.querySelector('.message-body-content');
+        if (!messageContentDOM) {
+            console.error('Message body content DOM is null!');
+            return;
+        }
         messageContentDOM.innerHTML = message;
         var messageDismissDOM = document.querySelector('.message-body-dismiss');
+        if (!messageDismissDOM) {
+            console.error('Message body dismiss DOM is null!');
+            return;
+        }
         var dismissHandler = function () {
             messageDOM.classList.add('invisible');
             messageDOM.addEventListener('transitionend', function () {
@@ -72,7 +84,9 @@ var Utils = (function () {
     Utils.animationFrame = function () {
         var resolve = null;
         var promise = new Promise(function (r) { return (resolve = r); });
-        window.requestAnimationFrame(resolve);
+        if (resolve) {
+            window.requestAnimationFrame(resolve);
+        }
         return promise;
     };
     Utils.clone = function (array) {

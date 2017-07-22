@@ -204,7 +204,11 @@ class GameFlyweb extends GameBase {
 
 export function initGameFlyweb({ clientMode = false }) {
   const canvas = document.querySelector('canvas')
-  let players: Array<Player> = null
+  if (!canvas) {
+    console.error('Canvas DOM is null')
+    return
+  }
+  let players: Array<Player> = []
   if (clientMode) {
     players = [
       new PlayerFlywebSlave(BoardPiece.PLAYER_1, canvas),

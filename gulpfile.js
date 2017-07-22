@@ -3,7 +3,6 @@ var gulp = require('gulp')
 // var debug = require('gulp-debug')
 // var inject = require('gulp-inject')
 var tsc = require('gulp-typescript')
-var tslint = require('gulp-tslint')
 var sourcemaps = require('gulp-sourcemaps')
 var uglify = require('gulp-uglify')
 var del = require('del')
@@ -15,6 +14,8 @@ var superstatic = require('superstatic')
 var browserify = require('browserify')
 
 var buffer = require('gulp-buffer')
+var gulpTslint = require('gulp-tslint')
+var tslint = require('tslint')
 
 var config = new Config()
 
@@ -22,14 +23,12 @@ var config = new Config()
  * Lint all custom TypeScript files.
  */
 gulp.task('ts-lint', function () {
-  return gulp
-    .src(config.allTypeScript)
-    .pipe(
-      tslint({
-        formatter: 'verbose'
-      })
-    )
-    .pipe(tslint.report())
+  var program = tslint.Linter.createProgram('./tsconfig.json')
+  return gulp.src(config.allTypeScript).pipe(
+    gulpTslint({
+      program
+    })
+  )
 })
 
 /**

@@ -6,12 +6,24 @@ export class Utils {
 
   static showMessage(message = '') {
     const messageDOM = document.querySelector('.message')
+    if (!messageDOM) {
+      console.error('Message DOM is null!')
+      return
+    }
     messageDOM.classList.remove('hidden')
 
     const messageContentDOM = document.querySelector('.message-body-content')
+    if (!messageContentDOM) {
+      console.error('Message body content DOM is null!')
+      return
+    }
     messageContentDOM.innerHTML = message
 
     const messageDismissDOM = document.querySelector('.message-body-dismiss')
+    if (!messageDismissDOM) {
+      console.error('Message body dismiss DOM is null!')
+      return
+    }
     const dismissHandler = () => {
       messageDOM.classList.add('invisible')
       messageDOM.addEventListener('transitionend', () => {
@@ -74,7 +86,7 @@ export class Utils {
   }
 
   /**
-   * 
+   *
    * @param coord Coordinate of point to be checked
    * @param columnXBegin X-Coordinate of N-th column
    * @param radius Radius of a piece
@@ -119,7 +131,9 @@ export class Utils {
   static animationFrame() {
     let resolve = null
     const promise = new Promise(r => (resolve = r))
-    window.requestAnimationFrame(resolve)
+    if (resolve) {
+      window.requestAnimationFrame(resolve)
+    }
     return promise
   }
 

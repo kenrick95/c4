@@ -10,6 +10,10 @@ class GameLocalAi extends GameBase {
 }
 export function initGameLocalAi() {
   const canvas = document.querySelector('canvas')
+  if (!canvas) {
+    console.error('Canvas DOM is null')
+    return
+  }
   const game = new GameLocalAi(
     [
       new PlayerHuman(BoardPiece.PLAYER_1, canvas),
