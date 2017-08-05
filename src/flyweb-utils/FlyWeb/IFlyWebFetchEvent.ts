@@ -1,5 +1,5 @@
 export interface IFlyWebFetchEvent extends Event {
-  request: Request;
+  request: Request
 
-  respondWith(response: Promise<Response>): void;
-};
+  respondWith(response: Promise<Response>): void
+}

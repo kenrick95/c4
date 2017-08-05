@@ -18,8 +18,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -71,7 +71,8 @@ var GameFlyweb = (function (_super) {
         return _this;
     }
     GameFlyweb.prototype.afterMove = function (action) {
-        if ((this.clientMode && this.currentPlayerId === 1) || (!this.clientMode && this.currentPlayerId === 0)) {
+        if ((this.clientMode && this.currentPlayerId === 1) ||
+            (!this.clientMode && this.currentPlayerId === 0)) {
             this.playerMaster.socket.send(JSON.stringify({
                 type: 'move',
                 data: {
@@ -106,28 +107,28 @@ var GameFlyweb = (function (_super) {
                         console.log('client socket.onmessage()', evt);
                         message = JSON.parse(evt.data);
                         if (!message) {
-                            return [2 /*return*/];
+                            return [2];
                         }
                         if (message.from === 'client') {
-                            return [2 /*return*/];
+                            return [2];
                         }
-                        if (!(message.type === 'start')) return [3 /*break*/, 1];
+                        if (!(message.type === 'start')) return [3, 1];
                         utils_1.Utils.showMessage('<h1>Welcome!</h1>Connection to Player 1 has been established. Game started!');
                         this.start();
-                        return [3 /*break*/, 4];
+                        return [3, 4];
                     case 1:
-                        if (!(message.type === 'move')) return [3 /*break*/, 2];
+                        if (!(message.type === 'move')) return [3, 2];
                         this.playerSlave.doAction(message.data.column);
-                        return [3 /*break*/, 4];
+                        return [3, 4];
                     case 2:
-                        if (!(message.type === 'reset')) return [3 /*break*/, 4];
+                        if (!(message.type === 'reset')) return [3, 4];
                         this.reset();
-                        return [4 /*yield*/, utils_1.Utils.animationFrame()];
+                        return [4, utils_1.Utils.animationFrame()];
                     case 3:
                         _a.sent();
                         this.start();
                         _a.label = 4;
-                    case 4: return [2 /*return*/];
+                    case 4: return [2];
                 }
             });
         }); };
@@ -137,22 +138,22 @@ var GameFlyweb = (function (_super) {
             var response, contentType, blob, headers;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, fetch(this.BASE_URL + url)];
+                    case 0: return [4, fetch(this.BASE_URL + url)];
                     case 1:
                         response = _a.sent();
                         contentType = response.headers.get('Content-Type');
-                        return [4 /*yield*/, response.blob()];
+                        return [4, response.blob()];
                     case 2:
                         blob = _a.sent();
                         headers = {
                             'Content-Type': contentType,
                             'Cache-Control': 'no-cache, no-store, must-revalidate',
-                            'Pragma': 'no-cache',
-                            'Expires': 0
+                            Pragma: 'no-cache',
+                            Expires: 0
                         };
                         console.log('Response is: ', url);
                         evt.respondWith(new Promise(function (r) { return r(new Response(blob, { headers: headers })); }));
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
@@ -196,23 +197,23 @@ var GameFlyweb = (function (_super) {
                         console.log('server socket.onmessage()', evt);
                         message = JSON.parse(evt.data);
                         if (!message) {
-                            return [2 /*return*/];
+                            return [2];
                         }
                         if (message.from === 'server') {
-                            return [2 /*return*/];
+                            return [2];
                         }
-                        if (!(message.type === 'move')) return [3 /*break*/, 1];
+                        if (!(message.type === 'move')) return [3, 1];
                         this.playerSlave.doAction(message.data.column);
-                        return [3 /*break*/, 3];
+                        return [3, 3];
                     case 1:
-                        if (!(message.type === 'reset')) return [3 /*break*/, 3];
+                        if (!(message.type === 'reset')) return [3, 3];
                         this.reset();
-                        return [4 /*yield*/, utils_1.Utils.animationFrame()];
+                        return [4, utils_1.Utils.animationFrame()];
                     case 2:
                         _a.sent();
                         this.start();
                         _a.label = 3;
-                    case 3: return [2 /*return*/];
+                    case 3: return [2];
                 }
             });
         }); };
@@ -226,9 +227,9 @@ var GameFlyweb = (function (_super) {
                     case 0:
                         if (!('publishServer' in this.browser)) {
                             utils_1.Utils.showMessage("<h1>Attention!</h1>\n        FlyWeb requires Firefox Developer Edition or Nightly,\n        and enabling \"dom.flyweb.enabled\" flag at about:config");
-                            return [2 /*return*/, false];
+                            return [2, false];
                         }
-                        return [4 /*yield*/, this.browser.publishServer('c4 - Connect Four')];
+                        return [4, this.browser.publishServer('c4 - Connect Four')];
                     case 1:
                         server = _a.sent();
                         server.onfetch = function (evt) { return __awaiter(_this, void 0, void 0, function () {
@@ -242,18 +243,18 @@ var GameFlyweb = (function (_super) {
                                         console.log('me Requested for url: ', url, params);
                                         _a = url;
                                         switch (_a) {
-                                            case '/dist/app.js': return [3 /*break*/, 1];
+                                            case '/dist/app.js': return [3, 1];
                                         }
-                                        return [3 /*break*/, 3];
-                                    case 1: return [4 /*yield*/, this.fetch(evt, '/dist/app-flyweb-client.js')];
+                                        return [3, 3];
+                                    case 1: return [4, this.fetch(evt, '/dist/app-flyweb-client.js')];
                                     case 2:
                                         _b.sent();
-                                        return [3 /*break*/, 5];
-                                    case 3: return [4 /*yield*/, this.fetch(evt, url)];
+                                        return [3, 5];
+                                    case 3: return [4, this.fetch(evt, url)];
                                     case 4:
                                         _b.sent();
                                         _b.label = 5;
-                                    case 5: return [2 /*return*/];
+                                    case 5: return [2];
                                 }
                             });
                         }); };
@@ -263,7 +264,7 @@ var GameFlyweb = (function (_super) {
                                 _this.handleWsServer(evt);
                             }
                         };
-                        return [2 /*return*/];
+                        return [2];
                 }
             });
         });
@@ -274,7 +275,11 @@ function initGameFlyweb(_a) {
     var _this = this;
     var _b = _a.clientMode, clientMode = _b === void 0 ? false : _b;
     var canvas = document.querySelector('canvas');
-    var players = null;
+    if (!canvas) {
+        console.error('Canvas DOM is null');
+        return;
+    }
+    var players = [];
     if (clientMode) {
         players = [
             new player_1.PlayerFlywebSlave(board_1.BoardPiece.PLAYER_1, canvas),
@@ -293,7 +298,7 @@ function initGameFlyweb(_a) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    if (!game.isGameWon) return [3 /*break*/, 2];
+                    if (!game.isGameWon) return [3, 2];
                     game.reset();
                     if (game.playerMaster && game.playerMaster.socket) {
                         game.playerMaster.socket.send(JSON.stringify({
@@ -303,12 +308,12 @@ function initGameFlyweb(_a) {
                             }
                         }));
                     }
-                    return [4 /*yield*/, utils_1.Utils.animationFrame()];
+                    return [4, utils_1.Utils.animationFrame()];
                 case 1:
                     _a.sent();
                     game.start();
                     _a.label = 2;
-                case 2: return [2 /*return*/];
+                case 2: return [2];
             }
         });
     }); });

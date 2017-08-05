@@ -1,9 +1,9 @@
-import { Player } from './player';
-import { Board, BoardPiece } from '../board';
-import { Utils } from '../utils';
+import { Player } from './player'
+import { Board, BoardPiece } from '../board'
+import { Utils } from '../utils'
 
 export class PlayerFlywebSlave extends Player {
-  actionPromiseResolver: any;
+  actionPromiseResolver: any
 
   constructor(boardPiece: BoardPiece, canvas: HTMLCanvasElement) {
     super(boardPiece, canvas)
@@ -17,6 +17,6 @@ export class PlayerFlywebSlave extends Player {
   }
 
   async getAction(board: Board): Promise<number> {
-    return new Promise<number>(r => this.actionPromiseResolver = r)
+    return new Promise<number>(r => (this.actionPromiseResolver = r))
   }
 }

@@ -1,17 +1,29 @@
-import { Board, BoardPiece } from './board';
+import { Board, BoardPiece } from './board'
 
 export class Utils {
-  static readonly BIG_POSITIVE_NUMBER = 10 ** 9 + 7;
-  static readonly BIG_NEGATIVE_NUMBER = -Utils.BIG_POSITIVE_NUMBER;
+  static readonly BIG_POSITIVE_NUMBER = 10 ** 9 + 7
+  static readonly BIG_NEGATIVE_NUMBER = -Utils.BIG_POSITIVE_NUMBER
 
   static showMessage(message = '') {
     const messageDOM = document.querySelector('.message')
+    if (!messageDOM) {
+      console.error('Message DOM is null!')
+      return
+    }
     messageDOM.classList.remove('hidden')
 
     const messageContentDOM = document.querySelector('.message-body-content')
+    if (!messageContentDOM) {
+      console.error('Message body content DOM is null!')
+      return
+    }
     messageContentDOM.innerHTML = message
 
     const messageDismissDOM = document.querySelector('.message-body-dismiss')
+    if (!messageDismissDOM) {
+      console.error('Message body dismiss DOM is null!')
+      return
+    }
     const dismissHandler = () => {
       messageDOM.classList.add('invisible')
       messageDOM.addEventListener('transitionend', () => {
@@ -23,7 +35,10 @@ export class Utils {
     messageDismissDOM.addEventListener('click', dismissHandler)
   }
 
-  static drawCircle(context: CanvasRenderingContext2D, { x = 0, y = 0, r = 0, fillStyle = '', strokeStyle = '' }) {
+  static drawCircle(
+    context: CanvasRenderingContext2D,
+    { x = 0, y = 0, r = 0, fillStyle = '', strokeStyle = '' }
+  ) {
     context.save()
     context.fillStyle = fillStyle
     context.strokeStyle = strokeStyle
@@ -47,10 +62,19 @@ export class Utils {
     const tripleRadius = 3 * Board.PIECE_RADIUS
     for (let y = 0; y < Board.ROWS; y++) {
       for (let x = 0; x < Board.COLUMNS; x++) {
-        context.arc(tripleRadius * x + Board.MASK_X_BEGIN + doubleRadius,
-          tripleRadius * y + Board.MASK_Y_BEGIN + doubleRadius, Board.PIECE_RADIUS, 0, 2 * Math.PI)
-        context.rect(tripleRadius * x + Board.MASK_X_BEGIN + 2 * doubleRadius,
-          tripleRadius * y + Board.MASK_Y_BEGIN, -2 * doubleRadius, 2 * doubleRadius)
+        context.arc(
+          tripleRadius * x + Board.MASK_X_BEGIN + doubleRadius,
+          tripleRadius * y + Board.MASK_Y_BEGIN + doubleRadius,
+          Board.PIECE_RADIUS,
+          0,
+          2 * Math.PI
+        )
+        context.rect(
+          tripleRadius * x + Board.MASK_X_BEGIN + 2 * doubleRadius,
+          tripleRadius * y + Board.MASK_Y_BEGIN,
+          -2 * doubleRadius,
+          2 * doubleRadius
+        )
       }
     }
     context.fill()
@@ -62,18 +86,32 @@ export class Utils {
   }
 
   /**
-   * 
+   *
    * @param coord Coordinate of point to be checked
    * @param columnXBegin X-Coordinate of N-th column
    * @param radius Radius of a piece
    */
-  static isCoordOnColumn(coord: { x: number, y: number }, columnXBegin: number, radius: number): boolean {
-    return ((coord.x - columnXBegin) * (coord.x - columnXBegin) <= radius * radius)
+  static isCoordOnColumn(
+    coord: { x: number; y: number },
+    columnXBegin: number,
+    radius: number
+  ): boolean {
+    return (
+      (coord.x - columnXBegin) * (coord.x - columnXBegin) <= radius * radius
+    )
   }
 
-  static getColumnFromCoord(coord: { x: number, y: number }) {
+  static getColumnFromCoord(coord: { x: number; y: number }) {
     for (let i = 0; i < Board.COLUMNS; i++) {
-      if (Utils.isCoordOnColumn(coord, 3 * Board.PIECE_RADIUS * i + Board.MASK_X_BEGIN + 2 * Board.PIECE_RADIUS, Board.PIECE_RADIUS)) {
+      if (
+        Utils.isCoordOnColumn(
+          coord,
+          3 * Board.PIECE_RADIUS * i +
+            Board.MASK_X_BEGIN +
+            2 * Board.PIECE_RADIUS,
+          Board.PIECE_RADIUS
+        )
+      ) {
         return i
       }
     }
@@ -92,8 +130,10 @@ export class Utils {
    */
   static animationFrame() {
     let resolve = null
-    const promise = new Promise(r => resolve = r)
-    window.requestAnimationFrame(resolve)
+    const promise = new Promise(r => (resolve = r))
+    if (resolve) {
+      window.requestAnimationFrame(resolve)
+    }
     return promise
   }
 
@@ -105,12 +145,20 @@ export class Utils {
     return arr
   }
 
-  static getMockPlayerAction(map: Array<Array<number>>, boardPiece: BoardPiece, column: number): {
-    success: boolean,
+  static getMockPlayerAction(
+    map: Array<Array<number>>,
+    boardPiece: BoardPiece,
+    column: number
+  ): {
+    success: boolean
     map: Array<Array<number>>
   } {
     const clonedMap = Utils.clone(map)
-    if (clonedMap[0][column] !== BoardPiece.EMPTY || column < 0 || column >= Board.COLUMNS) {
+    if (
+      clonedMap[0][column] !== BoardPiece.EMPTY ||
+      column < 0 ||
+      column >= Board.COLUMNS
+    ) {
       return {
         success: false,
         map: clonedMap
@@ -143,45 +191,43 @@ export class Utils {
    */
   static onresize() {
     var callbacks: Array<Function> = [],
-      running = false;
+      running = false
 
     // fired on resize event
     function resize() {
       if (!running) {
-        running = true;
+        running = true
 
         if (window.requestAnimationFrame) {
-          window.requestAnimationFrame(runCallbacks);
+          window.requestAnimationFrame(runCallbacks)
         } else {
-          setTimeout(runCallbacks, 66);
+          setTimeout(runCallbacks, 66)
         }
       }
-
     }
 
     // run the actual callbacks
     function runCallbacks() {
-      callbacks.forEach(function (callback) {
-        callback();
-      });
-      running = false;
+      callbacks.forEach(function(callback) {
+        callback()
+      })
+      running = false
     }
 
     // adds callback to loop
     function addCallback(callback: Function) {
       if (callback) {
-        callbacks.push(callback);
+        callbacks.push(callback)
       }
-
     }
 
     return {
       // public method to add additional callback
-      add: function (callback: Function) {
+      add: function(callback: Function) {
         if (!callbacks.length) {
-          window.addEventListener('resize', resize);
+          window.addEventListener('resize', resize)
         }
-        addCallback(callback);
+        addCallback(callback)
       }
     }
   }

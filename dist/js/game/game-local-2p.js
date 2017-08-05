@@ -18,8 +18,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -59,6 +59,10 @@ var GameLocal2p = (function (_super) {
 function initGameLocal2p() {
     var _this = this;
     var canvas = document.querySelector('canvas');
+    if (!canvas) {
+        console.error('Canvas DOM is null');
+        return;
+    }
     var game = new GameLocal2p([
         new player_1.PlayerHuman(board_1.BoardPiece.PLAYER_1, canvas),
         new player_1.PlayerHuman(board_1.BoardPiece.PLAYER_2, canvas)
@@ -68,14 +72,14 @@ function initGameLocal2p() {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    if (!game.isGameWon) return [3 /*break*/, 2];
+                    if (!game.isGameWon) return [3, 2];
                     game.reset();
-                    return [4 /*yield*/, utils_1.Utils.animationFrame()];
+                    return [4, utils_1.Utils.animationFrame()];
                 case 1:
                     _a.sent();
                     game.start();
                     _a.label = 2;
-                case 2: return [2 /*return*/];
+                case 2: return [2];
             }
         });
     }); });

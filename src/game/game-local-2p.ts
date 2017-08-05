@@ -1,7 +1,7 @@
-import { Board, BoardPiece } from '../board';
-import { GameBase } from './game-base';
-import { Player, PlayerHuman } from '../player';
-import { Utils } from '../utils';
+import { Board, BoardPiece } from '../board'
+import { GameBase } from './game-base'
+import { Player, PlayerHuman } from '../player'
+import { Utils } from '../utils'
 
 class GameLocal2p extends GameBase {
   constructor(players: Array<Player>, canvas: HTMLCanvasElement) {
@@ -10,10 +10,17 @@ class GameLocal2p extends GameBase {
 }
 export function initGameLocal2p() {
   const canvas = document.querySelector('canvas')
-  const game = new GameLocal2p([
-    new PlayerHuman(BoardPiece.PLAYER_1, canvas),
-    new PlayerHuman(BoardPiece.PLAYER_2, canvas)
-  ], canvas)
+  if (!canvas) {
+    console.error('Canvas DOM is null')
+    return
+  }
+  const game = new GameLocal2p(
+    [
+      new PlayerHuman(BoardPiece.PLAYER_1, canvas),
+      new PlayerHuman(BoardPiece.PLAYER_2, canvas)
+    ],
+    canvas
+  )
   game.start()
   canvas.addEventListener('click', async () => {
     if (game.isGameWon) {

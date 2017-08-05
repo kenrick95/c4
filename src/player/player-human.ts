@@ -1,15 +1,15 @@
-import { Player } from './player';
-import { Board, BoardPiece } from '../board';
-import { Utils } from '../utils';
+import { Player } from './player'
+import { Board, BoardPiece } from '../board'
+import { Utils } from '../utils'
 
 export class PlayerHuman extends Player {
-  clickPromiseResolver: any;
+  clickPromiseResolver: any
 
   constructor(boardPiece: BoardPiece, canvas: HTMLCanvasElement) {
     super(boardPiece, canvas)
     this.clickPromiseResolver = null
 
-    canvas.addEventListener('click', (evt) => {
+    canvas.addEventListener('click', evt => {
       try {
         this.handleClick(evt)
       } catch (e) {
@@ -33,6 +33,6 @@ export class PlayerHuman extends Player {
   }
 
   async getAction(board: Board): Promise<number> {
-    return new Promise<number>(r => this.clickPromiseResolver = r)
+    return new Promise<number>(r => (this.clickPromiseResolver = r))
   }
 }

@@ -1,10 +1,10 @@
 export interface IFlyWebPublishedServer extends EventTarget {
-  name: string;
-  uiUrl?: string;
+  name: string
+  uiUrl?: string
 
-  onclose: EventListener;
-  onfetch: EventListener;
-  onwebsocket: EventListener;
+  onclose: EventListener
+  onfetch: EventListener
+  onwebsocket: EventListener
 
-  close(): void;
-};
+  close(): void
+}
