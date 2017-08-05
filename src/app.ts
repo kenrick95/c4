@@ -1,3 +1,4 @@
+import 'es6-promise/auto'
 import * as Game from './game'
 import { Board } from './board'
 document.addEventListener('DOMContentLoaded', () => {

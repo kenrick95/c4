@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+require("es6-promise/auto");
 var Game = require("./game");
 var board_1 = require("./board");
 document.addEventListener('DOMContentLoaded', function () {
