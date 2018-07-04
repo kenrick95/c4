@@ -1,6 +1,8 @@
 import 'es6-promise/auto'
 import * as Game from './game'
 import { Board } from './board'
+import './style.css'
+
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.querySelector('canvas')
   if (!canvas) {
