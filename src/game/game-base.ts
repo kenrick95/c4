@@ -6,8 +6,8 @@ export abstract class GameBase {
   board: Board
   players: Array<Player>
   currentPlayerId: number
-  isMoveAllowed: boolean
-  isGameWon: boolean
+  isMoveAllowed: boolean = false
+  isGameWon: boolean = false
 
   constructor(players: Array<Player>, canvas: HTMLCanvasElement) {
     this.board = new Board(canvas)
