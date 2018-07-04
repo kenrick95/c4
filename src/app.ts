@@ -12,15 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const board = new Board(canvas)
   board.render()
 
-  if (!('publishServer' in navigator)) {
-    const flywebOptionInput = document.querySelector(
-      '.mode-chooser-input-flyweb'
-    )
-    if (flywebOptionInput) {
-      flywebOptionInput.setAttribute('disabled', 'disabled')
-    }
-  }
-
   const modeChooser = document.querySelector('.mode-chooser-submit')
   if (modeChooser) {
     modeChooser.addEventListener('click', () => {
