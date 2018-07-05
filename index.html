@@ -5,7 +5,6 @@
   <meta charset="utf-8">
   <title>c4</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="dist/style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -24,7 +23,6 @@
       <h2>Mode chooser</h2>
       <label><input class="mode-chooser-input" type="radio" name="mode" value="offline-ai" checked> Offline: Human player vs AI player</label><br />
       <label><input class="mode-chooser-input" type="radio" name="mode" value="offline-human"> Offline: Human player vs human player</label><br />
-      <label title="This option requires Firefox Dev Edition or Nightly with dom.flyweb.enabled flag enabled"><input class="mode-chooser-input mode-chooser-input-flyweb" type="radio" name="mode" value="local-flyweb"> Local network (via FlyWeb): Human player vs human player</label><br />
       <button class="mode-chooser-submit">Start game</button>
     </div>
   </div>
@@ -37,7 +35,7 @@
   <footer class="footer">
     By <a href="http://kenrick95.org">Kenrick95</a>. Fork this project at <a href="https://github.com/kenrick95/c4">GitHub</a>.
   </footer>
-  <script src="dist/app.js"></script>
+  <script src="./src/app.ts"></script>
 </body>
 
 </html>
