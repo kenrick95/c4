@@ -1,6 +1,8 @@
 import 'es6-promise/auto'
 import * as Game from './game'
 import { Board } from './board'
+import './style.css'
+
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.querySelector('canvas')
   if (!canvas) {
@@ -9,15 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   const board = new Board(canvas)
   board.render()
-
-  if (!('publishServer' in navigator)) {
-    const flywebOptionInput = document.querySelector(
-      '.mode-chooser-input-flyweb'
-    )
-    if (flywebOptionInput) {
-      flywebOptionInput.setAttribute('disabled', 'disabled')
-    }
-  }
 
   const modeChooser = document.querySelector('.mode-chooser-submit')
   if (modeChooser) {
@@ -39,8 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (chosenMode === 'offline-human') {
           Game.initGameLocal2p()
-        } else if (chosenMode === 'local-flyweb') {
-          Game.initGameFlyweb({ clientMode: false })
         } else if (chosenMode === 'offline-ai') {
           Game.initGameLocalAi()
         }
