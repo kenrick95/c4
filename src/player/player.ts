@@ -1,11 +1,9 @@
-import { Board, BoardPiece } from '../board'
+import { BoardBase, BoardPiece } from '../board'
 
 export abstract class Player {
   boardPiece: BoardPiece
-  canvas: HTMLCanvasElement
-  abstract async getAction(board: Board): Promise<number>
-  constructor(boardPiece: BoardPiece, canvas: HTMLCanvasElement) {
+  abstract async getAction(board: BoardBase): Promise<number>
+  constructor(boardPiece: BoardPiece) {
     this.boardPiece = boardPiece
-    this.canvas = canvas
   }
 }
