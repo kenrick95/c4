@@ -6,8 +6,8 @@ export class PlayerAi extends Player {
   static readonly MAX_DEPTH = 4
   private ownBoardPieceValue: number
   private enemyBoardPiece: BoardPiece
-  constructor(boardPiece: BoardPiece, canvas: HTMLCanvasElement) {
-    super(boardPiece, canvas)
+  constructor(boardPiece: BoardPiece) {
+    super(boardPiece)
     this.ownBoardPieceValue = this.getBoardPieceValue(boardPiece)
     this.enemyBoardPiece =
       boardPiece === BoardPiece.PLAYER_1

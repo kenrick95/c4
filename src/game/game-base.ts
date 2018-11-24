@@ -1,16 +1,15 @@
-import { Board, BoardPiece } from '../board'
+import { BoardPiece, BoardBase } from '../board'
 import { Player } from '../player'
-import { Utils } from '../utils'
 
 export abstract class GameBase {
-  board: Board
+  board: BoardBase
   players: Array<Player>
   currentPlayerId: number
   isMoveAllowed: boolean = false
   isGameWon: boolean = false
 
-  constructor(players: Array<Player>, canvas: HTMLCanvasElement) {
-    this.board = new Board(canvas)
+  constructor(players: Array<Player>, board: BoardBase) {
+    this.board = board
     this.players = players
     this.currentPlayerId = 0
     this.reset()
@@ -19,7 +18,6 @@ export abstract class GameBase {
     this.isMoveAllowed = false
     this.isGameWon = false
     this.board.reset()
-    this.board.render()
     this.board.debug()
   }
 
@@ -59,9 +57,7 @@ export abstract class GameBase {
     }
     this.currentPlayerId = this.getNextPlayer()
   }
-  afterMove(action: number) {
-    // no-op
-  }
+  abstract afterMove(action: number): void
 
   private getNextPlayer() {
     return this.currentPlayerId === 0 ? 1 : 0
