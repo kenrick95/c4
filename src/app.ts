@@ -17,9 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     modeChooser.addEventListener('click', () => {
       const modeDOM = document.querySelector('.mode')
       if (modeDOM) {
-        const modeInputDOMs = <NodeListOf<
-          HTMLInputElement
-        >>document.querySelectorAll('.mode-chooser-input')
+        const modeInputDOMs = <NodeListOf<HTMLInputElement>>(
+          document.querySelectorAll('.mode-chooser-input')
+        )
         let chosenMode = null
         for (let i = 0; i < modeInputDOMs.length; i++) {
           chosenMode = modeInputDOMs[i].checked ? modeInputDOMs[i].value : null
