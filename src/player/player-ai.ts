@@ -18,8 +18,8 @@ export class PlayerAi extends Player {
     return boardPiece === BoardPiece.EMPTY
       ? 0
       : boardPiece === this.boardPiece
-        ? 1
-        : -1
+      ? 1
+      : -1
   }
   private getStateValue(
     state: Array<Array<number>>

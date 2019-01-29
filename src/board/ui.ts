@@ -37,8 +37,16 @@ export class Board extends BoardBase {
   initConstants() {
     super.initConstants()
     if (this.canvas) {
-      this.canvas.width = BoardBase.CANVAS_WIDTH
-      this.canvas.height = BoardBase.CANVAS_HEIGHT
+      /**
+       * Scale the canvas to make it look sharper on hi-dpi devices
+       * https://www.html5rocks.com/en/tutorials/canvas/hidpi/
+       */
+      const dpr = self.devicePixelRatio || 1
+      this.canvas.width = Board.CANVAS_WIDTH * dpr
+      this.canvas.height = Board.CANVAS_HEIGHT * dpr
+      this.context.scale(dpr, dpr)
+      this.canvas.style.width = Board.CANVAS_WIDTH + 'px'
+      this.canvas.style.height = Board.CANVAS_HEIGHT + 'px'
     }
   }
 
