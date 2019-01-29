@@ -36,9 +36,9 @@
   ],
   "devDependencies": {
     "parcel-bundler": "^1.11.0",
-    "prettier": "1.15.3",
+    "prettier": "^1.16.1",
     "shx": "^0.3.2",
-    "typescript": "^3.2.2"
+    "typescript": "^3.2.4"
   },
   "dependencies": {
     "es6-promise": "^4.2.5"
