@@ -29,8 +29,8 @@ export class BoardBase {
 
   context: CanvasRenderingContext2D
 
-  constructor(canvascContext: CanvasRenderingContext2D) {
-    this.context = canvascContext
+  constructor(canvasContext: CanvasRenderingContext2D) {
+    this.context = canvasContext
     this.map = []
     this.winnerBoardPiece = BoardPiece.EMPTY
     this.getBoardScale()
