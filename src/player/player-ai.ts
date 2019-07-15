@@ -236,9 +236,7 @@ export class PlayerAi extends Player {
       Utils.BIG_POSITIVE_NUMBER
     )
     console.log(
-      `AI ${this.boardPiece} choose column ${action.move} with value of ${
-        action.value
-      }`
+      `AI ${this.boardPiece} choose column ${action.move} with value of ${action.value}`
     )
     return action.move
   }

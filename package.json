@@ -35,12 +35,12 @@
     "game"
   ],
   "devDependencies": {
-    "parcel-bundler": "^1.11.0",
-    "prettier": "^1.16.1",
+    "parcel-bundler": "^1.12.3",
+    "prettier": "^1.18.2",
     "shx": "^0.3.2",
-    "typescript": "^3.2.4"
+    "typescript": "^3.5.3"
   },
   "dependencies": {
-    "es6-promise": "^4.2.5"
+    "es6-promise": "^4.2.8"
   }
 }
