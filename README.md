@@ -17,7 +17,6 @@ At each turn, player will drop a game piece in one of the seven columns by click
 Read [Wikipedia page on Connect Four](https://en.wikipedia.org/wiki/Connect_Four)
 
 ## Browser compatibility
-- Require browser that supports ES2015's Promise.
 - Should be good in latest Firefox, Edge, Chrome, Opera, Safari, and IE.
 
 ## Contributing
