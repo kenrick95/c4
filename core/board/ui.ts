@@ -1,6 +1,7 @@
 import { BoardBase, BoardPiece } from './base'
 import { Player } from '../player'
 import { Utils } from '../utils'
+import { drawMask, drawCircle, clearCanvas } from './utils'
 
 export class Board extends BoardBase {
   canvas: HTMLCanvasElement
@@ -29,7 +30,7 @@ export class Board extends BoardBase {
       if (prevBoardScale !== BoardBase.SCALE) {
         prevBoardScale = BoardBase.SCALE
         this.initConstants()
-        Utils.clearCanvas(this)
+        clearCanvas(this)
         this.render()
       }
     })
@@ -38,7 +39,7 @@ export class Board extends BoardBase {
   reset() {
     super.reset()
     if (this.canvas) {
-      Utils.clearCanvas(this)
+      clearCanvas(this)
       this.render()
     }
   }
@@ -67,8 +68,8 @@ export class Board extends BoardBase {
     const fillStyle = this.getPlayerColor(boardPiece)
     let currentY = 0
     const doAnimation = async () => {
-      Utils.clearCanvas(this)
-      Utils.drawCircle(this.context, {
+      clearCanvas(this)
+      drawCircle(this.context, {
         x:
           3 * BoardBase.PIECE_RADIUS * column +
           BoardBase.MASK_X_BEGIN +
@@ -88,10 +89,10 @@ export class Board extends BoardBase {
   }
 
   render() {
-    Utils.drawMask(this)
+    drawMask(this)
     for (let y = 0; y < BoardBase.ROWS; y++) {
       for (let x = 0; x < BoardBase.COLUMNS; x++) {
-        Utils.drawCircle(this.context, {
+        drawCircle(this.context, {
           x:
             3 * BoardBase.PIECE_RADIUS * x +
             BoardBase.MASK_X_BEGIN +

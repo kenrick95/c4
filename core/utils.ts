@@ -1,4 +1,4 @@
-import { Board, BoardPiece } from '@kenrick95/c4-core/board'
+import { BoardPiece, BoardBase } from './board/base'
 
 export class Utils {
   static readonly BIG_POSITIVE_NUMBER = 10 ** 9 + 7
@@ -35,55 +35,6 @@ export class Utils {
     messageDismissDOM.addEventListener('click', dismissHandler)
   }
 
-  static drawCircle(
-    context: CanvasRenderingContext2D,
-    { x = 0, y = 0, r = 0, fillStyle = '', strokeStyle = '' }
-  ) {
-    context.save()
-    context.fillStyle = fillStyle
-    context.strokeStyle = strokeStyle
-    context.beginPath()
-    context.arc(x, y, r, 0, 2 * Math.PI, false)
-    context.fill()
-    context.restore()
-  }
-  /**
-   * @see http://stackoverflow.com/a/11770000/917957
-   * @static
-   * @param context Canvas 2D Context
-   * @param board   current board
-   */
-  static drawMask(board: Board) {
-    const context = board.context
-    context.save()
-    context.fillStyle = Board.MASK_COLOR
-    context.beginPath()
-    const doubleRadius = 2 * Board.PIECE_RADIUS
-    const tripleRadius = 3 * Board.PIECE_RADIUS
-    for (let y = 0; y < Board.ROWS; y++) {
-      for (let x = 0; x < Board.COLUMNS; x++) {
-        context.arc(
-          tripleRadius * x + Board.MASK_X_BEGIN + doubleRadius,
-          tripleRadius * y + Board.MASK_Y_BEGIN + doubleRadius,
-          Board.PIECE_RADIUS,
-          0,
-          2 * Math.PI
-        )
-        context.rect(
-          tripleRadius * x + Board.MASK_X_BEGIN + 2 * doubleRadius,
-          tripleRadius * y + Board.MASK_Y_BEGIN,
-          -2 * doubleRadius,
-          2 * doubleRadius
-        )
-      }
-    }
-    context.fill()
-    context.restore()
-  }
-
-  static clearCanvas(board: Board) {
-    board.context.clearRect(0, 0, board.canvas.width, board.canvas.height)
-  }
 
   /**
    *
@@ -102,14 +53,14 @@ export class Utils {
   }
 
   static getColumnFromCoord(coord: { x: number; y: number }) {
-    for (let i = 0; i < Board.COLUMNS; i++) {
+    for (let i = 0; i < BoardBase.COLUMNS; i++) {
       if (
         Utils.isCoordOnColumn(
           coord,
-          3 * Board.PIECE_RADIUS * i +
-            Board.MASK_X_BEGIN +
-            2 * Board.PIECE_RADIUS,
-          Board.PIECE_RADIUS
+          3 * BoardBase.PIECE_RADIUS * i +
+            BoardBase.MASK_X_BEGIN +
+            2 * BoardBase.PIECE_RADIUS,
+          BoardBase.PIECE_RADIUS
         )
       ) {
         return i
@@ -119,7 +70,7 @@ export class Utils {
   }
 
   static getRandomColumnNumber(): number {
-    return Math.floor(Math.random() * Board.COLUMNS)
+    return Math.floor(Math.random() * BoardBase.COLUMNS)
   }
   static choose(choice: Array<any>): any {
     return choice[Math.floor(Math.random() * choice.length)]
@@ -157,7 +108,7 @@ export class Utils {
     if (
       clonedMap[0][column] !== BoardPiece.EMPTY ||
       column < 0 ||
-      column >= Board.COLUMNS
+      column >= BoardBase.COLUMNS
     ) {
       return {
         success: false,
@@ -167,7 +118,7 @@ export class Utils {
 
     let isColumnEverFilled = false
     let row = 0
-    for (let i = 0; i < Board.ROWS - 1; i++) {
+    for (let i = 0; i < BoardBase.ROWS - 1; i++) {
       if (clonedMap[i + 1][column] !== BoardPiece.EMPTY) {
         isColumnEverFilled = true
         row = i
@@ -175,7 +126,7 @@ export class Utils {
       }
     }
     if (!isColumnEverFilled) {
-      row = Board.ROWS - 1
+      row = BoardBase.ROWS - 1
     }
     clonedMap[row][column] = boardPiece
 

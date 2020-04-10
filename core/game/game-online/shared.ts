@@ -17,6 +17,7 @@ export enum MESSAGE_TYPE {
 }
 
 export function constructMessage(type: MESSAGE_TYPE, payload?: any): string {
+  console.log('[ws] send: ', type, payload)
   return JSON.stringify({
     type,
     payload
@@ -25,5 +26,6 @@ export function constructMessage(type: MESSAGE_TYPE, payload?: any): string {
 export function parseMessage(
   message: string
 ): { type: MESSAGE_TYPE; payload: any } {
+  console.log('[ws] receive: ', JSON.parse(message))
   return JSON.parse(message)
 }

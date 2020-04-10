@@ -32,10 +32,6 @@ export class GameOnline2p extends GameBase {
       this.playerMain = players[1] as PlayerHuman
       this.playerShadow = players[0] as PlayerShadow
     }
-  }
-
-  reset() {
-    super.reset()
     this.initConnection()
   }
 
@@ -48,7 +44,6 @@ export class GameOnline2p extends GameBase {
 
     this.ws = new WebSocket(`ws://${location.hostname}:8080`)
     this.ws.addEventListener('message', event => {
-      console.log('[ws] received message ', event)
       this.messageActionHandler(parseMessage(event.data))
     })
     this.ws.addEventListener('open', () => {
@@ -58,18 +53,19 @@ export class GameOnline2p extends GameBase {
         )
       }
     })
-    this.ws.addEventListener('close', () => {
+    this.ws.addEventListener('close', event => {
       if (this.ws) {
-        this.ws.send(
-          constructMessage(MESSAGE_TYPE.HUNG_UP, {
-            playerId: this.connectionPlayerId
-          })
-        )
+        console.log('[ws] close event', event)
+        // this.ws.send(
+        //   constructMessage(MESSAGE_TYPE.HUNG_UP, {
+        //     playerId: this.connectionPlayerId
+        //   })
+        // )
       }
     })
   }
 
-  initMatch() {
+  initMatch = () => {
     if (this.ws) {
       this.ws.send(
         constructMessage(MESSAGE_TYPE.NEW_MATCH_REQUEST, {
@@ -79,7 +75,7 @@ export class GameOnline2p extends GameBase {
     }
   }
 
-  connectToMatch(matchId: string) {
+  connectToMatch = (matchId: string) => {
     if (!this.ws) {
       return
     }
@@ -91,46 +87,56 @@ export class GameOnline2p extends GameBase {
     )
   }
 
-  messageActionHandler({
+  messageActionHandler = ({
     type,
     payload
   }: {
     type: MESSAGE_TYPE
     payload: any
-  }) {
+  }) => {
     // TODO: Missing cases like game won/draw, game reset, other party disconnected,
     switch (type) {
-      case MESSAGE_TYPE.NEW_PLAYER_CONNECTION_OK: {
-        this.connectionPlayerId = payload.playerId
-        if (this.gameMode === GAME_MODE.FIRST) {
-          this.initMatch()
-        } else if (this.gameMode === GAME_MODE.SECOND) {
-          // there is a matchid in URL
-          const searchParams = new URLSearchParams(location.search)
-          const connectionMatchId = searchParams.get('matchId')
-          if (!connectionMatchId) {
-            return
+      case MESSAGE_TYPE.NEW_PLAYER_CONNECTION_OK:
+        {
+          this.connectionPlayerId = payload.playerId
+          if (this.gameMode === GAME_MODE.FIRST) {
+            this.initMatch()
+          } else if (this.gameMode === GAME_MODE.SECOND) {
+            // there is a matchid in URL
+            const searchParams = new URLSearchParams(location.search)
+            const connectionMatchId = searchParams.get('matchId')
+            if (!connectionMatchId) {
+              return
+            }
+            this.connectToMatch(connectionMatchId)
           }
-          this.connectToMatch(connectionMatchId)
         }
-      }
-      case MESSAGE_TYPE.NEW_MATCH_OK: {
-        this.connectionMatchId = payload.matchId
-      }
-      case MESSAGE_TYPE.CONNECT_MATCH_OK: {
-        this.connectionMatchId = payload.matchId
-      }
-      case MESSAGE_TYPE.GAME_READY: {
-        this.start()
-      }
+        break
+      case MESSAGE_TYPE.NEW_MATCH_OK:
+        {
+          this.connectionMatchId = payload.matchId
+          const shareUrl = `${location.origin}/?matchId=${this.connectionMatchId}`
+          console.log('[url] Share this', shareUrl)
+        }
+        break
+      case MESSAGE_TYPE.CONNECT_MATCH_OK:
+        {
+          this.connectionMatchId = payload.matchId
+        }
+        break
+      case MESSAGE_TYPE.GAME_READY:
+        {
+          this.start()
+        }
+        break
       case MESSAGE_TYPE.MOVE_SHADOW: {
         this.playerShadow.doAction(payload.column)
       }
     }
   }
 
-  afterMove(action: number) {
-    if (this.ws) {
+  afterMove = (action: number) => {
+    if (this.ws && this.currentPlayerId + 1 === this.gameMode) {
       this.ws.send(
         constructMessage(MESSAGE_TYPE.MOVE_MAIN, {
           playerId: this.connectionPlayerId,
@@ -153,6 +159,8 @@ export function initGameOnline2p() {
   const connectionMatchId = searchParams.get('matchId')
   const gameMode = !!connectionMatchId ? GAME_MODE.SECOND : GAME_MODE.FIRST
 
+  console.log('gameMode', gameMode)
+
   const board = new Board(canvas)
   const players =
     gameMode === GAME_MODE.FIRST
@@ -171,7 +179,7 @@ export function initGameOnline2p() {
 
   // wait till game ready to start
 
-  game.start()
+  // game.start()
   canvas.addEventListener('click', async (event: MouseEvent) => {
     if (game.isGameWon) {
       game.reset()
