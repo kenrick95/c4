@@ -34,6 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
           Game.initGameLocal2p()
         } else if (chosenMode === 'offline-ai') {
           Game.initGameLocalAi()
+        } else if (chosenMode === 'online-human') {
+          Game.initGameOnline2p()
         }
 
         modeDOM.classList.add('invisible')
