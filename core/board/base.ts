@@ -27,13 +27,9 @@ export class BoardBase {
   map: Array<Array<number>>
   private winnerBoardPiece: BoardPiece
 
-  context: CanvasRenderingContext2D
-
-  constructor(canvasContext: CanvasRenderingContext2D) {
-    this.context = canvasContext
+  constructor() {
     this.map = []
     this.winnerBoardPiece = BoardPiece.EMPTY
-    this.getBoardScale()
     this.initConstants()
     this.reset()
   }
@@ -49,11 +45,6 @@ export class BoardBase {
     this.winnerBoardPiece = BoardPiece.EMPTY
   }
 
-  getBoardScale() {
-    return window.innerWidth < 640
-      ? (BoardBase.SCALE = 0.5)
-      : (BoardBase.SCALE = 1.0)
-  }
   initConstants() {
     BoardBase.CANVAS_HEIGHT = BoardBase.SCALE * 480
     BoardBase.CANVAS_WIDTH = BoardBase.SCALE * 640

@@ -4,13 +4,22 @@ import { Utils } from '../utils'
 
 export class Board extends BoardBase {
   canvas: HTMLCanvasElement
+  context: CanvasRenderingContext2D
+
   constructor(canvas: HTMLCanvasElement) {
-    super(<CanvasRenderingContext2D>canvas.getContext('2d'))
+    super()
     this.canvas = canvas
+    this.context = <CanvasRenderingContext2D>canvas.getContext('2d')
     this.getBoardScale()
     this.initConstants()
     this.reset()
     this.onresize()
+  }
+
+  getBoardScale() {
+    return window.innerWidth < 640
+      ? (BoardBase.SCALE = 0.5)
+      : (BoardBase.SCALE = 1.0)
   }
 
   onresize() {

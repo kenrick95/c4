@@ -2,6 +2,7 @@ import * as WebSocket from 'ws'
 import * as process from 'process'
 import { ACTION_TYPE, Action, newPlayerConnection } from './actions'
 import { MatchId, PlayerId } from './types'
+import { IncomingMessage } from 'http'
 
 const port = parseInt(process.env.PORT || '') || 8080
 const wss = new WebSocket.Server({ port: port })
@@ -19,7 +20,6 @@ type MatchState = {
 }
 type PlayerState = {
   playerId: PlayerId
-  matchId: MatchId
   ws: WebSocket
 }
 type State = {
@@ -39,7 +39,21 @@ let STATE: State = {
 }
 function reducer(state: State, action: Action): State {
   switch (action.type) {
+    case ACTION_TYPE.NEW_PLAYER_CONNECTION: {
+      // Add player to server, no game/match yet
+      return {
+        ...state,
+        players: {
+          ...state.players,
+          [action.payload.playerId]: {
+            playerId: action.payload.playerId,
+            ws: action.payload.ws
+          }
+        }
+      }
+    }
     case ACTION_TYPE.NEW_MATCH: {
+      // Init board, but no game yet
       return {
         ...state,
         matches: {
@@ -57,29 +71,42 @@ function reducer(state: State, action: Action): State {
         }
       }
     }
+    case ACTION_TYPE.CONNECT_MATCH: {
+      // Start game
+    }
+    case ACTION_TYPE.HUNG_UP: {
+      // End game
+    }
+    case ACTION_TYPE.MOVE: {
+      // Move piece
+    }
   }
   return state
 }
 
-/**
- * TODO: Parse message into "action"
- */
-function getAction(message: string): Action {
-  return newPlayerConnection()
+const actionQueue: Action[] = []
+function dispatch(action: Action) {
+  actionQueue.push(action)
+}
+function centralLoop() {
+  for (const action of actionQueue) {
+    STATE = reducer(STATE, action)
+  }
+  if (actionQueue.length >= 1) {
+    console.log('STATE', STATE)
+  }
+  actionQueue.length = 0
 }
 
-wss.on('connection', (ws: WebSocket) => {
-  // TODO: Implement ping-pong heartbeat to check if player is still alive
-  // https://www.npmjs.com/package/ws#how-to-detect-and-close-broken-connections
+wss.on('connection', (ws: WebSocket, req: IncomingMessage) => {
+  const newPlayerConnectionAction = newPlayerConnection(ws)
+  const playerId = newPlayerConnectionAction.payload.playerId
+  dispatch(newPlayerConnectionAction)
 
   ws.on('message', (message: string) => {
     console.log('received: %s', message)
-
-    // TODO: This can be async (out-of-loop) actually :thinking:
-    STATE = reducer(STATE, getAction(message))
   })
-
   ws.on('close', () => {})
-
-  ws.send('something')
+  ws.send('hellooo')
 })
+const intervalId = setInterval(centralLoop, 100)

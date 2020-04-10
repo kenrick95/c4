@@ -29,7 +29,7 @@
   ],
   "scripts": {
     "start": "parcel index.html",
-    "start-server": "ts-node server/index.ts",
+    "start-server": "yarn workspace @kenrick95/c4-server start",
     "build": "yarn clean && parcel build index.html",
     "build:lib": "yarn clean && parcel build ./src/lib.ts",
     "prettier": "prettier --write \"src/**/*.?(ts|scss|css)\"",

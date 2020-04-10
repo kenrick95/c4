@@ -1,18 +1,44 @@
 import { v4 as uuidV4 } from 'uuid'
 import { PlayerId, MatchId } from './types'
+import * as WebSocket from 'ws'
 
 export type Action =
   | NewPlayerConnectionAction
   | NewMatchAction
+  | HungUpAction
+  | MoveAction
+  | ConnectMatchAction
 
 type NewPlayerConnectionAction = {
   type: 'NEW_PLAYER_CONNECTION'
   payload: {
     playerId: PlayerId
+    ws: WebSocket
   }
 }
 type NewMatchAction = {
   type: 'NEW_MATCH'
+  payload: {
+    playerId: PlayerId
+    matchId: MatchId
+  }
+}
+type HungUpAction = {
+  type: 'HUNG_UP'
+  payload: {
+    playerId: PlayerId
+  }
+}
+type MoveAction = {
+  type: 'MOVE'
+  payload: {
+    playerId: PlayerId
+    matchId: MatchId
+    column: number
+  }
+}
+type ConnectMatchAction = {
+  type: 'CONNECT_MATCH'
   payload: {
     playerId: PlayerId
     matchId: MatchId
@@ -26,11 +52,12 @@ export enum ACTION_TYPE {
   HUNG_UP = 'HUNG_UP',
   MOVE = 'MOVE'
 }
-export function newPlayerConnection(): NewPlayerConnectionAction {
+export function newPlayerConnection(ws: WebSocket): NewPlayerConnectionAction {
   return {
     type: ACTION_TYPE.NEW_PLAYER_CONNECTION,
     payload: {
-      playerId: uuidV4()
+      playerId: uuidV4(),
+      ws
     }
   }
 }
@@ -43,7 +70,10 @@ export function newMatch(playerId: PlayerId): NewMatchAction {
     }
   }
 }
-export function connectMatch(playerId: PlayerId, matchId: MatchId) {
+export function connectMatch(
+  playerId: PlayerId,
+  matchId: MatchId
+): ConnectMatchAction {
   return {
     type: ACTION_TYPE.CONNECT_MATCH,
     payload: {
@@ -52,7 +82,11 @@ export function connectMatch(playerId: PlayerId, matchId: MatchId) {
     }
   }
 }
-export function move(playerId: PlayerId, matchId: MatchId, column: number) {
+export function move(
+  playerId: PlayerId,
+  matchId: MatchId,
+  column: number
+): MoveAction {
   return {
     type: ACTION_TYPE.MOVE,
     payload: {
@@ -62,7 +96,7 @@ export function move(playerId: PlayerId, matchId: MatchId, column: number) {
     }
   }
 }
-export function hungUp(playerId: PlayerId) {
+export function hungUp(playerId: PlayerId): HungUpAction {
   return {
     type: ACTION_TYPE.HUNG_UP,
     payload: {
