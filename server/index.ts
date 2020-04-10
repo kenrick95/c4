@@ -246,4 +246,4 @@ wss.on('connection', (ws: WebSocket, req: IncomingMessage) => {
   })
   ws.on('close', () => {})
 })
-const intervalId = setInterval(centralLoop, 100)
+setInterval(centralLoop, 100)

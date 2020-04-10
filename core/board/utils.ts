@@ -1,4 +1,3 @@
-import { BoardPiece } from './base'
 import { Board } from './ui'
 
 export function drawCircle(
