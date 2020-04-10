@@ -1,4 +1,4 @@
-import { Board, BoardPiece } from './board'
+import { Board, BoardPiece } from '@kenrick95/c4-core/board'
 
 export class Utils {
   static readonly BIG_POSITIVE_NUMBER = 10 ** 9 + 7

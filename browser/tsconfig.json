@@ -2,6 +2,7 @@
   "compilerOptions": {
     "declaration": false,
     "module": "esnext",
+    "strict": true,
     "noImplicitAny": true,
     "removeComments": true,
     "moduleResolution": "node",
@@ -9,14 +10,8 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "target": "es5",
-    "lib": ["es2015", "dom", "dom.iterable"],
-    "strict": true
+    "lib": ["es2015", "dom", "dom.iterable"]
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
-  ]
+  "include": ["app.ts", "@kenrick95/c4-core"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }

@@ -1,6 +1,6 @@
 import 'es6-promise/auto'
-import * as Game from './game'
-import { Board } from './board'
+import * as Game from '@kenrick95/c4-core/game'
+import { Board } from '@kenrick95/c4-core/board'
 import './style.css'
 
 document.addEventListener('DOMContentLoaded', () => {

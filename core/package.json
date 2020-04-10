@@ -1,0 +1,5 @@
+{
+  "name": "@kenrick95/c4-core",
+  "version": "1.0.0",
+  "main": "./lib.ts"
+}

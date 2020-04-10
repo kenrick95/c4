@@ -1,0 +1,17 @@
+{
+  "name": "@kenrick95/c4-server",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^13.11.1",
+    "@types/uuid": "^7.0.2",
+    "@types/ws": "^7.2.3",
+    "uuid": "^7.0.3",
+    "ws": "^7.2.3"
+  },
+  "dependencies": {
+    "@kenrick95/c4-core": "1.0.0"
+  }
+}
