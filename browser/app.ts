@@ -12,6 +12,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const board = new Board(canvas)
   board.render()
 
+  const searchParams = new URLSearchParams(location.search)
+  const connectionMatchId = searchParams.get('matchId')
+  if (!!connectionMatchId) {
+    Game.initGameOnline2p()
+    const modeDOM = document.querySelector('.mode')
+    if (modeDOM) {
+      modeDOM.classList.add('hidden')
+    }
+  }
+
   const modeChooser = document.querySelector('.mode-chooser-submit')
   if (modeChooser) {
     modeChooser.addEventListener('click', () => {

@@ -117,6 +117,20 @@ export class GameOnline2p extends GameBase {
           this.connectionMatchId = payload.matchId
           const shareUrl = `${location.origin}/?matchId=${this.connectionMatchId}`
           console.log('[url] Share this', shareUrl)
+          Utils.showMessage(
+            `Please share this URL to your friend to start the game: <input type="text" id="copy-box" readonly value="${shareUrl}" /> <button type="button" id="copy-button">Copy</button>`
+          )
+          document
+            .getElementById('copy-button')
+            ?.addEventListener('click', () => {
+              const copyBox: HTMLInputElement | null = document.getElementById(
+                'copy-box'
+              ) as HTMLInputElement
+
+              copyBox?.select()
+              copyBox?.setSelectionRange(0, 99999)
+              document.execCommand('copy')
+            })
         }
         break
       case MESSAGE_TYPE.CONNECT_MATCH_OK:
@@ -126,6 +140,7 @@ export class GameOnline2p extends GameBase {
         break
       case MESSAGE_TYPE.GAME_READY:
         {
+          Utils.showMessage(`Game started`)
           this.start()
         }
         break
