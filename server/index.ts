@@ -7,7 +7,8 @@ import {
   newMatch,
   connectMatch,
   hungUp,
-  move
+  move,
+  renewLastSeen
 } from './actions'
 import { MatchId, PlayerId } from './types'
 import { IncomingMessage } from 'http'
@@ -31,6 +32,10 @@ type MatchState = {
 }
 type PlayerState = {
   playerId: PlayerId
+  /**
+   * JS timestamp
+   */
+  lastSeen: number
   ws: WebSocket
 }
 type State = {
@@ -67,6 +72,7 @@ function reducer(state: State, action: Action): State {
           ...state.players,
           [playerId]: {
             playerId: playerId,
+            lastSeen: Date.now(),
             ws: ws
           }
         }
@@ -86,6 +92,7 @@ function reducer(state: State, action: Action): State {
           }
         })
       )
+      // TODO: Update PlayerState
 
       return {
         ...state,
@@ -132,6 +139,7 @@ function reducer(state: State, action: Action): State {
           })
         )
       }
+      // TODO: Update player state
 
       return {
         ...state,
@@ -178,6 +186,20 @@ function reducer(state: State, action: Action): State {
 
       return state
     }
+
+    case ACTION_TYPE.RENEW_LAST_SEEN: {
+      const { playerId } = action.payload
+      return {
+        ...state,
+        players: {
+          ...state.players,
+          [playerId]: {
+            ...state.players[playerId],
+            lastSeen: Date.now()
+          }
+        }
+      }
+    }
   }
   return state
 }
@@ -196,12 +218,25 @@ function centralLoop() {
   }
   actionQueue.length = 0
 }
+function alivenessLoop() {
+  for (const player of Object.values(STATE.players)) {
+    if (player.lastSeen >= 60000) {
+      player.ws.terminate()
+    }
+
+    player.ws.ping()
+  }
+}
 
 wss.on('connection', (ws: WebSocket, req: IncomingMessage) => {
   const newPlayerConnectionAction = newPlayerConnection(ws)
   const playerId = newPlayerConnectionAction.payload.playerId
   let matchId: null | MatchId = null
   dispatch(newPlayerConnectionAction)
+
+  ws.on('pong', () => {
+    dispatch(renewLastSeen(playerId))
+  })
 
   ws.on('message', (message: string) => {
     const parsedMessage = JSON.parse(message)
@@ -244,6 +279,9 @@ wss.on('connection', (ws: WebSocket, req: IncomingMessage) => {
         break
     }
   })
-  ws.on('close', () => {})
+  ws.on('close', () => {
+    dispatch(hungUp(playerId))
+  })
 })
 setInterval(centralLoop, 100)
+setInterval(alivenessLoop, 30000)

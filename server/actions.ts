@@ -8,6 +8,7 @@ export type Action =
   | HungUpAction
   | MoveAction
   | ConnectMatchAction
+  | RenewLastSeenAction
 
 type NewPlayerConnectionAction = {
   type: 'NEW_PLAYER_CONNECTION'
@@ -44,13 +45,20 @@ type ConnectMatchAction = {
     matchId: MatchId
   }
 }
+type RenewLastSeenAction = {
+  type: 'RENEW_LAST_SEEN'
+  payload: {
+    playerId: PlayerId
+  }
+}
 
 export enum ACTION_TYPE {
   NEW_PLAYER_CONNECTION = 'NEW_PLAYER_CONNECTION',
   NEW_MATCH = 'NEW_MATCH',
   CONNECT_MATCH = 'CONNECT_MATCH',
   HUNG_UP = 'HUNG_UP',
-  MOVE = 'MOVE'
+  MOVE = 'MOVE',
+  RENEW_LAST_SEEN = 'RENEW_LAST_SEEN'
 }
 export function newPlayerConnection(ws: WebSocket): NewPlayerConnectionAction {
   return {
@@ -99,6 +107,14 @@ export function move(
 export function hungUp(playerId: PlayerId): HungUpAction {
   return {
     type: ACTION_TYPE.HUNG_UP,
+    payload: {
+      playerId
+    }
+  }
+}
+export function renewLastSeen(playerId: PlayerId): RenewLastSeenAction {
+  return {
+    type: ACTION_TYPE.RENEW_LAST_SEEN,
     payload: {
       playerId
     }
