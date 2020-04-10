@@ -1,9 +1,8 @@
 import { Player } from './player'
 import { Board, BoardPiece } from '../board'
-import { Utils } from '../utils'
 
 export class PlayerHuman extends Player {
-  clickPromiseResolver: any
+  clickPromiseResolver: null | ((column: number) => void)
 
   constructor(boardPiece: BoardPiece) {
     super(boardPiece)
