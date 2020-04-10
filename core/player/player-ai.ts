@@ -198,7 +198,7 @@ export class PlayerAi extends Player {
         map: nextState
       } = Utils.getMockPlayerAction(state, this.enemyBoardPiece, column)
       if (actionSuccessful) {
-        const { value: nextValue, move: nextMove } = this.getMove(
+        const { value: nextValue } = this.getMove(
           nextState,
           depth,
           alpha,
