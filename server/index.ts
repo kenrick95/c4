@@ -1,7 +1,11 @@
 import * as WebSocket from 'ws'
 import * as process from 'process'
+
+import { reducer } from './reducer'
+import thunk from 'redux-thunk'
+import { createStore, applyMiddleware } from 'redux'
+
 import {
-  Action,
   newPlayerConnection,
   newMatch,
   connectMatch,
@@ -9,18 +13,19 @@ import {
   move,
   renewLastSeen
 } from './actions'
-import { MatchId, State } from './types'
-import { IncomingMessage } from 'http'
+import { MatchId, State, ActionTypes } from './types'
+
 import { MESSAGE_TYPE } from '@kenrick95/c4-core/game/game-online/shared'
 import { BoardBase } from '@kenrick95/c4-core/board'
-import { reducer } from './reducer'
-import { createStore } from 'redux'
 
 const port = parseInt(process.env.PORT || '') || 8080
 const wss = new WebSocket.Server({ port: port })
 console.log(`[server] Started listening on ws://localhost:${port}`)
 
-const store = createStore<State, Action, unknown, unknown>(reducer)
+const store = createStore<State, ActionTypes, unknown, unknown>(
+  reducer,
+  applyMiddleware(thunk)
+)
 
 function alivenessLoop() {
   const state = store.getState()
@@ -34,7 +39,7 @@ function alivenessLoop() {
   }
 }
 
-wss.on('connection', (ws: WebSocket, req: IncomingMessage) => {
+wss.on('connection', (ws: WebSocket) => {
   const newPlayerConnectionAction = newPlayerConnection(ws)
   const playerId = newPlayerConnectionAction.payload.playerId
   let matchId: null | MatchId = null

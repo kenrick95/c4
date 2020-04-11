@@ -1,5 +1,5 @@
-import { State } from './types'
-import { Action, ACTION_TYPE } from './actions'
+import { State, ActionTypes } from './types'
+import { ACTION_TYPE } from './actions'
 import { MESSAGE_TYPE } from '@kenrick95/c4-core/game/game-online/shared'
 
 const INITIAL_STATE: State = {
@@ -8,7 +8,10 @@ const INITIAL_STATE: State = {
 }
 
 // TODO: There shouldn't be this much logic in the reducer ...
-export function reducer(state: State = INITIAL_STATE, action: Action): State {
+export function reducer(
+  state: State = INITIAL_STATE,
+  action: ActionTypes
+): State {
   switch (action.type) {
     case ACTION_TYPE.NEW_PLAYER_CONNECTION: {
       // Add player to server, no game/match yet

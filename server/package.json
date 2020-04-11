@@ -12,6 +12,7 @@
   "dependencies": {
     "@kenrick95/c4-core": "1.0.0",
     "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
     "uuid": "^7.0.3",
     "ws": "^7.2.3"
   }

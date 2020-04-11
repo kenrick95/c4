@@ -1,56 +1,15 @@
 import { v4 as uuidV4 } from 'uuid'
-import { PlayerId, MatchId, State } from './types'
+import {
+  PlayerId,
+  MatchId,
+  NewPlayerConnectionAction,
+  NewMatchAction,
+  ConnectMatchAction,
+  MoveAction,
+  HungUpAction,
+  RenewLastSeenAction
+} from './types'
 import * as WebSocket from 'ws'
-
-export type Action =
-  | NewPlayerConnectionAction
-  | NewMatchAction
-  | HungUpAction
-  | MoveAction
-  | ConnectMatchAction
-  | RenewLastSeenAction
-
-type NewPlayerConnectionAction = {
-  type: 'NEW_PLAYER_CONNECTION'
-  payload: {
-    playerId: PlayerId
-    ws: WebSocket
-  }
-}
-type NewMatchAction = {
-  type: 'NEW_MATCH'
-  payload: {
-    playerId: PlayerId
-    matchId: MatchId
-  }
-}
-type HungUpAction = {
-  type: 'HUNG_UP'
-  payload: {
-    playerId: PlayerId
-  }
-}
-type MoveAction = {
-  type: 'MOVE'
-  payload: {
-    playerId: PlayerId
-    matchId: MatchId
-    column: number
-  }
-}
-type ConnectMatchAction = {
-  type: 'CONNECT_MATCH'
-  payload: {
-    playerId: PlayerId
-    matchId: MatchId
-  }
-}
-type RenewLastSeenAction = {
-  type: 'RENEW_LAST_SEEN'
-  payload: {
-    playerId: PlayerId
-  }
-}
 
 export enum ACTION_TYPE {
   NEW_PLAYER_CONNECTION = 'NEW_PLAYER_CONNECTION',
@@ -100,7 +59,7 @@ export function move(
   column: number
 ): MoveAction {
   // TODO Validate matchId, column
-  
+
   // if (
   //   matchId &&
   //   state.matches[matchId] &&
