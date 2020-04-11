@@ -123,7 +123,10 @@ export class GameOnline2p extends GameBase {
           const shareUrl = `${location.origin}/?matchId=${this.connectionMatchId}`
           console.log('[url] Share this', shareUrl)
           Utils.showMessage(
-            `Please share this URL to your friend to start the game: <input type="text" id="copy-box" readonly value="${shareUrl}" /> <button type="button" id="copy-button">Copy</button>`
+            `<h1>Share this URL</h1>` +
+              `Please share this URL to your friend to start the game: ` +
+              `<input type="text" id="copy-box" readonly value="${shareUrl}" />` +
+              `<button type="button" id="copy-button">Copy</button>`
           )
           document
             .getElementById('copy-button')
@@ -143,9 +146,18 @@ export class GameOnline2p extends GameBase {
           this.connectionMatchId = payload.matchId
         }
         break
+      case MESSAGE_TYPE.CONNECT_MATCH_FAIL:
+        {
+          Utils.showMessage(`<h1>Error</h1> Failed to connect to match.`)
+        }
+        break
       case MESSAGE_TYPE.GAME_READY:
         {
-          Utils.showMessage(`Game started`)
+          Utils.showMessage(
+            `<h1>Game started</h1> The first piece should be dropped by ${
+              this.isCurrentMoveByCurrentPlayer() ? 'you' : 'the other player'
+            }`
+          )
           this.start()
         }
         break
@@ -155,8 +167,15 @@ export class GameOnline2p extends GameBase {
     }
   }
 
+  /**
+   * @returns true if the game is waiting for current player to make a move
+   */
+  isCurrentMoveByCurrentPlayer() {
+    return this.currentPlayerId + 1 === this.gameMode
+  }
+
   afterMove = (action: number) => {
-    if (this.ws && this.currentPlayerId + 1 === this.gameMode) {
+    if (this.ws && this.isCurrentMoveByCurrentPlayer()) {
       this.ws.send(
         constructMessage(MESSAGE_TYPE.MOVE_MAIN, {
           playerId: this.connectionPlayerId,

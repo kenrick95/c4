@@ -1,10 +1,5 @@
 import { v4 as uuidV4 } from 'uuid'
-import {
-  PlayerId,
-  MatchId,
-  RenewLastSeenAction,
-  AppThunk
-} from './types'
+import { PlayerId, MatchId, RenewLastSeenAction, AppThunk } from './types'
 import * as WebSocket from 'ws'
 import { BoardBase } from '@kenrick95/c4-core/board'
 import { MESSAGE_TYPE } from '@kenrick95/c4-core/game/game-online/shared'
@@ -76,8 +71,35 @@ export function connectMatch(
   return (dispatch, getState) => {
     {
       const state = getState()
+      const player = state.players[playerId]
 
-      if (!matchId || !state.matches[matchId]) {
+      if (
+        /**
+         * No matchId
+         */
+        !matchId ||
+        /**
+         * No match
+         */
+        !state.matches[matchId] ||
+        /**
+         * No player1 in match
+         */
+        !state.matches[matchId].players[0] ||
+        /**
+         * Player2 already in match
+         */
+        state.matches[matchId].players[1]
+      ) {
+        player.ws.send(
+          JSON.stringify({
+            type: MESSAGE_TYPE.CONNECT_MATCH_FAIL,
+            payload: {
+              playerId,
+              matchId
+            }
+          })
+        )
         return
       }
     }
@@ -90,10 +112,9 @@ export function connectMatch(
       }
     })
 
-    const state = getState()
-
     {
       // Reply to this player that it is connected to this match
+      const state = getState()
       const player = state.players[playerId]
       player.ws.send(
         JSON.stringify({
@@ -108,6 +129,7 @@ export function connectMatch(
 
     {
       // Tell all players that game is ready
+      const state = getState()
       const match = state.matches[matchId]
       const playerIds = match.players
       for (const pId of playerIds) {
