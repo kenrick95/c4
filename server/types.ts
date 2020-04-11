@@ -88,5 +88,6 @@ export type RenewLastSeenAction = {
   type: 'RENEW_LAST_SEEN'
   payload: {
     playerId: PlayerId
+    lastSeen: number
   }
 }

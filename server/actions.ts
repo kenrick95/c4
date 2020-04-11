@@ -2,14 +2,12 @@ import { v4 as uuidV4 } from 'uuid'
 import {
   PlayerId,
   MatchId,
-  NewPlayerConnectionAction,
-  ConnectMatchAction,
-  MoveAction,
-  HungUpAction,
   RenewLastSeenAction,
   AppThunk
 } from './types'
 import * as WebSocket from 'ws'
+import { BoardBase } from '@kenrick95/c4-core/board'
+import { MESSAGE_TYPE } from '@kenrick95/c4-core/game/game-online/shared'
 
 export enum ACTION_TYPE {
   NEW_PLAYER_CONNECTION = 'NEW_PLAYER_CONNECTION',
@@ -19,13 +17,27 @@ export enum ACTION_TYPE {
   MOVE = 'MOVE',
   RENEW_LAST_SEEN = 'RENEW_LAST_SEEN'
 }
-export function newPlayerConnection(ws: WebSocket): NewPlayerConnectionAction {
-  return {
-    type: ACTION_TYPE.NEW_PLAYER_CONNECTION,
-    payload: {
-      playerId: uuidV4(),
-      ws
-    }
+export function newPlayerConnection(ws: WebSocket): AppThunk<PlayerId> {
+  return dispatch => {
+    const playerId = uuidV4()
+    dispatch({
+      type: ACTION_TYPE.NEW_PLAYER_CONNECTION,
+      payload: {
+        playerId,
+        ws
+      }
+    })
+
+    ws.send(
+      JSON.stringify({
+        type: MESSAGE_TYPE.NEW_PLAYER_CONNECTION_OK,
+        payload: {
+          playerId
+        }
+      })
+    )
+
+    return playerId
   }
 }
 export function newMatch(playerId: PlayerId): AppThunk<MatchId> {
@@ -40,62 +52,140 @@ export function newMatch(playerId: PlayerId): AppThunk<MatchId> {
       }
     })
 
+    const state = getState()
+
+    const player = state.players[playerId]
+
+    player.ws.send(
+      JSON.stringify({
+        type: MESSAGE_TYPE.NEW_MATCH_OK,
+        payload: {
+          playerId,
+          matchId
+        }
+      })
+    )
+
     return matchId
   }
 }
 export function connectMatch(
   playerId: PlayerId,
-  matchId: MatchId
-): ConnectMatchAction {
-  // TODO: Validate match
-  // if (state.matches[dirtyMatchId]) {
-  //   matchId = dirtyMatchId
-  // }
-  return {
-    type: ACTION_TYPE.CONNECT_MATCH,
-    payload: {
-      playerId,
-      matchId
+  matchId: MatchId | null
+): AppThunk {
+  return (dispatch, getState) => {
+    {
+      const state = getState()
+
+      if (!matchId || !state.matches[matchId]) {
+        return
+      }
+    }
+
+    dispatch({
+      type: ACTION_TYPE.CONNECT_MATCH,
+      payload: {
+        playerId,
+        matchId
+      }
+    })
+
+    const state = getState()
+
+    {
+      // Reply to this player that it is connected to this match
+      const player = state.players[playerId]
+      player.ws.send(
+        JSON.stringify({
+          type: MESSAGE_TYPE.CONNECT_MATCH_OK,
+          payload: {
+            playerId,
+            matchId
+          }
+        })
+      )
+    }
+
+    {
+      // Tell all players that game is ready
+      const match = state.matches[matchId]
+      const playerIds = match.players
+      for (const pId of playerIds) {
+        if (!pId) {
+          continue
+        }
+        const player = state.players[pId]
+        player.ws.send(
+          JSON.stringify({
+            type: MESSAGE_TYPE.GAME_READY,
+            payload: {}
+          })
+        )
+      }
     }
   }
 }
 export function move(
   playerId: PlayerId,
-  matchId: MatchId,
+  matchId: MatchId | null,
   column: number
-): MoveAction {
-  // TODO Validate matchId, column
+): AppThunk {
+  return (dispatch, getState) => {
+    if (!matchId) {
+      return
+    }
+    const state = getState()
+    const match = state.matches[matchId]
+    if (match && column >= 0 && column < BoardBase.COLUMNS) {
+      const otherPlayerId = match.players.find(player => player !== playerId)
+      console.log('MOVE', playerId, matchId, column, otherPlayerId)
 
-  // if (
-  //   matchId &&
-  //   state.matches[matchId] &&
-  //   dirtyColumn >= 0 &&
-  //   dirtyColumn < BoardBase.COLUMNS
-  // ) {
-  //   store.dispatch(move(playerId, matchId, dirtyColumn))
-  // }
-  return {
-    type: ACTION_TYPE.MOVE,
-    payload: {
-      playerId,
-      matchId,
-      column
+      if (otherPlayerId) {
+        const otherPlayer = state.players[otherPlayerId]
+        otherPlayer.ws.send(
+          JSON.stringify({
+            type: MESSAGE_TYPE.MOVE_SHADOW,
+            payload: {
+              column
+            }
+          })
+        )
+      }
+
+      dispatch({
+        type: ACTION_TYPE.MOVE,
+        payload: {
+          playerId,
+          matchId,
+          column
+        }
+      })
     }
   }
 }
-export function hungUp(playerId: PlayerId): HungUpAction {
-  return {
-    type: ACTION_TYPE.HUNG_UP,
-    payload: {
-      playerId
-    }
+
+export function hungUp(playerId: PlayerId): AppThunk {
+  return (dispatch, getState) => {
+    const state = getState()
+    const player = state.players[playerId]
+
+    dispatch({
+      type: ACTION_TYPE.HUNG_UP,
+      payload: {
+        playerId
+      }
+    })
+
+    player.ws.close()
   }
 }
+
 export function renewLastSeen(playerId: PlayerId): RenewLastSeenAction {
   return {
     type: ACTION_TYPE.RENEW_LAST_SEEN,
     payload: {
-      playerId
+      playerId,
+      lastSeen: Date.now()
     }
   }
 }

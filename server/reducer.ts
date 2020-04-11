@@ -1,13 +1,11 @@
 import { State, ActionTypes } from './types'
 import { ACTION_TYPE } from './actions'
-import { MESSAGE_TYPE } from '@kenrick95/c4-core/game/game-online/shared'
 
 const INITIAL_STATE: State = {
   matches: {},
   players: {}
 }
 
-// TODO: There shouldn't be this much logic in the reducer ...
 export function reducer(
   state: State = INITIAL_STATE,
   action: ActionTypes
@@ -16,14 +14,6 @@ export function reducer(
     case ACTION_TYPE.NEW_PLAYER_CONNECTION: {
       // Add player to server, no game/match yet
       const { ws, playerId } = action.payload
-      ws.send(
-        JSON.stringify({
-          type: MESSAGE_TYPE.NEW_PLAYER_CONNECTION_OK,
-          payload: {
-            playerId
-          }
-        })
-      )
       return {
         ...state,
         players: {
@@ -41,16 +31,6 @@ export function reducer(
       // Init board, but no game yet
       const { playerId, matchId } = action.payload
       const player = state.players[playerId]
-
-      player.ws.send(
-        JSON.stringify({
-          type: MESSAGE_TYPE.NEW_MATCH_OK,
-          payload: {
-            playerId,
-            matchId
-          }
-        })
-      )
 
       return {
         ...state,
@@ -80,30 +60,7 @@ export function reducer(
       // Start game
       const { matchId, playerId } = action.payload
       const { players } = state.matches[matchId]
-
       const player = state.players[playerId]
-      player.ws.send(
-        JSON.stringify({
-          type: MESSAGE_TYPE.CONNECT_MATCH_OK,
-          payload: {
-            playerId,
-            matchId
-          }
-        })
-      )
-      const otherPlayerId = players[0]
-      for (const id of [playerId, otherPlayerId]) {
-        if (!id) {
-          continue
-        }
-        const player = state.players[id]
-        player.ws.send(
-          JSON.stringify({
-            type: MESSAGE_TYPE.GAME_READY,
-            payload: {}
-          })
-        )
-      }
       return {
         ...state,
         matches: {
@@ -123,12 +80,9 @@ export function reducer(
       }
     }
     case ACTION_TYPE.HUNG_UP: {
-      // End game
       const { playerId } = action.payload
-      const player = state.players[playerId]
-      const matchId = player.matchId
+      const matchId = state.players[playerId].matchId
 
-      player.ws.close()
       const newState = { ...state }
 
       const match = matchId ? newState.matches[matchId] : null
@@ -142,37 +96,19 @@ export function reducer(
       return newState
     }
     case ACTION_TYPE.MOVE: {
-      // Move piece
-      const { playerId, matchId, column } = action.payload
-
-      const match = state.matches[matchId]
-      const otherPlayerId = match.players.find(player => player !== playerId)
-      console.log('MOVE', playerId, matchId, column, otherPlayerId)
-
-      if (otherPlayerId) {
-        const otherPlayer = state.players[otherPlayerId]
-        otherPlayer.ws.send(
-          JSON.stringify({
-            type: MESSAGE_TYPE.MOVE_SHADOW,
-            payload: {
-              column
-            }
-          })
-        )
-      }
-
+      // TODO: If game state is tracked server-side, update it here
       return state
     }
 
     case ACTION_TYPE.RENEW_LAST_SEEN: {
-      const { playerId } = action.payload
+      const { playerId, lastSeen } = action.payload
       return {
         ...state,
         players: {
           ...state.players,
           [playerId]: {
             ...state.players[playerId],
-            lastSeen: Date.now()
+            lastSeen
           }
         }
       }
