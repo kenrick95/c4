@@ -116,6 +116,7 @@ export function connectMatch(
       // Reply to this player that it is connected to this match
       const state = getState()
       const player = state.players[playerId]
+
       player.ws.send(
         JSON.stringify({
           type: MESSAGE_TYPE.CONNECT_MATCH_OK,

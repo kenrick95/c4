@@ -10,6 +10,7 @@ export function reducer(
   state: State = INITIAL_STATE,
   action: ActionTypes
 ): State {
+  console.log('[reducer] Action: ', action.type);
   switch (action.type) {
     case ACTION_TYPE.NEW_PLAYER_CONNECTION: {
       // Add player to server, no game/match yet
@@ -91,6 +92,7 @@ export function reducer(
           return p === playerId ? null : p
         })
       }
+      // TODO: Is it confusing? If match in progress, P2 disconnected (HUNG_UP), then connected again, which will make "GAME_READY" to be sent to P1 again
 
       delete newState.players[playerId]
       return newState
