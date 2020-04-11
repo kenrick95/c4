@@ -3,11 +3,11 @@ import {
   PlayerId,
   MatchId,
   NewPlayerConnectionAction,
-  NewMatchAction,
   ConnectMatchAction,
   MoveAction,
   HungUpAction,
-  RenewLastSeenAction
+  RenewLastSeenAction,
+  AppThunk
 } from './types'
 import * as WebSocket from 'ws'
 
@@ -28,13 +28,19 @@ export function newPlayerConnection(ws: WebSocket): NewPlayerConnectionAction {
     }
   }
 }
-export function newMatch(playerId: PlayerId): NewMatchAction {
-  return {
-    type: ACTION_TYPE.NEW_MATCH,
-    payload: {
-      playerId,
-      matchId: uuidV4()
-    }
+export function newMatch(playerId: PlayerId): AppThunk<MatchId> {
+  return (dispatch, getState) => {
+    const matchId = uuidV4()
+
+    dispatch({
+      type: ACTION_TYPE.NEW_MATCH,
+      payload: {
+        playerId,
+        matchId
+      }
+    })
+
+    return matchId
   }
 }
 export function connectMatch(

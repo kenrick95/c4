@@ -2,7 +2,7 @@ import * as WebSocket from 'ws'
 import * as process from 'process'
 
 import { reducer } from './reducer'
-import thunk from 'redux-thunk'
+import thunk, { ThunkMiddleware } from 'redux-thunk'
 import { createStore, applyMiddleware } from 'redux'
 
 import {
@@ -22,10 +22,13 @@ const port = parseInt(process.env.PORT || '') || 8080
 const wss = new WebSocket.Server({ port: port })
 console.log(`[server] Started listening on ws://localhost:${port}`)
 
-const store = createStore<State, ActionTypes, unknown, unknown>(
-  reducer,
-  applyMiddleware(thunk)
-)
+function configureStore() {
+  const middleware = applyMiddleware(
+    thunk as ThunkMiddleware<State, ActionTypes>
+  )
+  return createStore(reducer, middleware)
+}
+const store = configureStore()
 
 function alivenessLoop() {
   const state = store.getState()
@@ -56,9 +59,7 @@ wss.on('connection', (ws: WebSocket) => {
     switch (parsedMessage.type) {
       case MESSAGE_TYPE.NEW_MATCH_REQUEST:
         {
-          const newMatchAction = newMatch(playerId)
-          matchId = newMatchAction.payload.matchId
-          store.dispatch(newMatchAction)
+          matchId = store.dispatch(newMatch(playerId))
         }
         break
       case MESSAGE_TYPE.MOVE_MAIN:
