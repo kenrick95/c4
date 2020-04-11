@@ -61,11 +61,6 @@ export class GameOnline2p extends GameBase {
     this.ws.addEventListener('close', (event) => {
       if (this.ws) {
         console.log('[ws] close event', event)
-        // this.ws.send(
-        //   constructMessage(MESSAGE_TYPE.HUNG_UP, {
-        //     playerId: this.connectionPlayerId
-        //   })
-        // )
       }
     })
   }
@@ -99,7 +94,6 @@ export class GameOnline2p extends GameBase {
     type: MESSAGE_TYPE
     payload: any
   }) => {
-    // TODO: Missing cases like game won/draw, game reset, other party disconnected,
     switch (type) {
       case MESSAGE_TYPE.NEW_PLAYER_CONNECTION_OK:
         {
@@ -161,14 +155,29 @@ export class GameOnline2p extends GameBase {
           this.start()
         }
         break
-      case MESSAGE_TYPE.MOVE_SHADOW: {
-        this.playerShadow.doAction(payload.column)
-      }
-      break 
-      case MESSAGE_TYPE.GAME_ENDED: {
-        // TODO: Server is sending this message, but nothing to do here since game ended message is already shown in client
-      }
-      break
+      case MESSAGE_TYPE.MOVE_SHADOW:
+        {
+          this.playerShadow.doAction(payload.column)
+        }
+        break
+      case MESSAGE_TYPE.GAME_ENDED:
+        {
+          const { winnerBoardPiece } = payload
+
+          Utils.showMessage(
+            `<h1>Thank you for playing</h1>` +
+              (winnerBoardPiece === BoardPiece.DRAW
+                ? `It's a draw`
+                : `Player ${winnerBoardPiece} wins this game`) +
+              `<br />Next game will be started in 10 seconds.`
+          )
+        }
+        break
+      case MESSAGE_TYPE.GAME_RESET:
+        {
+          this.reset()
+        }
+        break
     }
   }
 
@@ -189,6 +198,11 @@ export class GameOnline2p extends GameBase {
         })
       )
     }
+  }
+
+  announceWinner(winnerBoardPiece: BoardPiece) {
+    super.announceWinner(winnerBoardPiece)
+    // Do nothing here, will wait for
   }
 }
 
@@ -225,13 +239,7 @@ export function initGameOnline2p() {
 
   // game.start()
   canvas.addEventListener('click', async (event: MouseEvent) => {
-    if (game.isGameWon) {
-      // TODO: Decide who can reset game??
-      game.reset()
-      // TODO: Game start should be decided by server
-      // await Utils.animationFrame()
-      // game.start()
-    } else {
+    if (!game.isGameWon) {
       const rect = canvas.getBoundingClientRect()
       const x = event.clientX - rect.left
       const y = event.clientY - rect.top

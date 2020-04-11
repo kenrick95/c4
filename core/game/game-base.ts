@@ -1,5 +1,6 @@
 import { BoardPiece, BoardBase } from '../board'
 import { Player } from '../player'
+import { Utils } from '../utils'
 
 export abstract class GameBase<P extends Player = Player> {
   board: BoardBase
@@ -30,7 +31,7 @@ export abstract class GameBase<P extends Player = Player> {
         console.log('[GameBase] Game over: winner is player ', winner)
         this.isGameWon = true
         this.isMoveAllowed = false
-        this.board.announceWinner()
+        this.announceWinner(winner)
         break
       }
     }
@@ -58,6 +59,16 @@ export abstract class GameBase<P extends Player = Player> {
     this.currentPlayerId = this.getNextPlayer()
   }
   abstract afterMove(action: number): void
+
+  announceWinner(winnerPiece: BoardPiece) {
+    const winner = {
+      [BoardPiece.DRAW]: 'draw',
+      [BoardPiece.PLAYER_1]: 'Player 1',
+      [BoardPiece.PLAYER_2]: 'Player 2',
+      [BoardPiece.EMPTY]: 'none',
+    }[winnerPiece]
+    console.log('[GameBase] Game over: winner is ', winner, winnerPiece)
+  }
 
   private getNextPlayer() {
     return this.currentPlayerId === 0 ? 1 : 0

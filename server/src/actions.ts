@@ -209,17 +209,18 @@ export function gameEnded(
     const state = getState()
     const [firstPlayer, secondPlayer] = state.matches[matchId].players
 
-    let gameWinner: PlayerId | null = null
+    let gameWinnerPlayerId: PlayerId | null = null
     if (winnerBoardPiece === BoardPiece.PLAYER_1 && firstPlayer) {
-      gameWinner = firstPlayer
+      gameWinnerPlayerId = firstPlayer
     } else if (winnerBoardPiece === BoardPiece.PLAYER_2 && secondPlayer) {
-      gameWinner = secondPlayer
+      gameWinnerPlayerId = secondPlayer
     }
 
     dispatch({
       type: ACTION_TYPE.END_GAME,
       payload: {
-        gameWinner,
+        matchId,
+        gameWinnerPlayerId,
       },
     })
 
@@ -231,7 +232,47 @@ export function gameEnded(
 
       player.ws.send(
         constructMessage(MESSAGE_TYPE.GAME_ENDED, {
-          gameWinner,
+          matchId,
+          winnerBoardPiece,
+          gameWinnerPlayerId,
+        })
+      )
+    }
+
+    setTimeout(() => {
+      dispatch(gameReset(matchId))
+    }, 10000)
+  }
+}
+
+export function gameReset(matchId: MatchId): AppThunk {
+  return (dispatch, getState) => {
+    dispatch({
+      type: ACTION_TYPE.RESET_GAME,
+      payload: {
+        matchId,
+      },
+    })
+
+    const state = getState()
+    for (const playerId of state.matches[matchId].players) {
+      if (!playerId) {
+        continue
+      }
+      const player = state.players[playerId]
+      if (!player) {
+        console.warn(`[actions] Player ${playerId} is gone but still have reference to it`)
+        continue
+      }
+
+      player.ws.send(
+        constructMessage(MESSAGE_TYPE.GAME_RESET, {
+          matchId,
+        })
+      )
+      player.ws.send(
+        constructMessage(MESSAGE_TYPE.GAME_READY, {
+          matchId,
         })
       )
     }

@@ -142,20 +142,4 @@ export class Board extends BoardBase {
     return true
   }
 
-  announceWinner() {
-    super.announceWinner()
-
-    if (this.winnerBoardPiece === BoardPiece.EMPTY) {
-      return
-    }
-    let message = '<h1>Thank you for playing.</h1>'
-    if (this.winnerBoardPiece === BoardPiece.DRAW) {
-      message += `It's a draw`
-    } else {
-      message += `Player ${this.winnerBoardPiece} wins`
-    }
-    message +=
-      '.<br />After dismissing this message, click the board to reset game.'
-    Utils.showMessage(message)
-  }
 }

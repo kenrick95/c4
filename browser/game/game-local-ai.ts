@@ -11,6 +11,23 @@ class GameLocalAi extends GameBase {
   afterMove() {
     // no-op
   }
+
+  announceWinner(winnerBoardPiece: BoardPiece) {
+    super.announceWinner(winnerBoardPiece)
+
+    if (winnerBoardPiece === BoardPiece.EMPTY) {
+      return
+    }
+    let message = '<h1>Thank you for playing.</h1>'
+    if (winnerBoardPiece === BoardPiece.DRAW) {
+      message += `It's a draw`
+    } else {
+      message += `Player ${winnerBoardPiece} wins`
+    }
+    message +=
+      '.<br />After dismissing this message, click the board to reset game.'
+    Utils.showMessage(message)
+  }
 }
 export function initGameLocalAi() {
   const canvas = document.querySelector('canvas')

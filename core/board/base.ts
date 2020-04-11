@@ -158,20 +158,6 @@ export class BoardBase {
     return BoardPiece.EMPTY
   }
 
-  announceWinner() {
-    const winner = {
-      [BoardPiece.DRAW]: 'draw',
-      [BoardPiece.PLAYER_1]: 'Player 1',
-      [BoardPiece.PLAYER_2]: 'Player 2',
-      [BoardPiece.EMPTY]: 'none',
-    }[this.winnerBoardPiece]
-    console.log(
-      '[BoardBase] Game over: winner is ',
-      winner,
-      this.winnerBoardPiece
-    )
-  }
-
   protected getPlayerColor(boardPiece: BoardPiece): string {
     switch (boardPiece) {
       case BoardPiece.PLAYER_1:

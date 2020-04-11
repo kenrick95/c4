@@ -45,7 +45,7 @@ export function reducer(
           [matchId]: {
             matchId: matchId,
             players: [playerId, null],
-            board: new ServerBoard(matchId),
+            board: new ServerBoard(),
             game: null,
           },
         },
@@ -72,7 +72,8 @@ export function reducer(
           new ServerPlayer(BoardPiece.PLAYER_1, firstPlayer),
           new ServerPlayer(BoardPiece.PLAYER_2, playerId),
         ],
-        board
+        board,
+        matchId
       )
       game.start()
       return {
@@ -98,6 +99,8 @@ export function reducer(
       const { playerId } = action.payload
       const matchId = state.players[playerId].matchId
 
+      console.log(`[HUNG_UP] player ${playerId}`)
+
       const newState = { ...state }
 
       const match = matchId ? newState.matches[matchId] : null
@@ -114,6 +117,8 @@ export function reducer(
     case ACTION_TYPE.MOVE: {
       const { matchId, column, playerId } = action.payload
       const match = state.matches[matchId]
+
+      // TODO: Remove these verbose debug, quite useful in development
       console.log('---- MOVE DEBUG ----')
       const game = match.game
       console.log('game', game?.isGameWon, game?.isMoveAllowed)
@@ -126,7 +131,6 @@ export function reducer(
       game?.board.debug()
       console.log('---- MOVE DEBUG ----')
 
-      // TODO: Need new action to reset game so that we can call game.reset()
       return {
         ...state,
         matches: {
@@ -159,20 +163,23 @@ export function reducer(
       if (!gameWinnerPlayerId) {
         return state
       }
-
-      return {
+      const newState = {
         ...state,
         players: {
+          ...state.players,
           [gameWinnerPlayerId]: {
             ...state.players[gameWinnerPlayerId],
             gameWon: state.players[gameWinnerPlayerId].gameWon + 1,
           },
         },
       }
+
+      return newState
     }
     case ACTION_TYPE.RESET_GAME: {
       const { matchId } = action.payload
       state.matches[matchId].game?.reset()
+      state.matches[matchId].game?.start()
       return state
     }
   }
