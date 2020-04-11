@@ -64,7 +64,7 @@ export function newMatch(playerId: PlayerId): AppThunk<MatchId> {
 export function connectMatch(
   playerId: PlayerId,
   matchId: MatchId | null
-): AppThunk {
+): AppThunk<MatchId | null> {
   return (dispatch, getState) => {
     {
       const state = getState()
@@ -94,7 +94,7 @@ export function connectMatch(
             matchId
           })
         )
-        return
+        return null
       }
     }
 
@@ -132,6 +132,8 @@ export function connectMatch(
         player.ws.send(constructMessage(MESSAGE_TYPE.GAME_READY))
       }
     }
+
+    return matchId
   }
 }
 export function move(

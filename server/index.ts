@@ -15,7 +15,10 @@ import {
 } from './actions'
 import { MatchId, State, ActionTypes } from './types'
 
-import { MESSAGE_TYPE, parseMessage } from '@kenrick95/c4-core/game/game-online/shared'
+import {
+  MESSAGE_TYPE,
+  parseMessage
+} from '@kenrick95/c4-core/game/game-online/shared'
 
 const port = parseInt(process.env.PORT || '') || 8080
 const wss = new WebSocket.Server({ port: port })
@@ -57,16 +60,18 @@ wss.on('connection', (ws: WebSocket) => {
           matchId = store.dispatch(newMatch(playerId))
         }
         break
+      case MESSAGE_TYPE.CONNECT_MATCH_REQUEST:
+        {
+          matchId = store.dispatch(
+            connectMatch(playerId, parsedMessage.payload.matchId)
+          )
+        }
+        break
       case MESSAGE_TYPE.MOVE_MAIN:
         {
           store.dispatch(
             move(playerId, matchId, parseInt(parsedMessage.payload.column))
           )
-        }
-        break
-      case MESSAGE_TYPE.CONNECT_MATCH_REQUEST:
-        {
-          store.dispatch(connectMatch(playerId, parsedMessage.payload.matchId))
         }
         break
       case MESSAGE_TYPE.HUNG_UP:
