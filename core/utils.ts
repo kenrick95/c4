@@ -35,7 +35,6 @@ export class Utils {
     messageDismissDOM.addEventListener('click', dismissHandler)
   }
 
-
   /**
    *
    * @param coord Coordinate of point to be checked
@@ -81,7 +80,7 @@ export class Utils {
    */
   static animationFrame() {
     let resolve = null
-    const promise = new Promise(r => (resolve = r))
+    const promise = new Promise((r) => (resolve = r))
     if (resolve) {
       window.requestAnimationFrame(resolve)
     }
@@ -112,7 +111,7 @@ export class Utils {
     ) {
       return {
         success: false,
-        map: clonedMap
+        map: clonedMap,
       }
     }
 
@@ -132,7 +131,7 @@ export class Utils {
 
     return {
       success: true,
-      map: clonedMap
+      map: clonedMap,
     }
   }
 
@@ -159,7 +158,7 @@ export class Utils {
 
     // run the actual callbacks
     function runCallbacks() {
-      callbacks.forEach(function(callback) {
+      callbacks.forEach(function (callback) {
         callback()
       })
       running = false
@@ -174,12 +173,12 @@ export class Utils {
 
     return {
       // public method to add additional callback
-      add: function(callback: Function) {
+      add: function (callback: Function) {
         if (!callbacks.length) {
           window.addEventListener('resize', resize)
         }
         addCallback(callback)
-      }
+      },
     }
   }
 }

@@ -16,14 +16,14 @@ export enum MESSAGE_TYPE {
   HUNG_UP = 'HUNG_UP',
 
   MOVE_MAIN = 'MOVE_MAIN',
-  MOVE_SHADOW = 'MOVE_SHADOW'
+  MOVE_SHADOW = 'MOVE_SHADOW',
 }
 
 export function constructMessage(type: MESSAGE_TYPE, payload?: any): string {
   console.log('[ws] send: ', type, payload)
   return JSON.stringify({
     type,
-    payload
+    payload,
   })
 }
 export function parseMessage(

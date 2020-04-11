@@ -75,7 +75,7 @@ export class PlayerAi extends Player {
     }
     return {
       winnerBoardPiece: winnerBoardPiece,
-      chain: chainValue
+      chain: chainValue,
     }
   }
 
@@ -126,7 +126,7 @@ export class PlayerAi extends Player {
           stateValue.winnerBoardPiece,
           depth
         ),
-        move: -1 // leaf node
+        move: -1, // leaf node
       }
     }
 
@@ -149,15 +149,10 @@ export class PlayerAi extends Player {
     for (let column = 0; column < BoardBase.COLUMNS; column++) {
       const {
         success: actionSuccessful,
-        map: nextState
+        map: nextState,
       } = Utils.getMockPlayerAction(state, this.boardPiece, column)
       if (actionSuccessful) {
-        const { value: nextValue } = this.getMove(
-          nextState,
-          depth,
-          alpha,
-          beta
-        )
+        const { value: nextValue } = this.getMove(nextState, depth, alpha, beta)
         if (nextValue > value) {
           value = nextValue
           moveQueue = [column]
@@ -169,7 +164,7 @@ export class PlayerAi extends Player {
         if (value > beta) {
           return {
             value: value,
-            move: Utils.choose(moveQueue)
+            move: Utils.choose(moveQueue),
           }
         }
         alpha = Math.max(alpha, value)
@@ -178,7 +173,7 @@ export class PlayerAi extends Player {
 
     return {
       value: value,
-      move: Utils.choose(moveQueue)
+      move: Utils.choose(moveQueue),
     }
   }
   private minState(
@@ -195,15 +190,10 @@ export class PlayerAi extends Player {
     for (let column = 0; column < BoardBase.COLUMNS; column++) {
       const {
         success: actionSuccessful,
-        map: nextState
+        map: nextState,
       } = Utils.getMockPlayerAction(state, this.enemyBoardPiece, column)
       if (actionSuccessful) {
-        const { value: nextValue } = this.getMove(
-          nextState,
-          depth,
-          alpha,
-          beta
-        )
+        const { value: nextValue } = this.getMove(nextState, depth, alpha, beta)
         if (nextValue < value) {
           value = nextValue
           moveQueue = [column]
@@ -215,7 +205,7 @@ export class PlayerAi extends Player {
         if (value < alpha) {
           return {
             value: value,
-            move: Utils.choose(moveQueue)
+            move: Utils.choose(moveQueue),
           }
         }
         beta = Math.min(beta, value)
@@ -223,7 +213,7 @@ export class PlayerAi extends Player {
     }
     return {
       value: value,
-      move: Utils.choose(moveQueue)
+      move: Utils.choose(moveQueue),
     }
   }
 

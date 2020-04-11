@@ -11,13 +11,13 @@ import {
   connectMatch,
   hungUp,
   move,
-  renewLastSeen
+  renewLastSeen,
 } from './actions'
 import { MatchId, State, ActionTypes } from './types'
 
 import {
   MESSAGE_TYPE,
-  parseMessage
+  parseMessage,
 } from '@kenrick95/c4-core/game/game-online/shared'
 
 const port = parseInt(process.env.PORT || '') || 8080

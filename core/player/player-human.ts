@@ -10,12 +10,16 @@ export class PlayerHuman extends Player {
   }
 
   doAction(column: number) {
-    if (this.clickPromiseResolver && 0 <= column && column < BoardBase.COLUMNS) {
+    if (
+      this.clickPromiseResolver &&
+      0 <= column &&
+      column < BoardBase.COLUMNS
+    ) {
       this.clickPromiseResolver(column)
     }
   }
 
   async getAction(board: BoardBase): Promise<number> {
-    return new Promise<number>(r => (this.clickPromiseResolver = r))
+    return new Promise<number>((r) => (this.clickPromiseResolver = r))
   }
 }

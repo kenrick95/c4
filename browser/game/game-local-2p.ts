@@ -21,7 +21,7 @@ export function initGameLocal2p() {
   const board = new Board(canvas)
   const humanPlayers = [
     new PlayerHuman(BoardPiece.PLAYER_1),
-    new PlayerHuman(BoardPiece.PLAYER_2)
+    new PlayerHuman(BoardPiece.PLAYER_2),
   ]
 
   const game = new GameLocal2p(humanPlayers, board)

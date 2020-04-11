@@ -5,7 +5,7 @@ export enum BoardPiece {
   EMPTY,
   PLAYER_1,
   PLAYER_2,
-  DRAW
+  DRAW,
 }
 export class BoardBase {
   static readonly ROWS: number = 6
@@ -75,7 +75,7 @@ export class BoardBase {
   async applyPlayerAction(player: Player, column: number): Promise<boolean> {
     const {
       success: actionSuccessful,
-      map: nextState
+      map: nextState,
     } = Utils.getMockPlayerAction(this.map, player.boardPiece, column)
 
     this.map = nextState
@@ -85,7 +85,7 @@ export class BoardBase {
   }
 
   debug() {
-    console.log(this.map.map(row => row.join(' ')).join('\n'))
+    console.log(this.map.map((row) => row.join(' ')).join('\n'))
   }
 
   getWinner(): BoardPiece {
@@ -100,7 +100,7 @@ export class BoardBase {
       [-1, 1],
       [1, -1],
       [1, 0],
-      [1, 1]
+      [1, 1],
     ]
     const isWinningSequence = (
       i: number,
@@ -165,7 +165,11 @@ export class BoardBase {
       [BoardPiece.PLAYER_2]: 'Player 2',
       [BoardPiece.EMPTY]: 'none',
     }[this.winnerBoardPiece]
-    console.log('[BoardBase] Game over: winner is ', winner, this.winnerBoardPiece)
+    console.log(
+      '[BoardBase] Game over: winner is ',
+      winner,
+      this.winnerBoardPiece
+    )
   }
 
   protected getPlayerColor(boardPiece: BoardPiece): string {

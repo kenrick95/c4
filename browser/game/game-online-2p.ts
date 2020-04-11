@@ -4,14 +4,14 @@ import {
   GameBase,
   MESSAGE_TYPE,
   constructMessage,
-  parseMessage
+  parseMessage,
 } from '@kenrick95/c4-core/game'
 import { Player, PlayerHuman, PlayerShadow } from '@kenrick95/c4-core/player'
 import { Utils } from '@kenrick95/c4-core/utils'
 
 enum GAME_MODE {
   FIRST = BoardPiece.PLAYER_1,
-  SECOND = BoardPiece.PLAYER_2
+  SECOND = BoardPiece.PLAYER_2,
 }
 
 export class GameOnline2p extends GameBase {
@@ -48,7 +48,7 @@ export class GameOnline2p extends GameBase {
     }
 
     this.ws = new WebSocket(`ws://${location.hostname}:8080`)
-    this.ws.addEventListener('message', event => {
+    this.ws.addEventListener('message', (event) => {
       this.messageActionHandler(parseMessage(event.data))
     })
     this.ws.addEventListener('open', () => {
@@ -58,7 +58,7 @@ export class GameOnline2p extends GameBase {
         )
       }
     })
-    this.ws.addEventListener('close', event => {
+    this.ws.addEventListener('close', (event) => {
       if (this.ws) {
         console.log('[ws] close event', event)
         // this.ws.send(
@@ -74,7 +74,7 @@ export class GameOnline2p extends GameBase {
     if (this.ws) {
       this.ws.send(
         constructMessage(MESSAGE_TYPE.NEW_MATCH_REQUEST, {
-          playerId: this.connectionPlayerId
+          playerId: this.connectionPlayerId,
         })
       )
     }
@@ -87,14 +87,14 @@ export class GameOnline2p extends GameBase {
     this.ws.send(
       constructMessage(MESSAGE_TYPE.CONNECT_MATCH_REQUEST, {
         playerId: this.connectionPlayerId,
-        matchId
+        matchId,
       })
     )
   }
 
   messageActionHandler = ({
     type,
-    payload
+    payload,
   }: {
     type: MESSAGE_TYPE
     payload: any
@@ -180,7 +180,7 @@ export class GameOnline2p extends GameBase {
         constructMessage(MESSAGE_TYPE.MOVE_MAIN, {
           playerId: this.connectionPlayerId,
           matchId: this.connectionMatchId,
-          column: action
+          column: action,
         })
       )
     }
@@ -205,15 +205,15 @@ export function initGameOnline2p() {
     gameMode === GAME_MODE.FIRST
       ? [
           new PlayerHuman(BoardPiece.PLAYER_1),
-          new PlayerShadow(BoardPiece.PLAYER_2)
+          new PlayerShadow(BoardPiece.PLAYER_2),
         ]
       : [
           new PlayerShadow(BoardPiece.PLAYER_1),
-          new PlayerHuman(BoardPiece.PLAYER_2)
+          new PlayerHuman(BoardPiece.PLAYER_2),
         ]
 
   const game = new GameOnline2p(players, board, {
-    gameMode
+    gameMode,
   })
 
   // wait till game ready to start

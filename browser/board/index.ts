@@ -77,7 +77,7 @@ export class Board extends BoardBase {
         y: currentY + BoardBase.MASK_Y_BEGIN + 2 * BoardBase.PIECE_RADIUS,
         r: BoardBase.PIECE_RADIUS,
         fillStyle: fillStyle,
-        strokeStyle: BoardBase.PIECE_STROKE_STYLE
+        strokeStyle: BoardBase.PIECE_STROKE_STYLE,
       })
       this.render()
       currentY += BoardBase.PIECE_RADIUS
@@ -103,7 +103,7 @@ export class Board extends BoardBase {
             2 * BoardBase.PIECE_RADIUS,
           r: BoardBase.PIECE_RADIUS,
           fillStyle: this.getPlayerColor(this.map[y][x]),
-          strokeStyle: BoardBase.PIECE_STROKE_STYLE
+          strokeStyle: BoardBase.PIECE_STROKE_STYLE,
         })
       }
     }
@@ -142,10 +142,9 @@ export class Board extends BoardBase {
     return true
   }
 
-  
   announceWinner() {
     super.announceWinner()
-    
+
     if (this.winnerBoardPiece === BoardPiece.EMPTY) {
       return
     }

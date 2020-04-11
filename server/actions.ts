@@ -4,7 +4,7 @@ import * as WebSocket from 'ws'
 import { BoardBase } from '@kenrick95/c4-core/board'
 import {
   MESSAGE_TYPE,
-  constructMessage
+  constructMessage,
 } from '@kenrick95/c4-core/game/game-online/shared'
 
 export enum ACTION_TYPE {
@@ -13,22 +13,22 @@ export enum ACTION_TYPE {
   CONNECT_MATCH = 'CONNECT_MATCH',
   HUNG_UP = 'HUNG_UP',
   MOVE = 'MOVE',
-  RENEW_LAST_SEEN = 'RENEW_LAST_SEEN'
+  RENEW_LAST_SEEN = 'RENEW_LAST_SEEN',
 }
 export function newPlayerConnection(ws: WebSocket): AppThunk<PlayerId> {
-  return dispatch => {
+  return (dispatch) => {
     const playerId = uuidV4()
     dispatch({
       type: ACTION_TYPE.NEW_PLAYER_CONNECTION,
       payload: {
         playerId,
-        ws
-      }
+        ws,
+      },
     })
 
     ws.send(
       constructMessage(MESSAGE_TYPE.NEW_PLAYER_CONNECTION_OK, {
-        playerId
+        playerId,
       })
     )
 
@@ -43,8 +43,8 @@ export function newMatch(playerId: PlayerId): AppThunk<MatchId> {
       type: ACTION_TYPE.NEW_MATCH,
       payload: {
         playerId,
-        matchId
-      }
+        matchId,
+      },
     })
 
     const state = getState()
@@ -54,7 +54,7 @@ export function newMatch(playerId: PlayerId): AppThunk<MatchId> {
     player.ws.send(
       constructMessage(MESSAGE_TYPE.NEW_MATCH_OK, {
         playerId,
-        matchId
+        matchId,
       })
     )
 
@@ -91,7 +91,7 @@ export function connectMatch(
         player.ws.send(
           constructMessage(MESSAGE_TYPE.CONNECT_MATCH_FAIL, {
             playerId,
-            matchId
+            matchId,
           })
         )
         return null
@@ -102,8 +102,8 @@ export function connectMatch(
       type: ACTION_TYPE.CONNECT_MATCH,
       payload: {
         playerId,
-        matchId
-      }
+        matchId,
+      },
     })
 
     {
@@ -114,7 +114,7 @@ export function connectMatch(
       player.ws.send(
         constructMessage(MESSAGE_TYPE.CONNECT_MATCH_OK, {
           playerId,
-          matchId
+          matchId,
         })
       )
     }
@@ -148,14 +148,14 @@ export function move(
     const state = getState()
     const match = state.matches[matchId]
     if (match && column >= 0 && column < BoardBase.COLUMNS) {
-      const otherPlayerId = match.players.find(player => player !== playerId)
+      const otherPlayerId = match.players.find((player) => player !== playerId)
       console.log('MOVE', playerId, matchId, column, otherPlayerId)
 
       if (otherPlayerId) {
         const otherPlayer = state.players[otherPlayerId]
         otherPlayer.ws.send(
           constructMessage(MESSAGE_TYPE.MOVE_SHADOW, {
-            column
+            column,
           })
         )
       }
@@ -165,8 +165,8 @@ export function move(
         payload: {
           playerId,
           matchId,
-          column
-        }
+          column,
+        },
       })
     }
   }
@@ -180,8 +180,8 @@ export function hungUp(playerId: PlayerId): AppThunk {
     dispatch({
       type: ACTION_TYPE.HUNG_UP,
       payload: {
-        playerId
-      }
+        playerId,
+      },
     })
 
     player.ws.close()
@@ -193,7 +193,7 @@ export function renewLastSeen(playerId: PlayerId): RenewLastSeenAction {
     type: ACTION_TYPE.RENEW_LAST_SEEN,
     payload: {
       playerId,
-      lastSeen: Date.now()
-    }
+      lastSeen: Date.now(),
+    },
   }
 }

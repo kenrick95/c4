@@ -10,12 +10,16 @@ export class PlayerShadow extends Player {
   }
 
   doAction(column: number) {
-    if (this.actionPromiseResolver && 0 <= column && column < BoardBase.COLUMNS) {
+    if (
+      this.actionPromiseResolver &&
+      0 <= column &&
+      column < BoardBase.COLUMNS
+    ) {
       this.actionPromiseResolver(column)
     }
   }
 
   async getAction(board: BoardBase): Promise<number> {
-    return new Promise<number>(r => (this.actionPromiseResolver = r))
+    return new Promise<number>((r) => (this.actionPromiseResolver = r))
   }
 }

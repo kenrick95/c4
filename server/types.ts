@@ -8,9 +8,9 @@ export type PlayerId = string
 export type MatchId = string
 export type MatchState = {
   matchId: MatchId
-  players: Array<PlayerId | null>,
-  board: ServerBoard,
-  game: null | ServerGame,
+  players: Array<PlayerId | null>
+  board: ServerBoard
+  game: null | ServerGame
 }
 export type PlayerState = {
   playerId: PlayerId

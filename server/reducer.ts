@@ -7,7 +7,7 @@ import { ServerBoard } from './game/board'
 
 const INITIAL_STATE: State = {
   matches: {},
-  players: {}
+  players: {},
 }
 
 export function reducer(
@@ -27,9 +27,9 @@ export function reducer(
             playerId: playerId,
             lastSeen: Date.now(),
             ws: ws,
-            matchId: null
-          }
-        }
+            matchId: null,
+          },
+        },
       }
     }
     case ACTION_TYPE.NEW_MATCH: {
@@ -45,16 +45,16 @@ export function reducer(
             matchId: matchId,
             players: [playerId, null],
             board: new ServerBoard(),
-            game: null
-          }
+            game: null,
+          },
         },
         players: {
           ...state.players,
           [playerId]: {
             ...player,
-            matchId
-          }
-        }
+            matchId,
+          },
+        },
       }
     }
     case ACTION_TYPE.CONNECT_MATCH: {
@@ -69,7 +69,7 @@ export function reducer(
       const game = new ServerGame(
         [
           new ServerPlayer(BoardPiece.PLAYER_1, firstPlayer),
-          new ServerPlayer(BoardPiece.PLAYER_2, playerId)
+          new ServerPlayer(BoardPiece.PLAYER_2, playerId),
         ],
         board
       )
@@ -81,16 +81,16 @@ export function reducer(
           [matchId]: {
             ...state.matches[matchId],
             players: [firstPlayer, playerId],
-            game: game
-          }
+            game: game,
+          },
         },
         players: {
           ...state.players,
           [playerId]: {
             ...player,
-            matchId
-          }
-        }
+            matchId,
+          },
+        },
       }
     }
     case ACTION_TYPE.HUNG_UP: {
@@ -101,7 +101,7 @@ export function reducer(
 
       const match = matchId ? newState.matches[matchId] : null
       if (match) {
-        match.players = match.players.map(p => {
+        match.players = match.players.map((p) => {
           return p === playerId ? null : p
         })
       }
@@ -118,7 +118,7 @@ export function reducer(
       console.log('game', game?.isGameWon, game?.isMoveAllowed)
       game?.board.debug()
 
-      const player = game?.players.find(p => p.playerId === playerId)
+      const player = game?.players.find((p) => p.playerId === playerId)
       console.log('player', player)
       player?.doAction(column)
 
@@ -132,9 +132,9 @@ export function reducer(
           ...state.matches,
           [matchId]: {
             ...match,
-            game
-          }
-        }
+            game,
+          },
+        },
       }
     }
 
@@ -146,9 +146,9 @@ export function reducer(
           ...state.players,
           [playerId]: {
             ...state.players[playerId],
-            lastSeen
-          }
-        }
+            lastSeen,
+          },
+        },
       }
     }
   }
