@@ -42,8 +42,9 @@ function centralLoop() {
   actionQueue.length = 0
 }
 function alivenessLoop() {
+  const now = Date.now()
   for (const player of Object.values(STATE.players)) {
-    if (player.lastSeen >= 60000) {
+    if (now - player.lastSeen >= 60000) {
       player.ws.terminate()
     }
 
