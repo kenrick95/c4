@@ -9,6 +9,6 @@
     "target": "es2017",
     "strict": true
   },
-  "include": ["./*.ts", "../core"],
+  "include": ["./*.ts", "@kenrick95/c4-core", "game/*.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

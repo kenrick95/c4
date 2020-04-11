@@ -1,19 +1,16 @@
 import * as WebSocket from 'ws'
 import { ThunkAction } from 'redux-thunk'
 import { Action } from 'redux'
+import { ServerGame } from './game/game'
+import { ServerBoard } from './game/board'
 
 export type PlayerId = string
 export type MatchId = string
 export type MatchState = {
   matchId: MatchId
-  players: Array<PlayerId | null>
-  // gameState: {
-  //   // TODO: Do I really need game state in server? :thinking:
-  //   isGameWon: boolean
-  //   isMoveAllowed: boolean
-  //   currentPlayerId: PlayerId
-  //   map: Array<Array<number>>
-  // }
+  players: Array<PlayerId | null>,
+  board: ServerBoard,
+  game: null | ServerGame,
 }
 export type PlayerState = {
   playerId: PlayerId

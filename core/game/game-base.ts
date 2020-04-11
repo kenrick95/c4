@@ -1,14 +1,14 @@
 import { BoardPiece, BoardBase } from '../board'
 import { Player } from '../player'
 
-export abstract class GameBase {
+export abstract class GameBase<P extends Player = Player> {
   board: BoardBase
-  players: Array<Player>
+  players: Array<P>
   currentPlayerId: number
   isMoveAllowed: boolean = false
   isGameWon: boolean = false
 
-  constructor(players: Array<Player>, board: BoardBase) {
+  constructor(players: Array<P>, board: BoardBase) {
     this.board = board
     this.players = players
     this.currentPlayerId = 0
@@ -27,7 +27,7 @@ export abstract class GameBase {
       await this.move()
       const winner = this.board.getWinner()
       if (winner !== BoardPiece.EMPTY) {
-        console.log('Game over: winner is player ', winner)
+        console.log('[GameBase] Game over: winner is player ', winner)
         this.isGameWon = true
         this.isMoveAllowed = false
         this.board.announceWinner()

@@ -221,9 +221,11 @@ export function initGameOnline2p() {
   // game.start()
   canvas.addEventListener('click', async (event: MouseEvent) => {
     if (game.isGameWon) {
+      // TODO: Decide who can reset game??
       game.reset()
-      await Utils.animationFrame()
-      game.start()
+      // TODO: Game start should be decided by server
+      // await Utils.animationFrame()
+      // game.start()
     } else {
       const rect = canvas.getBoundingClientRect()
       const x = event.clientX - rect.left

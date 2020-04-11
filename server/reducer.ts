@@ -1,5 +1,9 @@
 import { State, ActionTypes } from './types'
 import { ACTION_TYPE } from './actions'
+import { BoardPiece } from '@kenrick95/c4-core'
+import { ServerGame } from './game/game'
+import { ServerPlayer } from './game/player'
+import { ServerBoard } from './game/board'
 
 const INITIAL_STATE: State = {
   matches: {},
@@ -10,7 +14,7 @@ export function reducer(
   state: State = INITIAL_STATE,
   action: ActionTypes
 ): State {
-  console.log('[reducer] Action: ', action.type);
+  console.log('[reducer] Action: ', action.type)
   switch (action.type) {
     case ACTION_TYPE.NEW_PLAYER_CONNECTION: {
       // Add player to server, no game/match yet
@@ -39,13 +43,9 @@ export function reducer(
           ...state.matches,
           [matchId]: {
             matchId: matchId,
-            players: [playerId, null]
-            // gameState: {
-            //   isGameWon: false,
-            //   isMoveAllowed: false,
-            //   currentPlayerId: playerId,
-            //   map: [[]]
-            // }
+            players: [playerId, null],
+            board: new ServerBoard(),
+            game: null
           }
         },
         players: {
@@ -60,15 +60,28 @@ export function reducer(
     case ACTION_TYPE.CONNECT_MATCH: {
       // Start game
       const { matchId, playerId } = action.payload
-      const { players } = state.matches[matchId]
+      const { players, board } = state.matches[matchId]
       const player = state.players[playerId]
+
+      // Guaranteed players[0] to be non-null here, already checked before dispatching action
+      const firstPlayer = players[0]!
+
+      const game = new ServerGame(
+        [
+          new ServerPlayer(BoardPiece.PLAYER_1, firstPlayer),
+          new ServerPlayer(BoardPiece.PLAYER_2, playerId)
+        ],
+        board
+      )
+      game.start()
       return {
         ...state,
         matches: {
           ...state.matches,
           [matchId]: {
             ...state.matches[matchId],
-            players: [players[0], playerId]
+            players: [firstPlayer, playerId],
+            game: game
           }
         },
         players: {
@@ -98,8 +111,31 @@ export function reducer(
       return newState
     }
     case ACTION_TYPE.MOVE: {
-      // TODO: If game state is tracked server-side, update it here
-      return state
+      const { matchId, column, playerId } = action.payload
+      const match = state.matches[matchId]
+      console.log('---- MOVE DEBUG ----')
+      const game = match.game
+      console.log('game', game?.isGameWon, game?.isMoveAllowed)
+      game?.board.debug()
+
+      const player = game?.players.find(p => p.playerId === playerId)
+      console.log('player', player)
+      player?.doAction(column)
+
+      game?.board.debug()
+      console.log('---- MOVE DEBUG ----')
+
+      // TODO: Need new action to reset game so that we can call game.reset()
+      return {
+        ...state,
+        matches: {
+          ...state.matches,
+          [matchId]: {
+            ...match,
+            game
+          }
+        }
+      }
     }
 
     case ACTION_TYPE.RENEW_LAST_SEEN: {

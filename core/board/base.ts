@@ -25,7 +25,7 @@ export class BoardBase {
   static SCALE: number
 
   map: Array<Array<number>>
-  private winnerBoardPiece: BoardPiece
+  protected winnerBoardPiece: BoardPiece
 
   constructor() {
     this.map = []
@@ -159,18 +159,13 @@ export class BoardBase {
   }
 
   announceWinner() {
-    if (this.winnerBoardPiece === BoardPiece.EMPTY) {
-      return
-    }
-    let message = '<h1>Thank you for playing.</h1>'
-    if (this.winnerBoardPiece === BoardPiece.DRAW) {
-      message += `It's a draw`
-    } else {
-      message += `Player ${this.winnerBoardPiece} wins`
-    }
-    message +=
-      '.<br />After dismissing this message, click the board to reset game.'
-    Utils.showMessage(message)
+    const winner = {
+      [BoardPiece.DRAW]: 'draw',
+      [BoardPiece.PLAYER_1]: 'Player 1',
+      [BoardPiece.PLAYER_2]: 'Player 2',
+      [BoardPiece.EMPTY]: 'none',
+    }[this.winnerBoardPiece]
+    console.log('[BoardBase] Game over: winner is ', winner, this.winnerBoardPiece)
   }
 
   protected getPlayerColor(boardPiece: BoardPiece): string {
