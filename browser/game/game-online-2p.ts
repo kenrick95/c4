@@ -164,6 +164,11 @@ export class GameOnline2p extends GameBase {
       case MESSAGE_TYPE.MOVE_SHADOW: {
         this.playerShadow.doAction(payload.column)
       }
+      break 
+      case MESSAGE_TYPE.GAME_ENDED: {
+        // TODO: Server is sending this message, but nothing to do here since game ended message is already shown in client
+      }
+      break
     }
   }
 

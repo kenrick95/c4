@@ -21,6 +21,8 @@ export type PlayerState = {
   ws: WebSocket
 
   matchId: null | MatchId
+
+  gameWon: number
 }
 export type State = {
   matches: {
@@ -45,6 +47,8 @@ export type ActionTypes =
   | MoveAction
   | ConnectMatchAction
   | RenewLastSeenAction
+  | EndGameAction
+  | ResetGameAction
 
 export type NewPlayerConnectionAction = {
   type: 'NEW_PLAYER_CONNECTION'
@@ -86,5 +90,24 @@ export type RenewLastSeenAction = {
   payload: {
     playerId: PlayerId
     lastSeen: number
+  }
+}
+
+export type EndGameAction = {
+  type: 'END_GAME'
+  payload: {
+    matchId: MatchId
+
+    /**
+     * Either a PlayerId (player 1 or player 2 wins) or null (draw)
+     */
+    gameWinnerPlayerId: PlayerId | null
+  }
+}
+
+export type ResetGameAction = {
+  type: 'RESET_GAME'
+  payload: {
+    matchId: MatchId
   }
 }

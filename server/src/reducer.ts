@@ -1,6 +1,6 @@
 import { State, ActionTypes } from './types'
 import { ACTION_TYPE } from './actions'
-import { BoardPiece } from '@kenrick95/c4-core'
+import { BoardPiece, MESSAGE_TYPE } from '@kenrick95/c4-core'
 import { ServerGame } from './game/game'
 import { ServerPlayer } from './game/player'
 import { ServerBoard } from './game/board'
@@ -28,6 +28,7 @@ export function reducer(
             lastSeen: Date.now(),
             ws: ws,
             matchId: null,
+            gameWon: 0,
           },
         },
       }
@@ -44,7 +45,7 @@ export function reducer(
           [matchId]: {
             matchId: matchId,
             players: [playerId, null],
-            board: new ServerBoard(),
+            board: new ServerBoard(matchId),
             game: null,
           },
         },
@@ -150,6 +151,29 @@ export function reducer(
           },
         },
       }
+    }
+
+    case ACTION_TYPE.END_GAME: {
+      const { gameWinnerPlayerId } = action.payload
+
+      if (!gameWinnerPlayerId) {
+        return state
+      }
+
+      return {
+        ...state,
+        players: {
+          [gameWinnerPlayerId]: {
+            ...state.players[gameWinnerPlayerId],
+            gameWon: state.players[gameWinnerPlayerId].gameWon + 1,
+          },
+        },
+      }
+    }
+    case ACTION_TYPE.RESET_GAME: {
+      const { matchId } = action.payload
+      state.matches[matchId].game?.reset()
+      return state
     }
   }
   return state

@@ -30,7 +30,7 @@ function configureStore() {
   )
   return createStore(reducer, middleware)
 }
-const store = configureStore()
+export const store = configureStore()
 
 function alivenessLoop() {
   const state = store.getState()

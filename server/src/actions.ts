@@ -1,7 +1,7 @@
 import { v4 as uuidV4 } from 'uuid'
 import { PlayerId, MatchId, RenewLastSeenAction, AppThunk } from './types'
 import * as WebSocket from 'ws'
-import { BoardBase } from '@kenrick95/c4-core/board'
+import { BoardBase, BoardPiece } from '@kenrick95/c4-core/board'
 import {
   MESSAGE_TYPE,
   constructMessage,
@@ -14,6 +14,9 @@ export enum ACTION_TYPE {
   HUNG_UP = 'HUNG_UP',
   MOVE = 'MOVE',
   RENEW_LAST_SEEN = 'RENEW_LAST_SEEN',
+
+  END_GAME = 'END_GAME',
+  RESET_GAME = 'RESET_GAME',
 }
 export function newPlayerConnection(ws: WebSocket): AppThunk<PlayerId> {
   return (dispatch) => {
@@ -195,5 +198,42 @@ export function renewLastSeen(playerId: PlayerId): RenewLastSeenAction {
       playerId,
       lastSeen: Date.now(),
     },
+  }
+}
+
+export function gameEnded(
+  matchId: MatchId,
+  winnerBoardPiece: BoardPiece
+): AppThunk {
+  return (dispatch, getState) => {
+    const state = getState()
+    const [firstPlayer, secondPlayer] = state.matches[matchId].players
+
+    let gameWinner: PlayerId | null = null
+    if (winnerBoardPiece === BoardPiece.PLAYER_1 && firstPlayer) {
+      gameWinner = firstPlayer
+    } else if (winnerBoardPiece === BoardPiece.PLAYER_2 && secondPlayer) {
+      gameWinner = secondPlayer
+    }
+
+    dispatch({
+      type: ACTION_TYPE.END_GAME,
+      payload: {
+        gameWinner,
+      },
+    })
+
+    for (const playerId of state.matches[matchId].players) {
+      if (!playerId) {
+        continue
+      }
+      const player = state.players[playerId]
+
+      player.ws.send(
+        constructMessage(MESSAGE_TYPE.GAME_ENDED, {
+          gameWinner,
+        })
+      )
+    }
   }
 }
