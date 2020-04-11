@@ -1,5 +1,5 @@
 import { v4 as uuidV4 } from 'uuid'
-import { PlayerId, MatchId } from './types'
+import { PlayerId, MatchId, State } from './types'
 import * as WebSocket from 'ws'
 
 export type Action =
@@ -82,6 +82,10 @@ export function connectMatch(
   playerId: PlayerId,
   matchId: MatchId
 ): ConnectMatchAction {
+  // TODO: Validate match
+  // if (state.matches[dirtyMatchId]) {
+  //   matchId = dirtyMatchId
+  // }
   return {
     type: ACTION_TYPE.CONNECT_MATCH,
     payload: {
@@ -95,6 +99,16 @@ export function move(
   matchId: MatchId,
   column: number
 ): MoveAction {
+  // TODO Validate matchId, column
+  
+  // if (
+  //   matchId &&
+  //   state.matches[matchId] &&
+  //   dirtyColumn >= 0 &&
+  //   dirtyColumn < BoardBase.COLUMNS
+  // ) {
+  //   store.dispatch(move(playerId, matchId, dirtyColumn))
+  // }
   return {
     type: ACTION_TYPE.MOVE,
     payload: {

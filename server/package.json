@@ -7,11 +7,12 @@
   "devDependencies": {
     "@types/node": "^13.11.1",
     "@types/uuid": "^7.0.2",
-    "@types/ws": "^7.2.3",
-    "uuid": "^7.0.3",
-    "ws": "^7.2.3"
+    "@types/ws": "^7.2.3"
   },
   "dependencies": {
-    "@kenrick95/c4-core": "1.0.0"
+    "@kenrick95/c4-core": "1.0.0",
+    "redux": "^4.0.5",
+    "uuid": "^7.0.3",
+    "ws": "^7.2.3"
   }
 }

@@ -2,8 +2,13 @@ import { State } from './types'
 import { Action, ACTION_TYPE } from './actions'
 import { MESSAGE_TYPE } from '@kenrick95/c4-core/game/game-online/shared'
 
+const INITIAL_STATE: State = {
+  matches: {},
+  players: {}
+}
+
 // TODO: There shouldn't be this much logic in the reducer ...
-export function reducer(state: State, action: Action): State {
+export function reducer(state: State = INITIAL_STATE, action: Action): State {
   switch (action.type) {
     case ACTION_TYPE.NEW_PLAYER_CONNECTION: {
       // Add player to server, no game/match yet
@@ -139,6 +144,7 @@ export function reducer(state: State, action: Action): State {
 
       const match = state.matches[matchId]
       const otherPlayerId = match.players.find(player => player !== playerId)
+      console.log('MOVE', playerId, matchId, column, otherPlayerId)
 
       if (otherPlayerId) {
         const otherPlayer = state.players[otherPlayerId]
