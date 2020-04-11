@@ -1,5 +1,5 @@
 import { Player } from './player'
-import { Board, BoardPiece } from '../board'
+import { BoardBase, BoardPiece } from '../board'
 import { Utils } from '../utils'
 
 export class PlayerAi extends Player {
@@ -26,25 +26,25 @@ export class PlayerAi extends Player {
   ): { winnerBoardPiece: BoardPiece; chain: number } {
     let winnerBoardPiece = BoardPiece.EMPTY
     let chainValue = 0
-    for (let i = 0; i < Board.ROWS; i++) {
-      for (let j = 0; j < Board.COLUMNS; j++) {
+    for (let i = 0; i < BoardBase.ROWS; i++) {
+      for (let j = 0; j < BoardBase.COLUMNS; j++) {
         let tempRight = 0,
           tempBottom = 0,
           tempBottomRight = 0,
           tempTopRight = 0
         for (let k = 0; k <= 3; k++) {
           // from (i,j) to right
-          if (j + k < Board.COLUMNS) {
+          if (j + k < BoardBase.COLUMNS) {
             tempRight += this.getBoardPieceValue(state[i][j + k])
           }
 
           // from (i,j) to bottom
-          if (i + k < Board.ROWS) {
+          if (i + k < BoardBase.ROWS) {
             tempBottom += this.getBoardPieceValue(state[i + k][j])
           }
 
           // from (i,j) to bottom-right
-          if (i + k < Board.ROWS && j + k < Board.COLUMNS) {
+          if (i + k < BoardBase.ROWS && j + k < BoardBase.COLUMNS) {
             tempBottomRight += this.getBoardPieceValue(state[i + k][j + k])
           }
 
@@ -146,7 +146,7 @@ export class PlayerAi extends Player {
   } {
     let value = Utils.BIG_NEGATIVE_NUMBER
     let moveQueue: Array<number> = []
-    for (let column = 0; column < Board.COLUMNS; column++) {
+    for (let column = 0; column < BoardBase.COLUMNS; column++) {
       const {
         success: actionSuccessful,
         map: nextState
@@ -192,7 +192,7 @@ export class PlayerAi extends Player {
   } {
     let value = Utils.BIG_POSITIVE_NUMBER
     let moveQueue: Array<number> = []
-    for (let column = 0; column < Board.COLUMNS; column++) {
+    for (let column = 0; column < BoardBase.COLUMNS; column++) {
       const {
         success: actionSuccessful,
         map: nextState
@@ -227,7 +227,7 @@ export class PlayerAi extends Player {
     }
   }
 
-  async getAction(board: Board): Promise<number> {
+  async getAction(board: BoardBase): Promise<number> {
     const state = Utils.clone(board.map)
     const action = this.maxState(
       state,

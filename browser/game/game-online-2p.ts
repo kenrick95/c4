@@ -1,8 +1,13 @@
-import { Board, BoardBase, BoardPiece } from '../../board'
-import { GameBase } from '../game-base'
-import { Player, PlayerHuman, PlayerShadow } from '../../player'
-import { Utils } from '../../utils'
-import { MESSAGE_TYPE, constructMessage, parseMessage } from './shared'
+import { Board } from '../board'
+import { BoardBase, BoardPiece } from '@kenrick95/c4-core/board'
+import {
+  GameBase,
+  MESSAGE_TYPE,
+  constructMessage,
+  parseMessage
+} from '@kenrick95/c4-core/game'
+import { Player, PlayerHuman, PlayerShadow } from '@kenrick95/c4-core/player'
+import { Utils } from '@kenrick95/c4-core/utils'
 
 enum GAME_MODE {
   FIRST = BoardPiece.PLAYER_1,

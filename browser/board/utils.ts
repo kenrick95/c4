@@ -1,4 +1,4 @@
-import { Board } from './ui'
+import { Board } from './index'
 
 export function drawCircle(
   context: CanvasRenderingContext2D,

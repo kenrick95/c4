@@ -1,7 +1,8 @@
-import { Board, BoardPiece, BoardBase } from '../board'
-import { GameBase } from './game-base'
-import { Player, PlayerHuman, PlayerAi } from '../player'
-import { Utils } from '../utils'
+import { Board } from '../board'
+import { BoardBase, BoardPiece } from '@kenrick95/c4-core/board'
+import { GameBase } from '@kenrick95/c4-core/game'
+import { Player, PlayerHuman, PlayerAi } from '@kenrick95/c4-core/player'
+import { Utils } from '@kenrick95/c4-core/utils'
 
 class GameLocalAi extends GameBase {
   constructor(players: Array<Player>, board: BoardBase) {

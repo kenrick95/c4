@@ -1,6 +1,6 @@
-import { BoardBase, BoardPiece } from './base'
-import { Player } from '../player'
-import { Utils } from '../utils'
+import { BoardBase, BoardPiece } from '@kenrick95/c4-core/board'
+import { Player } from '@kenrick95/c4-core/player'
+import { Utils } from '@kenrick95/c4-core/utils'
 import { drawMask, drawCircle, clearCanvas } from './utils'
 
 export class Board extends BoardBase {

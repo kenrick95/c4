@@ -1,7 +1,8 @@
-import { BoardBase, BoardPiece, Board } from '../board'
-import { GameBase } from './game-base'
-import { Player, PlayerHuman } from '../player'
-import { Utils } from '../utils'
+import { Board } from '../board'
+import { BoardBase, BoardPiece } from '@kenrick95/c4-core/board'
+import { GameBase } from '@kenrick95/c4-core/game'
+import { Player, PlayerHuman } from '@kenrick95/c4-core/player'
+import { Utils } from '@kenrick95/c4-core/utils'
 
 class GameLocal2p extends GameBase {
   constructor(players: Array<Player>, board: BoardBase) {

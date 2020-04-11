@@ -1,5 +1,5 @@
 import { Player } from './player'
-import { Board, BoardPiece } from '../board'
+import { BoardBase, BoardPiece } from '../board'
 
 export class PlayerShadow extends Player {
   actionPromiseResolver: null | ((column: number) => void)
@@ -10,12 +10,12 @@ export class PlayerShadow extends Player {
   }
 
   doAction(column: number) {
-    if (this.actionPromiseResolver && 0 <= column && column < Board.COLUMNS) {
+    if (this.actionPromiseResolver && 0 <= column && column < BoardBase.COLUMNS) {
       this.actionPromiseResolver(column)
     }
   }
 
-  async getAction(board: Board): Promise<number> {
+  async getAction(board: BoardBase): Promise<number> {
     return new Promise<number>(r => (this.actionPromiseResolver = r))
   }
 }
