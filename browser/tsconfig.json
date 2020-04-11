@@ -12,6 +12,6 @@
     "target": "es5",
     "lib": ["es2015", "dom", "dom.iterable"]
   },
-  "include": ["app.ts", "@kenrick95/c4-core"],
+  "include": ["app.ts", "board/", "game/", "@kenrick95/c4-core"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

@@ -28,9 +28,9 @@
     "dist/"
   ],
   "scripts": {
-    "start": "concurrently \"yarn:start-client\" \"yarn:start-server\"",
+    "start": "concurrently --handle-input \"yarn:start-server\" \"yarn:start-client\"",
     "start-client": "parcel index.html",
-    "start-server": "yarn workspace @kenrick95/c4-server start",
+    "start-server": "yarn workspace @kenrick95/c4-server start-dev",
     "build": "yarn clean && parcel build index.html",
     "build-library": "yarn clean && parcel build ./core/lib.ts",
     "prettier": "prettier --write \"browser/**/*.?(ts|scss|css)\" \"core/**/*.?(ts|scss|css)\" \"server/**/*.?(ts|scss|css)\"",
