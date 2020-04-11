@@ -2,6 +2,7 @@ import { State } from './types'
 import { Action, ACTION_TYPE } from './actions'
 import { MESSAGE_TYPE } from '@kenrick95/c4-core/game/game-online/shared'
 
+// TODO: There shouldn't be this much logic in the reducer ...
 export function reducer(state: State, action: Action): State {
   switch (action.type) {
     case ACTION_TYPE.NEW_PLAYER_CONNECTION: {
@@ -22,7 +23,8 @@ export function reducer(state: State, action: Action): State {
           [playerId]: {
             playerId: playerId,
             lastSeen: Date.now(),
-            ws: ws
+            ws: ws,
+            matchId: null
           }
         }
       }
@@ -41,7 +43,6 @@ export function reducer(state: State, action: Action): State {
           }
         })
       )
-      // TODO: Update PlayerState
 
       return {
         ...state,
@@ -56,6 +57,13 @@ export function reducer(state: State, action: Action): State {
             //   currentPlayerId: playerId,
             //   map: [[]]
             // }
+          }
+        },
+        players: {
+          ...state.players,
+          [playerId]: {
+            ...player,
+            matchId
           }
         }
       }
@@ -88,8 +96,6 @@ export function reducer(state: State, action: Action): State {
           })
         )
       }
-      // TODO: Update player state
-
       return {
         ...state,
         matches: {
@@ -98,28 +104,41 @@ export function reducer(state: State, action: Action): State {
             ...state.matches[matchId],
             players: [players[0], playerId]
           }
+        },
+        players: {
+          ...state.players,
+          [playerId]: {
+            ...player,
+            matchId
+          }
         }
       }
     }
     case ACTION_TYPE.HUNG_UP: {
       // End game
       const { playerId } = action.payload
-      state.players[playerId].ws.close()
-      const newState = { ...state }
-      delete newState.players[playerId]
-      // TODO: Find match where player is in and notify the other player?
+      const player = state.players[playerId]
+      const matchId = player.matchId
 
+      player.ws.close()
+      const newState = { ...state }
+
+      const match = matchId ? newState.matches[matchId] : null
+      if (match) {
+        match.players = match.players.map(p => {
+          return p === playerId ? null : p
+        })
+      }
+
+      delete newState.players[playerId]
       return newState
     }
     case ACTION_TYPE.MOVE: {
       // Move piece
       const { playerId, matchId, column } = action.payload
-      // TODO: Validate column...
 
       const match = state.matches[matchId]
       const otherPlayerId = match.players.find(player => player !== playerId)
-      console.log('MOVE ', playerId, matchId, column)
-      console.log('MOVE otherPlayerId', otherPlayerId)
 
       if (otherPlayerId) {
         const otherPlayer = state.players[otherPlayerId]

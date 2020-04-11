@@ -20,6 +20,8 @@ export type PlayerState = {
    */
   lastSeen: number
   ws: WebSocket
+
+  matchId: null | MatchId
 }
 export type State = {
   matches: {
