@@ -29,6 +29,7 @@ export function constructMessage(type: MESSAGE_TYPE, payload?: any): string {
 export function parseMessage(
   message: string
 ): { type: MESSAGE_TYPE; payload: any } {
-  console.log('[ws] receive: ', JSON.parse(message))
-  return JSON.parse(message)
+  const parsedMessage = JSON.parse(message)
+  console.log('[ws] receive: ', parsedMessage)
+  return parsedMessage
 }

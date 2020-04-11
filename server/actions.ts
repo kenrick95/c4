@@ -2,7 +2,10 @@ import { v4 as uuidV4 } from 'uuid'
 import { PlayerId, MatchId, RenewLastSeenAction, AppThunk } from './types'
 import * as WebSocket from 'ws'
 import { BoardBase } from '@kenrick95/c4-core/board'
-import { MESSAGE_TYPE } from '@kenrick95/c4-core/game/game-online/shared'
+import {
+  MESSAGE_TYPE,
+  constructMessage
+} from '@kenrick95/c4-core/game/game-online/shared'
 
 export enum ACTION_TYPE {
   NEW_PLAYER_CONNECTION = 'NEW_PLAYER_CONNECTION',
@@ -24,11 +27,8 @@ export function newPlayerConnection(ws: WebSocket): AppThunk<PlayerId> {
     })
 
     ws.send(
-      JSON.stringify({
-        type: MESSAGE_TYPE.NEW_PLAYER_CONNECTION_OK,
-        payload: {
-          playerId
-        }
+      constructMessage(MESSAGE_TYPE.NEW_PLAYER_CONNECTION_OK, {
+        playerId
       })
     )
 
@@ -52,12 +52,9 @@ export function newMatch(playerId: PlayerId): AppThunk<MatchId> {
     const player = state.players[playerId]
 
     player.ws.send(
-      JSON.stringify({
-        type: MESSAGE_TYPE.NEW_MATCH_OK,
-        payload: {
-          playerId,
-          matchId
-        }
+      constructMessage(MESSAGE_TYPE.NEW_MATCH_OK, {
+        playerId,
+        matchId
       })
     )
 
@@ -92,12 +89,9 @@ export function connectMatch(
         state.matches[matchId].players[1]
       ) {
         player.ws.send(
-          JSON.stringify({
-            type: MESSAGE_TYPE.CONNECT_MATCH_FAIL,
-            payload: {
-              playerId,
-              matchId
-            }
+          constructMessage(MESSAGE_TYPE.CONNECT_MATCH_FAIL, {
+            playerId,
+            matchId
           })
         )
         return
@@ -118,12 +112,9 @@ export function connectMatch(
       const player = state.players[playerId]
 
       player.ws.send(
-        JSON.stringify({
-          type: MESSAGE_TYPE.CONNECT_MATCH_OK,
-          payload: {
-            playerId,
-            matchId
-          }
+        constructMessage(MESSAGE_TYPE.CONNECT_MATCH_OK, {
+          playerId,
+          matchId
         })
       )
     }
@@ -138,12 +129,7 @@ export function connectMatch(
           continue
         }
         const player = state.players[pId]
-        player.ws.send(
-          JSON.stringify({
-            type: MESSAGE_TYPE.GAME_READY,
-            payload: {}
-          })
-        )
+        player.ws.send(constructMessage(MESSAGE_TYPE.GAME_READY))
       }
     }
   }
@@ -166,11 +152,8 @@ export function move(
       if (otherPlayerId) {
         const otherPlayer = state.players[otherPlayerId]
         otherPlayer.ws.send(
-          JSON.stringify({
-            type: MESSAGE_TYPE.MOVE_SHADOW,
-            payload: {
-              column
-            }
+          constructMessage(MESSAGE_TYPE.MOVE_SHADOW, {
+            column
           })
         )
       }

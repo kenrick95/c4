@@ -15,7 +15,7 @@ import {
 } from './actions'
 import { MatchId, State, ActionTypes } from './types'
 
-import { MESSAGE_TYPE } from '@kenrick95/c4-core/game/game-online/shared'
+import { MESSAGE_TYPE, parseMessage } from '@kenrick95/c4-core/game/game-online/shared'
 
 const port = parseInt(process.env.PORT || '') || 8080
 const wss = new WebSocket.Server({ port: port })
@@ -50,8 +50,7 @@ wss.on('connection', (ws: WebSocket) => {
   })
 
   ws.on('message', (message: string) => {
-    const parsedMessage = JSON.parse(message)
-    console.log('[ws] receive: %s', parsedMessage)
+    const parsedMessage = parseMessage(message)
     switch (parsedMessage.type) {
       case MESSAGE_TYPE.NEW_MATCH_REQUEST:
         {
