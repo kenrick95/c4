@@ -2,7 +2,7 @@ import { Board } from '../board'
 import { BoardBase, BoardPiece } from '@kenrick95/c4/src/board'
 import { GameBase } from '@kenrick95/c4/src/game'
 import { Player, PlayerHuman } from '@kenrick95/c4/src/player'
-import { Utils } from '@kenrick95/c4/src/utils'
+import { animationFrame, showMessage, getColumnFromCoord } from '@kenrick95/c4/src/utils'
 
 class GameLocal2p extends GameBase {
   constructor(players: Array<Player>, board: BoardBase) {
@@ -26,7 +26,7 @@ class GameLocal2p extends GameBase {
     }
     message +=
       '.<br />After dismissing this message, click the board to reset game.'
-    Utils.showMessage(message)
+    showMessage(message)
   }
 }
 export function initGameLocal2p() {
@@ -46,13 +46,13 @@ export function initGameLocal2p() {
   canvas.addEventListener('click', async (event: MouseEvent) => {
     if (game.isGameWon) {
       game.reset()
-      await Utils.animationFrame()
+      await animationFrame()
       game.start()
     } else {
       const rect = canvas.getBoundingClientRect()
       const x = event.clientX - rect.left
       const y = event.clientY - rect.top
-      const column = Utils.getColumnFromCoord({ x: x, y: y })
+      const column = getColumnFromCoord({ x: x, y: y })
       humanPlayers[game.currentPlayerId].doAction(column)
     }
   })

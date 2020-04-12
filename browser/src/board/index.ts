@@ -1,6 +1,6 @@
 import { BoardBase, BoardPiece } from '@kenrick95/c4/src/board'
 import { Player } from '@kenrick95/c4/src/player'
-import { Utils } from '@kenrick95/c4/src/utils'
+import { onresize, animationFrame } from '@kenrick95/c4/src/utils'
 import { drawMask, drawCircle, clearCanvas } from './utils'
 
 export class Board extends BoardBase {
@@ -25,7 +25,7 @@ export class Board extends BoardBase {
 
   onresize() {
     let prevBoardScale = BoardBase.SCALE
-    Utils.onresize().add(() => {
+    onresize().add(() => {
       this.getBoardScale()
       if (prevBoardScale !== BoardBase.SCALE) {
         prevBoardScale = BoardBase.SCALE
@@ -83,7 +83,7 @@ export class Board extends BoardBase {
       currentY += BoardBase.PIECE_RADIUS
     }
     while (newRow * 3 * BoardBase.PIECE_RADIUS >= currentY) {
-      await Utils.animationFrame()
+      await animationFrame()
       doAnimation()
     }
   }
@@ -137,7 +137,7 @@ export class Board extends BoardBase {
     this.map[row][column] = player.boardPiece
     this.debug()
 
-    await Utils.animationFrame()
+    await animationFrame()
     this.render()
     return true
   }

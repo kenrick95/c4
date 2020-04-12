@@ -7,7 +7,7 @@ import {
   parseMessage,
 } from '@kenrick95/c4/src/game'
 import { Player, PlayerHuman, PlayerShadow } from '@kenrick95/c4/src/player'
-import { Utils } from '@kenrick95/c4/src/utils'
+import { showMessage, getColumnFromCoord } from '@kenrick95/c4/src/utils'
 
 enum GAME_MODE {
   FIRST = BoardPiece.PLAYER_1,
@@ -116,7 +116,7 @@ export class GameOnline2p extends GameBase {
           this.connectionMatchId = payload.matchId
           const shareUrl = `${location.origin}/?matchId=${this.connectionMatchId}`
           console.log('[url] Share this', shareUrl)
-          Utils.showMessage(
+          showMessage(
             `<h1>Share this URL</h1>` +
               `Please share this URL to your friend to start the game: ` +
               `<input type="text" id="copy-box" readonly value="${shareUrl}" />` +
@@ -142,12 +142,12 @@ export class GameOnline2p extends GameBase {
         break
       case MESSAGE_TYPE.CONNECT_MATCH_FAIL:
         {
-          Utils.showMessage(`<h1>Error</h1> Failed to connect to match.`)
+          showMessage(`<h1>Error</h1> Failed to connect to match.`)
         }
         break
       case MESSAGE_TYPE.GAME_READY:
         {
-          Utils.showMessage(
+          showMessage(
             `<h1>Game started</h1> The first piece should be dropped by ${
               this.isCurrentMoveByCurrentPlayer() ? 'you' : 'the other player'
             }`
@@ -164,7 +164,7 @@ export class GameOnline2p extends GameBase {
         {
           const { winnerBoardPiece } = payload
 
-          Utils.showMessage(
+          showMessage(
             `<h1>Thank you for playing</h1>` +
               (winnerBoardPiece === BoardPiece.DRAW
                 ? `It's a draw`
@@ -243,7 +243,7 @@ export function initGameOnline2p() {
       const rect = canvas.getBoundingClientRect()
       const x = event.clientX - rect.left
       const y = event.clientY - rect.top
-      const column = Utils.getColumnFromCoord({ x: x, y: y })
+      const column = getColumnFromCoord({ x: x, y: y })
       game.playerMain.doAction(column)
     }
   })

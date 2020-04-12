@@ -1,6 +1,12 @@
 import { Player } from './player'
 import { BoardBase, BoardPiece } from '../board'
-import { Utils } from '../utils'
+import {
+  BIG_POSITIVE_NUMBER,
+  BIG_NEGATIVE_NUMBER,
+  getMockPlayerAction,
+  choose,
+  clone,
+} from '../utils'
 
 export class PlayerAi extends Player {
   static readonly MAX_DEPTH = 4
@@ -99,9 +105,9 @@ export class PlayerAi extends Player {
     // This is just my hypothesis, I haven't tested without it yet.
     // My point is that this AI implementation is basically a heuristic function :P
     if (isWon) {
-      returnValue = Utils.BIG_POSITIVE_NUMBER - 100
+      returnValue = BIG_POSITIVE_NUMBER - 100
     } else if (isLost) {
-      returnValue = Utils.BIG_NEGATIVE_NUMBER + 100
+      returnValue = BIG_NEGATIVE_NUMBER + 100
     }
     returnValue -= depth * depth
     return returnValue
@@ -144,13 +150,14 @@ export class PlayerAi extends Player {
     value: number
     move: number
   } {
-    let value = Utils.BIG_NEGATIVE_NUMBER
+    let value = BIG_NEGATIVE_NUMBER
     let moveQueue: Array<number> = []
     for (let column = 0; column < BoardBase.COLUMNS; column++) {
-      const {
-        success: actionSuccessful,
-        map: nextState,
-      } = Utils.getMockPlayerAction(state, this.boardPiece, column)
+      const { success: actionSuccessful, map: nextState } = getMockPlayerAction(
+        state,
+        this.boardPiece,
+        column
+      )
       if (actionSuccessful) {
         const { value: nextValue } = this.getMove(nextState, depth, alpha, beta)
         if (nextValue > value) {
@@ -164,7 +171,7 @@ export class PlayerAi extends Player {
         if (value > beta) {
           return {
             value: value,
-            move: Utils.choose(moveQueue),
+            move: choose(moveQueue),
           }
         }
         alpha = Math.max(alpha, value)
@@ -173,7 +180,7 @@ export class PlayerAi extends Player {
 
     return {
       value: value,
-      move: Utils.choose(moveQueue),
+      move: choose(moveQueue),
     }
   }
   private minState(
@@ -185,13 +192,14 @@ export class PlayerAi extends Player {
     value: number
     move: number
   } {
-    let value = Utils.BIG_POSITIVE_NUMBER
+    let value = BIG_POSITIVE_NUMBER
     let moveQueue: Array<number> = []
     for (let column = 0; column < BoardBase.COLUMNS; column++) {
-      const {
-        success: actionSuccessful,
-        map: nextState,
-      } = Utils.getMockPlayerAction(state, this.enemyBoardPiece, column)
+      const { success: actionSuccessful, map: nextState } = getMockPlayerAction(
+        state,
+        this.enemyBoardPiece,
+        column
+      )
       if (actionSuccessful) {
         const { value: nextValue } = this.getMove(nextState, depth, alpha, beta)
         if (nextValue < value) {
@@ -205,7 +213,7 @@ export class PlayerAi extends Player {
         if (value < alpha) {
           return {
             value: value,
-            move: Utils.choose(moveQueue),
+            move: choose(moveQueue),
           }
         }
         beta = Math.min(beta, value)
@@ -213,17 +221,17 @@ export class PlayerAi extends Player {
     }
     return {
       value: value,
-      move: Utils.choose(moveQueue),
+      move: choose(moveQueue),
     }
   }
 
   async getAction(board: BoardBase): Promise<number> {
-    const state = Utils.clone(board.map)
+    const state = clone(board.map)
     const action = this.maxState(
       state,
       0,
-      Utils.BIG_NEGATIVE_NUMBER,
-      Utils.BIG_POSITIVE_NUMBER
+      BIG_NEGATIVE_NUMBER,
+      BIG_POSITIVE_NUMBER
     )
     console.log(
       `AI ${this.boardPiece} choose column ${action.move} with value of ${action.value}`

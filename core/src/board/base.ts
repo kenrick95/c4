@@ -1,5 +1,5 @@
 import { Player } from '../player'
-import { Utils } from '../utils'
+import { getMockPlayerAction } from '../utils'
 
 export enum BoardPiece {
   EMPTY,
@@ -76,7 +76,7 @@ export class BoardBase {
     const {
       success: actionSuccessful,
       map: nextState,
-    } = Utils.getMockPlayerAction(this.map, player.boardPiece, column)
+    } = getMockPlayerAction(this.map, player.boardPiece, column)
 
     this.map = nextState
     this.debug()
