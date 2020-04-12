@@ -13,3 +13,12 @@ mv dist/index.html index.html
 ## To Heroku
 
 No action needed. Automatically deployed on master branch
+
+## To npm
+
+Publishing [@kenrick95/c4](https://www.npmjs.com/package/@kenrick95/c4)
+
+```
+yarn workspace @kenrick95/c4 run build
+yarn workspace @kenrick95/c4 publish
+```
