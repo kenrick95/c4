@@ -147,7 +147,7 @@ export class GameOnline2p extends GameBase {
       case MESSAGE_TYPE.NEW_MATCH_OK:
         {
           this.connectionMatchId = payload.matchId
-          const shareUrl = `${location.origin}/?matchId=${this.connectionMatchId}`
+          const shareUrl = `${location.href}?matchId=${this.connectionMatchId}`
           console.log('[url] Share this', shareUrl)
           showMessage(
             `<h1>Share this URL</h1>` +
