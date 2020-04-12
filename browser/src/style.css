@@ -32,7 +32,7 @@ button {
   font-size: 0.9em;
   margin-top: 0.5em;
   padding: 6px 12px;
-  border-radius: 6px;
+  border-radius: 2px;
   border: 1px solid #76c9eb;
   background: #96d2eb;
 }
@@ -74,10 +74,16 @@ h2 {
   flex: 0 1 auto;
   text-align: left;
   background: white;
-  border-radius: 0.5em;
+  border-radius: 2px;
   margin: 0.5em;
   padding: 0.5em 1em 1em 1em;
   max-width: 30em;
+}
+.copy-box {
+  width: 100%;
+  max-width: 28em;
+  margin-right: 1em;
+  padding: 6px 12px;
 }
 .invisible {
   opacity: 0;

@@ -132,16 +132,20 @@ export class GameOnline2p extends GameBase {
           showMessage(
             `<h1>Share this URL</h1>` +
               `Please share this URL to your friend to start the game: ` +
-              `<input type="text" id="copy-box" readonly value="${shareUrl}" />` +
+              `<input type="text" id="copy-box" class="copy-box" readonly value="${shareUrl}" />` +
               `<button type="button" id="copy-button">Copy</button>`
           )
+          // Select all
+          const copyBox: HTMLInputElement | null = document.getElementById(
+            'copy-box'
+          ) as HTMLInputElement
+          copyBox.focus()
+          copyBox.select()
+          
+          // Click to copy
           document
             .getElementById('copy-button')
             ?.addEventListener('click', () => {
-              const copyBox: HTMLInputElement | null = document.getElementById(
-                'copy-box'
-              ) as HTMLInputElement
-
               copyBox?.select()
               copyBox?.setSelectionRange(0, 99999)
               document.execCommand('copy')
@@ -156,6 +160,10 @@ export class GameOnline2p extends GameBase {
       case MESSAGE_TYPE.CONNECT_MATCH_FAIL:
         {
           showMessage(`<h1>Error</h1> Failed to connect to match.`)
+
+          if (statusboxBodyConnection) {
+            statusboxBodyConnection.textContent = 'Connection error'
+          }
         }
         break
       case MESSAGE_TYPE.GAME_READY:
@@ -189,7 +197,6 @@ export class GameOnline2p extends GameBase {
       case MESSAGE_TYPE.GAME_ENDED:
         {
           const { winnerBoardPiece } = payload
-          console.log('GAME_ENDED')
 
           const messageWinner =
             winnerBoardPiece === BoardPiece.DRAW
@@ -249,7 +256,6 @@ export class GameOnline2p extends GameBase {
   }
 
   afterMove = (action: number) => {
-    console.log('afterMove')
     if (this.ws && this.isCurrentMoveByCurrentPlayer()) {
       this.ws.send(
         constructMessage(MESSAGE_TYPE.MOVE_MAIN, {
@@ -264,7 +270,6 @@ export class GameOnline2p extends GameBase {
   announceWinner(winnerBoardPiece: BoardPiece) {
     super.announceWinner(winnerBoardPiece)
     // Do nothing here, will wait for server to announce
-    console.log('announceWinner')
   }
 }
 
@@ -278,8 +283,6 @@ export function initGameOnline2p() {
   const searchParams = new URLSearchParams(location.search)
   const connectionMatchId = searchParams.get('matchId')
   const gameMode = !!connectionMatchId ? GAME_MODE.SECOND : GAME_MODE.FIRST
-
-  console.log('gameMode', gameMode)
 
   const board = new Board(canvas)
   const players =
