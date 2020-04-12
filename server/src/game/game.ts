@@ -16,6 +16,9 @@ export class ServerGame extends GameBase<ServerPlayer> {
     super(players, board)
     this.matchId = matchId
   }
+  beforeMove() {
+    // no-op
+  }
   afterMove() {
     // no-op
   }

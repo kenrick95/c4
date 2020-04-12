@@ -15,6 +15,9 @@
     local('.LucidaGrandeUI'), local('Segoe UI Bold'), local('Ubuntu Bold'),
     local('Roboto-Bold'), local('DroidSans-Bold'), local('Tahoma Bold');
 }
+* {
+  box-sizing: border-box;
+}
 html,
 body {
   width: 100%;
@@ -84,4 +87,15 @@ h2 {
 }
 .footer {
   font-size: 0.8em;
+}
+.statusbox {
+  padding: 1em;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+.statusbox-body {
+  display: flex;
+  justify-content: space-between;
+  max-width: 550px;
+  margin: 0 auto;
 }

@@ -44,6 +44,7 @@ export abstract class GameBase<P extends Player = Player> {
     while (!actionSuccesful) {
       const action = await currentPlayer.getAction(this.board)
       this.isMoveAllowed = false
+      this.beforeMove(action)
       actionSuccesful = await this.board.applyPlayerAction(
         currentPlayer,
         action
@@ -57,6 +58,7 @@ export abstract class GameBase<P extends Player = Player> {
     }
     this.currentPlayerId = this.getNextPlayer()
   }
+  abstract beforeMove(action: number): void
   abstract afterMove(action: number): void
 
   announceWinner(winnerPiece: BoardPiece) {
