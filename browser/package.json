@@ -37,6 +37,7 @@
     "es6-promise": "^4.2.8"
   },
   "devDependencies": {
+    "@types/node": "^13.11.1",
     "parcel-bundler": "^1.12.4",
     "prettier": "^2.0.4",
     "shx": "^0.3.2",

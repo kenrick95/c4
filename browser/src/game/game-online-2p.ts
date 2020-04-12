@@ -21,6 +21,13 @@ const statusboxBodyConnection = document.querySelector(
 )
 const statusboxBodyPlayer = document.querySelector('.statusbox-body-player')
 
+const C4_SERVER_ENDPOINT =
+  process.env.NODE_ENV === 'production'
+    ? process.env.C4_SERVER_ENDPOINT
+      ? process.env.C4_SERVER_ENDPOINT
+      : `wss://c4-server.herokuapp.com/`
+    : `ws://${location.hostname}:8080`
+
 export class GameOnline2p extends GameBase {
   connectionPlayerId: null | string = null
   connectionMatchId: null | string = null
@@ -54,7 +61,20 @@ export class GameOnline2p extends GameBase {
       this.ws.close()
     }
 
-    this.ws = new WebSocket(`ws://${location.hostname}:8080`)
+    const setStatusDisconnected = () => {
+      this.isMoveAllowed = false
+      if (statusboxBodyConnection) {
+        statusboxBodyConnection.textContent = 'Disconnected from server'
+      }
+      if (statusboxBodyGame) {
+        statusboxBodyGame.textContent = `Game over`
+      }
+      if (statusboxBodyPlayer) {
+        statusboxBodyPlayer.textContent = `Disconnected from match`
+      }
+    }
+
+    this.ws = new WebSocket(C4_SERVER_ENDPOINT)
     this.ws.addEventListener('message', (event) => {
       this.messageActionHandler(parseMessage(event.data))
     })
@@ -69,19 +89,12 @@ export class GameOnline2p extends GameBase {
       }
     })
     this.ws.addEventListener('close', (event) => {
-      if (this.ws) {
-        console.log('[ws] close event', event)
-      }
-      this.isMoveAllowed = false
-      if (statusboxBodyConnection) {
-        statusboxBodyConnection.textContent = 'Disconnected from server'
-      }
-      if (statusboxBodyGame) {
-        statusboxBodyGame.textContent = `Game over`
-      }
-      if (statusboxBodyPlayer) {
-        statusboxBodyPlayer.textContent = `Disconnected from match`
-      }
+      console.log('[ws] close event', event)
+      setStatusDisconnected()
+    })
+    this.ws.addEventListener('error', () => {
+      console.log('[ws] error event', event)
+      setStatusDisconnected()
     })
   }
 
@@ -234,7 +247,9 @@ export class GameOnline2p extends GameBase {
 
       case MESSAGE_TYPE.OTHER_PLAYER_HUNGUP:
         {
-          showMessage(`<h1>Other player disconnected</h1> Please reload the page to start a new match`)
+          showMessage(
+            `<h1>Other player disconnected</h1> Please reload the page to start a new match`
+          )
         }
         break
     }
