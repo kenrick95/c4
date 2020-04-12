@@ -118,21 +118,24 @@ export function reducer(
       return newState
     }
     case ACTION_TYPE.MOVE: {
-      const { matchId } = action.payload
+      const { matchId, playerId, column } = action.payload
       const match = state.matches[matchId]
       const game = match.game
 
-      // TODO: Remove these verbose debug, quite useful in development
-      // console.log('---- MOVE DEBUG ----')
-      // console.log('game', game?.isGameWon, game?.isMoveAllowed)
-      // game?.board.debug()
+      if (process.env.NODE_ENV === 'development') {
+        console.log('---- MOVE DEBUG ----')
+        console.log('game', game?.isGameWon, game?.isMoveAllowed)
+        game?.board.debug()
+      }
 
-      // const player = game?.players.find((p) => p.playerId === playerId)
-      // console.log('player', player)
-      // player?.doAction(column)
+      const player = game?.players.find((p) => p.playerId === playerId)
+      player?.doAction(column)
 
-      // game?.board.debug()
-      // console.log('---- MOVE DEBUG ----')
+      if (process.env.NODE_ENV === 'development') {
+        console.log('player', player)
+        game?.board.debug()
+        console.log('---- MOVE DEBUG ----')
+      }
 
       return {
         ...state,
