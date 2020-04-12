@@ -1,6 +1,5 @@
 import { BoardPiece, BoardBase } from '../board'
 import { Player } from '../player'
-import { Utils } from '../utils'
 
 export abstract class GameBase<P extends Player = Player> {
   board: BoardBase

@@ -1,6 +1,6 @@
 import { State, ActionTypes } from './types'
 import { ACTION_TYPE } from './actions'
-import { BoardPiece, MESSAGE_TYPE } from '@kenrick95/c4-core'
+import { BoardPiece } from '@kenrick95/c4-core'
 import { ServerGame } from './game/game'
 import { ServerPlayer } from './game/player'
 import { ServerBoard } from './game/board'
