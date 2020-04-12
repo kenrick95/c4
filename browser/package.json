@@ -34,7 +34,8 @@
   },
   "dependencies": {
     "@kenrick95/c4": "4.0.0",
-    "es6-promise": "^4.2.8"
+    "es6-promise": "^4.2.8",
+    "url-search-params-polyfill": "^8.0.0"
   },
   "devDependencies": {
     "@types/node": "^13.11.1",
