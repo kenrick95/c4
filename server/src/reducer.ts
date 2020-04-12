@@ -104,32 +104,35 @@ export function reducer(
       const newState = { ...state }
 
       const match = matchId ? newState.matches[matchId] : null
-      if (match) {
+      if (match && matchId) {
         match.players = match.players.map((p) => {
           return p === playerId ? null : p
         })
+
+        if (match.players.length === 0) {
+          delete newState.matches[matchId]
+        }
       }
-      // TODO: Is it confusing? If match in progress, P2 disconnected (HUNG_UP), then connected again, which will make "GAME_READY" to be sent to P1 again
 
       delete newState.players[playerId]
       return newState
     }
     case ACTION_TYPE.MOVE: {
-      const { matchId, column, playerId } = action.payload
+      const { matchId } = action.payload
       const match = state.matches[matchId]
+      const game = match.game
 
       // TODO: Remove these verbose debug, quite useful in development
-      console.log('---- MOVE DEBUG ----')
-      const game = match.game
-      console.log('game', game?.isGameWon, game?.isMoveAllowed)
-      game?.board.debug()
+      // console.log('---- MOVE DEBUG ----')
+      // console.log('game', game?.isGameWon, game?.isMoveAllowed)
+      // game?.board.debug()
 
-      const player = game?.players.find((p) => p.playerId === playerId)
-      console.log('player', player)
-      player?.doAction(column)
+      // const player = game?.players.find((p) => p.playerId === playerId)
+      // console.log('player', player)
+      // player?.doAction(column)
 
-      game?.board.debug()
-      console.log('---- MOVE DEBUG ----')
+      // game?.board.debug()
+      // console.log('---- MOVE DEBUG ----')
 
       return {
         ...state,

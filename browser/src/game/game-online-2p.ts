@@ -72,8 +72,15 @@ export class GameOnline2p extends GameBase {
       if (this.ws) {
         console.log('[ws] close event', event)
       }
+      this.isMoveAllowed = false
       if (statusboxBodyConnection) {
         statusboxBodyConnection.textContent = 'Disconnected from server'
+      }
+      if (statusboxBodyGame) {
+        statusboxBodyGame.textContent = `Game over`
+      }
+      if (statusboxBodyPlayer) {
+        statusboxBodyPlayer.textContent = `Disconnected from match`
       }
     })
   }
@@ -141,7 +148,7 @@ export class GameOnline2p extends GameBase {
           ) as HTMLInputElement
           copyBox.focus()
           copyBox.select()
-          
+
           // Click to copy
           document
             .getElementById('copy-button')
@@ -222,6 +229,12 @@ export class GameOnline2p extends GameBase {
       case MESSAGE_TYPE.GAME_RESET:
         {
           this.reset()
+        }
+        break
+
+      case MESSAGE_TYPE.OTHER_PLAYER_HUNGUP:
+        {
+          showMessage(`<h1>Other player disconnected</h1> Please reload the page to start a new match`)
         }
         break
     }

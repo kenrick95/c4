@@ -179,6 +179,17 @@ export function hungUp(playerId: PlayerId): AppThunk {
   return (dispatch, getState) => {
     const state = getState()
     const player = state.players[playerId]
+    const matchId = state.players[playerId].matchId
+    if (matchId) {
+      // If there is ongoing match, notify other player that player has been disconnected
+      const match = state.matches[matchId]
+      const otherPlayerId = match.players.find((pId) => pId !== playerId)
+      if (otherPlayerId) {
+        const otherPlayer = state.players[otherPlayerId]
+        otherPlayer.ws.send(constructMessage(MESSAGE_TYPE.OTHER_PLAYER_HUNGUP))
+        otherPlayer.ws.close()
+      }
+    }
 
     dispatch({
       type: ACTION_TYPE.HUNG_UP,
