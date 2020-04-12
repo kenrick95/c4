@@ -1,14 +1,14 @@
 import { BoardPiece, BoardBase } from '../board'
 import { Player } from '../player'
 
-export abstract class GameBase {
+export abstract class GameBase<P extends Player = Player> {
   board: BoardBase
-  players: Array<Player>
+  players: Array<P>
   currentPlayerId: number
   isMoveAllowed: boolean = false
   isGameWon: boolean = false
 
-  constructor(players: Array<Player>, board: BoardBase) {
+  constructor(players: Array<P>, board: BoardBase) {
     this.board = board
     this.players = players
     this.currentPlayerId = 0
@@ -27,10 +27,10 @@ export abstract class GameBase {
       await this.move()
       const winner = this.board.getWinner()
       if (winner !== BoardPiece.EMPTY) {
-        console.log('Game over: winner is player ', winner)
+        console.log('[GameBase] Game over: winner is player ', winner)
         this.isGameWon = true
         this.isMoveAllowed = false
-        this.board.announceWinner()
+        this.announceWinner(winner)
         break
       }
     }
@@ -42,8 +42,10 @@ export abstract class GameBase {
     const currentPlayer = this.players[this.currentPlayerId]
     let actionSuccesful = false
     while (!actionSuccesful) {
+      this.waitingForMove()
       const action = await currentPlayer.getAction(this.board)
       this.isMoveAllowed = false
+      this.beforeMoveApplied(action)
       actionSuccesful = await this.board.applyPlayerAction(
         currentPlayer,
         action
@@ -57,7 +59,19 @@ export abstract class GameBase {
     }
     this.currentPlayerId = this.getNextPlayer()
   }
+  abstract waitingForMove(): void
+  abstract beforeMoveApplied(action: number): void
   abstract afterMove(action: number): void
+
+  announceWinner(winnerPiece: BoardPiece) {
+    const winner = {
+      [BoardPiece.DRAW]: 'draw',
+      [BoardPiece.PLAYER_1]: 'Player 1',
+      [BoardPiece.PLAYER_2]: 'Player 2',
+      [BoardPiece.EMPTY]: 'none',
+    }[winnerPiece]
+    console.log('[GameBase] Game over: winner is ', winner, winnerPiece)
+  }
 
   private getNextPlayer() {
     return this.currentPlayerId === 0 ? 1 : 0

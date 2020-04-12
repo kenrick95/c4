@@ -1,6 +1,12 @@
 import { Player } from './player'
-import { Board, BoardPiece } from '../board'
-import { Utils } from '../utils'
+import { BoardBase, BoardPiece } from '../board'
+import {
+  BIG_POSITIVE_NUMBER,
+  BIG_NEGATIVE_NUMBER,
+  getMockPlayerAction,
+  choose,
+  clone,
+} from '../utils'
 
 export class PlayerAi extends Player {
   static readonly MAX_DEPTH = 4
@@ -26,25 +32,25 @@ export class PlayerAi extends Player {
   ): { winnerBoardPiece: BoardPiece; chain: number } {
     let winnerBoardPiece = BoardPiece.EMPTY
     let chainValue = 0
-    for (let i = 0; i < Board.ROWS; i++) {
-      for (let j = 0; j < Board.COLUMNS; j++) {
+    for (let i = 0; i < BoardBase.ROWS; i++) {
+      for (let j = 0; j < BoardBase.COLUMNS; j++) {
         let tempRight = 0,
           tempBottom = 0,
           tempBottomRight = 0,
           tempTopRight = 0
         for (let k = 0; k <= 3; k++) {
           // from (i,j) to right
-          if (j + k < Board.COLUMNS) {
+          if (j + k < BoardBase.COLUMNS) {
             tempRight += this.getBoardPieceValue(state[i][j + k])
           }
 
           // from (i,j) to bottom
-          if (i + k < Board.ROWS) {
+          if (i + k < BoardBase.ROWS) {
             tempBottom += this.getBoardPieceValue(state[i + k][j])
           }
 
           // from (i,j) to bottom-right
-          if (i + k < Board.ROWS && j + k < Board.COLUMNS) {
+          if (i + k < BoardBase.ROWS && j + k < BoardBase.COLUMNS) {
             tempBottomRight += this.getBoardPieceValue(state[i + k][j + k])
           }
 
@@ -75,7 +81,7 @@ export class PlayerAi extends Player {
     }
     return {
       winnerBoardPiece: winnerBoardPiece,
-      chain: chainValue
+      chain: chainValue,
     }
   }
 
@@ -99,9 +105,9 @@ export class PlayerAi extends Player {
     // This is just my hypothesis, I haven't tested without it yet.
     // My point is that this AI implementation is basically a heuristic function :P
     if (isWon) {
-      returnValue = Utils.BIG_POSITIVE_NUMBER - 100
+      returnValue = BIG_POSITIVE_NUMBER - 100
     } else if (isLost) {
-      returnValue = Utils.BIG_NEGATIVE_NUMBER + 100
+      returnValue = BIG_NEGATIVE_NUMBER + 100
     }
     returnValue -= depth * depth
     return returnValue
@@ -126,7 +132,7 @@ export class PlayerAi extends Player {
           stateValue.winnerBoardPiece,
           depth
         ),
-        move: -1 // leaf node
+        move: -1, // leaf node
       }
     }
 
@@ -144,20 +150,16 @@ export class PlayerAi extends Player {
     value: number
     move: number
   } {
-    let value = Utils.BIG_NEGATIVE_NUMBER
+    let value = BIG_NEGATIVE_NUMBER
     let moveQueue: Array<number> = []
-    for (let column = 0; column < Board.COLUMNS; column++) {
-      const {
-        success: actionSuccessful,
-        map: nextState
-      } = Utils.getMockPlayerAction(state, this.boardPiece, column)
+    for (let column = 0; column < BoardBase.COLUMNS; column++) {
+      const { success: actionSuccessful, map: nextState } = getMockPlayerAction(
+        state,
+        this.boardPiece,
+        column
+      )
       if (actionSuccessful) {
-        const { value: nextValue, move: nextMove } = this.getMove(
-          nextState,
-          depth,
-          alpha,
-          beta
-        )
+        const { value: nextValue } = this.getMove(nextState, depth, alpha, beta)
         if (nextValue > value) {
           value = nextValue
           moveQueue = [column]
@@ -169,7 +171,7 @@ export class PlayerAi extends Player {
         if (value > beta) {
           return {
             value: value,
-            move: Utils.choose(moveQueue)
+            move: choose(moveQueue),
           }
         }
         alpha = Math.max(alpha, value)
@@ -178,7 +180,7 @@ export class PlayerAi extends Player {
 
     return {
       value: value,
-      move: Utils.choose(moveQueue)
+      move: choose(moveQueue),
     }
   }
   private minState(
@@ -190,20 +192,16 @@ export class PlayerAi extends Player {
     value: number
     move: number
   } {
-    let value = Utils.BIG_POSITIVE_NUMBER
+    let value = BIG_POSITIVE_NUMBER
     let moveQueue: Array<number> = []
-    for (let column = 0; column < Board.COLUMNS; column++) {
-      const {
-        success: actionSuccessful,
-        map: nextState
-      } = Utils.getMockPlayerAction(state, this.enemyBoardPiece, column)
+    for (let column = 0; column < BoardBase.COLUMNS; column++) {
+      const { success: actionSuccessful, map: nextState } = getMockPlayerAction(
+        state,
+        this.enemyBoardPiece,
+        column
+      )
       if (actionSuccessful) {
-        const { value: nextValue, move: nextMove } = this.getMove(
-          nextState,
-          depth,
-          alpha,
-          beta
-        )
+        const { value: nextValue } = this.getMove(nextState, depth, alpha, beta)
         if (nextValue < value) {
           value = nextValue
           moveQueue = [column]
@@ -215,7 +213,7 @@ export class PlayerAi extends Player {
         if (value < alpha) {
           return {
             value: value,
-            move: Utils.choose(moveQueue)
+            move: choose(moveQueue),
           }
         }
         beta = Math.min(beta, value)
@@ -223,17 +221,17 @@ export class PlayerAi extends Player {
     }
     return {
       value: value,
-      move: Utils.choose(moveQueue)
+      move: choose(moveQueue),
     }
   }
 
-  async getAction(board: Board): Promise<number> {
-    const state = Utils.clone(board.map)
+  async getAction(board: BoardBase): Promise<number> {
+    const state = clone(board.map)
     const action = this.maxState(
       state,
       0,
-      Utils.BIG_NEGATIVE_NUMBER,
-      Utils.BIG_POSITIVE_NUMBER
+      BIG_NEGATIVE_NUMBER,
+      BIG_POSITIVE_NUMBER
     )
     console.log(
       `AI ${this.boardPiece} choose column ${action.move} with value of ${action.value}`

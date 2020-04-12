@@ -1,4 +1,5 @@
 import 'es6-promise/auto'
+import 'url-search-params-polyfill'
 import * as Game from './game'
 import { Board } from './board'
 import './style.css'
@@ -11,6 +12,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   const board = new Board(canvas)
   board.render()
+
+  const searchParams = new URLSearchParams(location.search)
+  const connectionMatchId = searchParams.get('matchId')
+  if (!!connectionMatchId) {
+    Game.initGameOnline2p()
+    const modeDOM = document.querySelector('.mode')
+    if (modeDOM) {
+      modeDOM.classList.add('hidden')
+    }
+  }
 
   const modeChooser = document.querySelector('.mode-chooser-submit')
   if (modeChooser) {
@@ -34,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
           Game.initGameLocal2p()
         } else if (chosenMode === 'offline-ai') {
           Game.initGameLocalAi()
+        } else if (chosenMode === 'online-human') {
+          Game.initGameOnline2p()
         }
 
         modeDOM.classList.add('invisible')

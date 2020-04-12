@@ -1,26 +1,36 @@
-import { BoardBase, BoardPiece } from './base'
-import { Player } from '../player'
-import { Utils } from '../utils'
+import { BoardBase, BoardPiece } from '@kenrick95/c4/src/board'
+import { Player } from '@kenrick95/c4/src/player'
+import { onresize, animationFrame } from '@kenrick95/c4/src/utils'
+import { drawMask, drawCircle, clearCanvas } from './utils'
 
 export class Board extends BoardBase {
   canvas: HTMLCanvasElement
+  context: CanvasRenderingContext2D
+
   constructor(canvas: HTMLCanvasElement) {
-    super(<CanvasRenderingContext2D>canvas.getContext('2d'))
+    super()
     this.canvas = canvas
+    this.context = <CanvasRenderingContext2D>canvas.getContext('2d')
     this.getBoardScale()
     this.initConstants()
     this.reset()
     this.onresize()
   }
 
+  getBoardScale() {
+    return window.innerWidth < 640
+      ? (BoardBase.SCALE = 0.5)
+      : (BoardBase.SCALE = 1.0)
+  }
+
   onresize() {
     let prevBoardScale = BoardBase.SCALE
-    Utils.onresize().add(() => {
+    onresize().add(() => {
       this.getBoardScale()
       if (prevBoardScale !== BoardBase.SCALE) {
         prevBoardScale = BoardBase.SCALE
         this.initConstants()
-        Utils.clearCanvas(this)
+        clearCanvas(this)
         this.render()
       }
     })
@@ -29,7 +39,7 @@ export class Board extends BoardBase {
   reset() {
     super.reset()
     if (this.canvas) {
-      Utils.clearCanvas(this)
+      clearCanvas(this)
       this.render()
     }
   }
@@ -58,8 +68,8 @@ export class Board extends BoardBase {
     const fillStyle = this.getPlayerColor(boardPiece)
     let currentY = 0
     const doAnimation = async () => {
-      Utils.clearCanvas(this)
-      Utils.drawCircle(this.context, {
+      clearCanvas(this)
+      drawCircle(this.context, {
         x:
           3 * BoardBase.PIECE_RADIUS * column +
           BoardBase.MASK_X_BEGIN +
@@ -67,22 +77,22 @@ export class Board extends BoardBase {
         y: currentY + BoardBase.MASK_Y_BEGIN + 2 * BoardBase.PIECE_RADIUS,
         r: BoardBase.PIECE_RADIUS,
         fillStyle: fillStyle,
-        strokeStyle: BoardBase.PIECE_STROKE_STYLE
+        strokeStyle: BoardBase.PIECE_STROKE_STYLE,
       })
       this.render()
       currentY += BoardBase.PIECE_RADIUS
     }
     while (newRow * 3 * BoardBase.PIECE_RADIUS >= currentY) {
-      await Utils.animationFrame()
+      await animationFrame()
       doAnimation()
     }
   }
 
   render() {
-    Utils.drawMask(this)
+    drawMask(this)
     for (let y = 0; y < BoardBase.ROWS; y++) {
       for (let x = 0; x < BoardBase.COLUMNS; x++) {
-        Utils.drawCircle(this.context, {
+        drawCircle(this.context, {
           x:
             3 * BoardBase.PIECE_RADIUS * x +
             BoardBase.MASK_X_BEGIN +
@@ -93,7 +103,7 @@ export class Board extends BoardBase {
             2 * BoardBase.PIECE_RADIUS,
           r: BoardBase.PIECE_RADIUS,
           fillStyle: this.getPlayerColor(this.map[y][x]),
-          strokeStyle: BoardBase.PIECE_STROKE_STYLE
+          strokeStyle: BoardBase.PIECE_STROKE_STYLE,
         })
       }
     }
@@ -127,7 +137,7 @@ export class Board extends BoardBase {
     this.map[row][column] = player.boardPiece
     this.debug()
 
-    await Utils.animationFrame()
+    await animationFrame()
     this.render()
     return true
   }

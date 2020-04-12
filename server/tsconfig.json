@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "declaration": false,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es2017",
+    "strict": true
+  },
+  "include": ["@kenrick95/c4", "src/"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}

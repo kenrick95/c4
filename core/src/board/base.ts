@@ -1,11 +1,11 @@
 import { Player } from '../player'
-import { Utils } from '../utils'
+import { getMockPlayerAction } from '../utils'
 
 export enum BoardPiece {
   EMPTY,
   PLAYER_1,
   PLAYER_2,
-  DRAW
+  DRAW,
 }
 export class BoardBase {
   static readonly ROWS: number = 6
@@ -25,15 +25,11 @@ export class BoardBase {
   static SCALE: number
 
   map: Array<Array<number>>
-  private winnerBoardPiece: BoardPiece
+  protected winnerBoardPiece: BoardPiece
 
-  context: CanvasRenderingContext2D
-
-  constructor(canvasContext: CanvasRenderingContext2D) {
-    this.context = canvasContext
+  constructor() {
     this.map = []
     this.winnerBoardPiece = BoardPiece.EMPTY
-    this.getBoardScale()
     this.initConstants()
     this.reset()
   }
@@ -49,11 +45,6 @@ export class BoardBase {
     this.winnerBoardPiece = BoardPiece.EMPTY
   }
 
-  getBoardScale() {
-    return window.innerWidth < 640
-      ? (BoardBase.SCALE = 0.5)
-      : (BoardBase.SCALE = 1.0)
-  }
   initConstants() {
     BoardBase.CANVAS_HEIGHT = BoardBase.SCALE * 480
     BoardBase.CANVAS_WIDTH = BoardBase.SCALE * 640
@@ -84,8 +75,8 @@ export class BoardBase {
   async applyPlayerAction(player: Player, column: number): Promise<boolean> {
     const {
       success: actionSuccessful,
-      map: nextState
-    } = Utils.getMockPlayerAction(this.map, player.boardPiece, column)
+      map: nextState,
+    } = getMockPlayerAction(this.map, player.boardPiece, column)
 
     this.map = nextState
     this.debug()
@@ -94,7 +85,7 @@ export class BoardBase {
   }
 
   debug() {
-    console.log(this.map.map(row => row.join(' ')).join('\n'))
+    console.log(this.map.map((row) => row.join(' ')).join('\n'))
   }
 
   getWinner(): BoardPiece {
@@ -109,7 +100,7 @@ export class BoardBase {
       [-1, 1],
       [1, -1],
       [1, 0],
-      [1, 1]
+      [1, 1],
     ]
     const isWinningSequence = (
       i: number,
@@ -165,21 +156,6 @@ export class BoardBase {
     }
 
     return BoardPiece.EMPTY
-  }
-
-  announceWinner() {
-    if (this.winnerBoardPiece === BoardPiece.EMPTY) {
-      return
-    }
-    let message = '<h1>Thank you for playing.</h1>'
-    if (this.winnerBoardPiece === BoardPiece.DRAW) {
-      message += `It's a draw`
-    } else {
-      message += `Player ${this.winnerBoardPiece} wins`
-    }
-    message +=
-      '.<br />After dismissing this message, click the board to reset game.'
-    Utils.showMessage(message)
   }
 
   protected getPlayerColor(boardPiece: BoardPiece): string {

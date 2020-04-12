@@ -1,0 +1,50 @@
+{
+  "name": "@kenrick95/c4-browser",
+  "version": "1.0.0",
+  "description": "Connect Four game in browser",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kenrick95/c4.git"
+  },
+  "author": {
+    "name": "Kenrick",
+    "email": "kenrick95@gmail.com",
+    "url": "https://kenrick95.org"
+  },
+  "bugs": {
+    "url": "https://github.com/kenrick95/c4/issues"
+  },
+  "homepage": "https://github.com/kenrick95/c4",
+  "license": "MIT",
+  "keywords": [
+    "c4",
+    "connect-four",
+    "game"
+  ],
+  "main": "./dist/index.html",
+  "source": "./src/app.ts",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "yarn clean && parcel build src/index.html",
+    "prettier": "prettier --write \"./**/*.?(ts|html|scss|css)\"",
+    "clean": "shx rm -rf dist/"
+  },
+  "dependencies": {
+    "@kenrick95/c4": "4.0.0",
+    "es6-promise": "^4.2.8",
+    "url-search-params-polyfill": "^8.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^13.11.1",
+    "parcel-bundler": "^1.12.4",
+    "prettier": "^2.0.4",
+    "shx": "^0.3.2",
+    "typescript": "^3.8.3"
+  },
+  "resolutions": {
+    "minimist": "^1.2.2"
+  }
+}

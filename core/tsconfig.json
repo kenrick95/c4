@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "declaration": false,
+    "module": "esnext",
+    "strict": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "target": "es5",
+    "lib": ["es2015", "dom", "dom.iterable"]
+  },
+  "include": ["src/"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}

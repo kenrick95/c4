@@ -33,7 +33,7 @@ Contributions are welcome! I'm happy to accept any kind of contributions, pull r
   ```
   yarn start
   ```
-4. Make your changes at `src/`
+4. Make your changes at either `browser/`, `core/`, or `server/`
 5. Test it out at http://localhost:1234/
 6. After you are happy with your changes, please submit your Pull Request!
 
