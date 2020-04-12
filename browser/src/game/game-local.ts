@@ -19,23 +19,30 @@ export class GameLocal extends GameBase {
   constructor(players: Array<Player>, board: BoardBase) {
     super(players, board)
   }
-  beforeMove() {
+  beforeMoveApplied() {
     if (statusboxBodyGame) {
       statusboxBodyGame.textContent = `Dropping ${
         this.currentPlayerId === 0 ? '🔴' : '🔵'
       } disc`
     }
   }
-  afterMove() {
+  waitingForMove() {
+    if (!this.isMoveAllowed || this.isGameWon) {
+      return
+    }
+
     if (statusboxBodyGame) {
       statusboxBodyGame.textContent = 'Wating for move'
     }
 
     if (statusboxBodyPlayer) {
-      statusboxBodyPlayer.textContent = this.currentPlayerId
-        ? `Player 1 🔴`
-        : `Player 2 🔵`
+      // `currentPlayerId` is not updated yet
+      statusboxBodyPlayer.textContent =
+        this.currentPlayerId === 0 ? `Player 1 🔴` : `Player 2 🔵`
     }
+  }
+  afterMove() {
+    // no-op
   }
 
   announceWinner(winnerBoardPiece: BoardPiece) {

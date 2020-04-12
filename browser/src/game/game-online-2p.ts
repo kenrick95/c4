@@ -14,6 +14,13 @@ enum GAME_MODE {
   SECOND = BoardPiece.PLAYER_2,
 }
 
+const statusbox = document.querySelector('.statusbox')
+const statusboxBodyGame = document.querySelector('.statusbox-body-game')
+const statusboxBodyConnection = document.querySelector(
+  '.statusbox-body-connection'
+)
+const statusboxBodyPlayer = document.querySelector('.statusbox-body-player')
+
 export class GameOnline2p extends GameBase {
   connectionPlayerId: null | string = null
   connectionMatchId: null | string = null
@@ -57,10 +64,16 @@ export class GameOnline2p extends GameBase {
           constructMessage(MESSAGE_TYPE.NEW_PLAYER_CONNECTION_REQUEST)
         )
       }
+      if (statusboxBodyConnection) {
+        statusboxBodyConnection.textContent = 'Connected to server'
+      }
     })
     this.ws.addEventListener('close', (event) => {
       if (this.ws) {
         console.log('[ws] close event', event)
+      }
+      if (statusboxBodyConnection) {
+        statusboxBodyConnection.textContent = 'Disconnected from server'
       }
     })
   }
@@ -152,6 +165,19 @@ export class GameOnline2p extends GameBase {
               this.isCurrentMoveByCurrentPlayer() ? 'you' : 'the other player'
             }`
           )
+
+          if (statusboxBodyGame) {
+            statusboxBodyGame.textContent = 'Wating for move'
+          }
+
+          if (statusboxBodyPlayer) {
+            statusboxBodyPlayer.textContent =
+              (this.currentPlayerId === 0 ? `Player 1 🔴` : `Player 2 🔵`) +
+              ` ` +
+              (this.isCurrentMoveByCurrentPlayer()
+                ? `(you)`
+                : `(the other player)`)
+          }
           this.start()
         }
         break
@@ -163,14 +189,27 @@ export class GameOnline2p extends GameBase {
       case MESSAGE_TYPE.GAME_ENDED:
         {
           const { winnerBoardPiece } = payload
+          console.log('GAME_ENDED')
+
+          const messageWinner =
+            winnerBoardPiece === BoardPiece.DRAW
+              ? `It's a draw`
+              : `Player ${
+                  winnerBoardPiece === BoardPiece.PLAYER_1 ? '1 🔴' : '2 🔵'
+                } wins`
 
           showMessage(
             `<h1>Thank you for playing</h1>` +
-              (winnerBoardPiece === BoardPiece.DRAW
-                ? `It's a draw`
-                : `Player ${winnerBoardPiece} wins this game`) +
+              messageWinner +
               `<br />Next game will be started in 10 seconds.`
           )
+
+          if (statusboxBodyGame) {
+            statusboxBodyGame.textContent = 'Game over'
+          }
+          if (statusboxBodyPlayer) {
+            statusboxBodyPlayer.textContent = messageWinner
+          }
         }
         break
       case MESSAGE_TYPE.GAME_RESET:
@@ -188,7 +227,29 @@ export class GameOnline2p extends GameBase {
     return this.currentPlayerId + 1 === this.gameMode
   }
 
+  beforeMoveApplied = () => {
+    if (statusboxBodyGame) {
+      statusboxBodyGame.textContent = `Dropping ${
+        this.currentPlayerId === 0 ? '🔴' : '🔵'
+      } disc`
+    }
+  }
+
+  waitingForMove = () => {
+    if (statusboxBodyGame) {
+      statusboxBodyGame.textContent = 'Wating for move'
+    }
+
+    if (statusboxBodyPlayer) {
+      statusboxBodyPlayer.textContent =
+        (this.currentPlayerId === 0 ? `Player 1 🔴` : `Player 2 🔵`) +
+        ` ` +
+        (this.isCurrentMoveByCurrentPlayer() ? `(you)` : `(the other player)`)
+    }
+  }
+
   afterMove = (action: number) => {
+    console.log('afterMove')
     if (this.ws && this.isCurrentMoveByCurrentPlayer()) {
       this.ws.send(
         constructMessage(MESSAGE_TYPE.MOVE_MAIN, {
@@ -202,7 +263,8 @@ export class GameOnline2p extends GameBase {
 
   announceWinner(winnerBoardPiece: BoardPiece) {
     super.announceWinner(winnerBoardPiece)
-    // Do nothing here, will wait for
+    // Do nothing here, will wait for server to announce
+    console.log('announceWinner')
   }
 }
 
@@ -234,10 +296,8 @@ export function initGameOnline2p() {
   const game = new GameOnline2p(players, board, {
     gameMode,
   })
+  statusbox?.classList.remove('hidden')
 
-  // wait till game ready to start
-
-  // game.start()
   canvas.addEventListener('click', async (event: MouseEvent) => {
     if (!game.isGameWon) {
       const rect = canvas.getBoundingClientRect()
