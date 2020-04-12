@@ -1,6 +1,6 @@
 {
-  "name": "@kenrick95/c4",
-  "version": "3.0.5",
+  "name": "@kenrick95/c4-root",
+  "version": "0.0.0",
   "description": "Connect Four game",
   "main": "./dist/lib.js",
   "private": true,
@@ -23,34 +23,21 @@
   },
   "homepage": "https://github.com/kenrick95/c4",
   "license": "MIT",
-  "files": [
-    "src/",
-    "dist/"
-  ],
-  "scripts": {
-    "start": "concurrently --handle-input \"yarn:start-server\" \"yarn:start-client\"",
-    "start-client": "parcel index.html",
-    "start-server": "yarn workspace @kenrick95/c4-server start-dev",
-    "build": "yarn clean && parcel build index.html",
-    "build-library": "yarn clean && parcel build ./core/lib.ts",
-    "prettier": "prettier --write \"browser/**/*.?(ts|scss|css)\" \"core/**/*.?(ts|scss|css)\" \"server/**/*.?(ts|scss|css)\"",
-    "prepublishOnly": "yarn build",
-    "clean": "shx rm -rf dist/"
-  },
   "keywords": [
     "c4",
     "connect-four",
     "game"
   ],
-  "devDependencies": {
-    "concurrently": "^5.1.0",
-    "parcel-bundler": "^1.12.4",
-    "prettier": "^2.0.4",
-    "shx": "^0.3.2",
-    "ts-node": "^8.8.2",
-    "typescript": "^3.8.3"
+  "files": [
+    "src/",
+    "dist/"
+  ],
+  "scripts": {
+    "start": "concurrently --handle-input \"yarn:start-server\" \"yarn:start-browser\"",
+    "start-browser": "yarn workspace @kenrick95/c4-browser start",
+    "start-server": "yarn workspace @kenrick95/c4-server start-dev"
   },
-  "resolutions": {
-    "minimist": "^1.2.2"
+  "devDependencies": {
+    "concurrently": "^5.1.0"
   }
 }

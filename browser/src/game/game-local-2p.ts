@@ -1,10 +1,10 @@
 import { Board } from '../board'
-import { BoardBase, BoardPiece } from '@kenrick95/c4-core/board'
-import { GameBase } from '@kenrick95/c4-core/game'
-import { Player, PlayerHuman, PlayerAi } from '@kenrick95/c4-core/player'
-import { Utils } from '@kenrick95/c4-core/utils'
+import { BoardBase, BoardPiece } from '@kenrick95/c4/src/board'
+import { GameBase } from '@kenrick95/c4/src/game'
+import { Player, PlayerHuman } from '@kenrick95/c4/src/player'
+import { Utils } from '@kenrick95/c4/src/utils'
 
-class GameLocalAi extends GameBase {
+class GameLocal2p extends GameBase {
   constructor(players: Array<Player>, board: BoardBase) {
     super(players, board)
   }
@@ -29,19 +29,19 @@ class GameLocalAi extends GameBase {
     Utils.showMessage(message)
   }
 }
-export function initGameLocalAi() {
+export function initGameLocal2p() {
   const canvas = document.querySelector('canvas')
   if (!canvas) {
     console.error('Canvas DOM is null')
     return
   }
   const board = new Board(canvas)
-  const humanPlayer = new PlayerHuman(BoardPiece.PLAYER_1)
-  const game = new GameLocalAi(
-    [humanPlayer, new PlayerAi(BoardPiece.PLAYER_2)],
-    board
-  )
+  const humanPlayers = [
+    new PlayerHuman(BoardPiece.PLAYER_1),
+    new PlayerHuman(BoardPiece.PLAYER_2),
+  ]
 
+  const game = new GameLocal2p(humanPlayers, board)
   game.start()
   canvas.addEventListener('click', async (event: MouseEvent) => {
     if (game.isGameWon) {
@@ -53,7 +53,7 @@ export function initGameLocalAi() {
       const x = event.clientX - rect.left
       const y = event.clientY - rect.top
       const column = Utils.getColumnFromCoord({ x: x, y: y })
-      humanPlayer.doAction(column)
+      humanPlayers[game.currentPlayerId].doAction(column)
     }
   })
 }

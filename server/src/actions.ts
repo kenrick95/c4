@@ -1,11 +1,11 @@
 import { v4 as uuidV4 } from 'uuid'
 import { PlayerId, MatchId, RenewLastSeenAction, AppThunk } from './types'
 import * as WebSocket from 'ws'
-import { BoardBase, BoardPiece } from '@kenrick95/c4-core/board'
+import { BoardBase, BoardPiece } from '@kenrick95/c4/src/board'
 import {
   MESSAGE_TYPE,
   constructMessage,
-} from '@kenrick95/c4-core/game/game-online/shared'
+} from '@kenrick95/c4/src/game/game-online/shared'
 
 export enum ACTION_TYPE {
   NEW_PLAYER_CONNECTION = 'NEW_PLAYER_CONNECTION',
@@ -261,7 +261,9 @@ export function gameReset(matchId: MatchId): AppThunk {
       }
       const player = state.players[playerId]
       if (!player) {
-        console.warn(`[actions] Player ${playerId} is gone but still have reference to it`)
+        console.warn(
+          `[actions] Player ${playerId} is gone but still have reference to it`
+        )
         continue
       }
 

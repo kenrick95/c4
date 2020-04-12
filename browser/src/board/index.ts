@@ -1,6 +1,6 @@
-import { BoardBase, BoardPiece } from '@kenrick95/c4-core/board'
-import { Player } from '@kenrick95/c4-core/player'
-import { Utils } from '@kenrick95/c4-core/utils'
+import { BoardBase, BoardPiece } from '@kenrick95/c4/src/board'
+import { Player } from '@kenrick95/c4/src/player'
+import { Utils } from '@kenrick95/c4/src/utils'
 import { drawMask, drawCircle, clearCanvas } from './utils'
 
 export class Board extends BoardBase {
@@ -141,5 +141,4 @@ export class Board extends BoardBase {
     this.render()
     return true
   }
-
 }
