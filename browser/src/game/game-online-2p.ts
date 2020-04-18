@@ -5,6 +5,7 @@ import {
   MESSAGE_TYPE,
   constructMessage,
   parseMessage,
+  GameOnlineMessage,
 } from '@kenrick95/c4/src/game'
 import { Player, PlayerHuman, PlayerShadow } from '@kenrick95/c4/src/player'
 import { showMessage, getColumnFromCoord } from '@kenrick95/c4/src/utils'
@@ -120,17 +121,11 @@ export class GameOnline2p extends GameBase {
     )
   }
 
-  messageActionHandler = ({
-    type,
-    payload,
-  }: {
-    type: MESSAGE_TYPE
-    payload: any
-  }) => {
-    switch (type) {
+  messageActionHandler = (message: GameOnlineMessage) => {
+    switch (message.type) {
       case MESSAGE_TYPE.NEW_PLAYER_CONNECTION_OK:
         {
-          this.connectionPlayerId = payload.playerId
+          this.connectionPlayerId = message.payload.playerId
           if (this.gameMode === GAME_MODE.FIRST) {
             this.initMatch()
           } else if (this.gameMode === GAME_MODE.SECOND) {
@@ -146,7 +141,7 @@ export class GameOnline2p extends GameBase {
         break
       case MESSAGE_TYPE.NEW_MATCH_OK:
         {
-          this.connectionMatchId = payload.matchId
+          this.connectionMatchId = message.payload.matchId
           const shareUrl = `${location.href}?matchId=${this.connectionMatchId}`
           console.log('[url] Share this', shareUrl)
           showMessage(
@@ -174,7 +169,7 @@ export class GameOnline2p extends GameBase {
         break
       case MESSAGE_TYPE.CONNECT_MATCH_OK:
         {
-          this.connectionMatchId = payload.matchId
+          this.connectionMatchId = message.payload.matchId
         }
         break
       case MESSAGE_TYPE.CONNECT_MATCH_FAIL:
@@ -211,12 +206,12 @@ export class GameOnline2p extends GameBase {
         break
       case MESSAGE_TYPE.MOVE_SHADOW:
         {
-          this.playerShadow.doAction(payload.column)
+          this.playerShadow.doAction(message.payload.column)
         }
         break
       case MESSAGE_TYPE.GAME_ENDED:
         {
-          const { winnerBoardPiece } = payload
+          const { winnerBoardPiece } = message.payload
 
           const messageWinner =
             winnerBoardPiece === BoardPiece.DRAW
