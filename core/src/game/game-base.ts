@@ -18,7 +18,7 @@ export abstract class GameBase<P extends Player = Player> {
     this.isMoveAllowed = false
     this.isGameWon = false
     this.board.reset()
-    this.board.debug()
+    // this.board.debug()
   }
 
   async start() {

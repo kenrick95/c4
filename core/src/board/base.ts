@@ -79,7 +79,7 @@ export class BoardBase {
     } = getMockPlayerAction(this.map, player.boardPiece, column)
 
     this.map = nextState
-    this.debug()
+    // this.debug()
 
     return actionSuccessful
   }
