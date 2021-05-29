@@ -44,7 +44,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "uuid": "^7.0.3",
-    "ws": "^7.2.3"
+    "ws": "^7.4.6"
   },
   "resolutions": {
     "minimist": "^1.2.2"
