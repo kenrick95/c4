@@ -225,7 +225,7 @@ export class PlayerAi extends Player {
     }
   }
 
-  async getAction(board: BoardBase): Promise<number> {
+  getAction(board: BoardBase): Promise<number> {
     const state = clone(board.map)
     const action = this.maxState(
       state,
@@ -236,6 +236,6 @@ export class PlayerAi extends Player {
     console.log(
       `AI ${this.boardPiece} choose column ${action.move} with value of ${action.value}`
     )
-    return action.move
+    return Promise.resolve(action.move)
   }
 }

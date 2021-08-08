@@ -21,29 +21,31 @@
     "connect-four",
     "game"
   ],
-  "main": "./dist/index.html",
   "source": "./src/app.ts",
   "files": [
     "dist/"
   ],
   "scripts": {
-    "start": "parcel src/index.html",
-    "build": "yarn clean && parcel build src/index.html",
+    "start": "parcel serve --no-cache src/index.html",
+    "build": "yarn clean && cross-env parcel build --no-cache src/index.html",
     "build-gh-pages": "yarn clean && parcel build src/index.html --public-url \"https://kenrick95.github.io/c4/dist/\"",
-    "prettier": "prettier --write \"./**/*.?(ts|html|scss|css)\"",
+    "pretty": "prettier --write \"./**/*.?(ts|html|scss|css)\"",
     "clean": "shx rm -rf dist/"
   },
   "dependencies": {
     "@kenrick95/c4": "4.0.0",
-    "es6-promise": "^4.2.8",
-    "url-search-params-polyfill": "^8.0.0"
+    "core-js": "^3.16.0",
+    "regenerator-runtime": "^0.13.9"
   },
   "devDependencies": {
-    "@types/node": "^13.11.1",
-    "parcel-bundler": "^1.12.4",
-    "prettier": "^2.0.4",
-    "shx": "^0.3.2",
-    "typescript": "^3.8.3"
+    "@babel/core": "^7.15.0",
+    "@babel/preset-typescript": "^7.15.0",
+    "@types/node": "^16.4.13",
+    "cross-env": "^7.0.3",
+    "parcel": "nightly",
+    "prettier": "^2.3.2",
+    "shx": "^0.3.3",
+    "typescript": "^4.3.5"
   },
   "resolutions": {
     "minimist": "^1.2.2"

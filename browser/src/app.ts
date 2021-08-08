@@ -1,5 +1,6 @@
-import 'es6-promise/auto'
-import 'url-search-params-polyfill'
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
+
 import * as Game from './game'
 import { Board } from './board'
 import './style.css'

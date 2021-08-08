@@ -22,7 +22,7 @@
     "url": "https://github.com/kenrick95/c4/issues"
   },
   "engines": {
-    "node": "12.x"
+    "node": "14.x"
   },
   "homepage": "https://github.com/kenrick95/c4",
   "license": "MIT",
@@ -38,9 +38,10 @@
   "scripts": {
     "start": "concurrently --handle-input \"yarn:start-server\" \"yarn:start-browser\"",
     "start-browser": "yarn workspace @kenrick95/c4-browser start",
-    "start-server": "yarn workspace @kenrick95/c4-server start-dev"
+    "start-server": "yarn workspace @kenrick95/c4-server start-dev",
+    "test": "yarn workspace @kenrick95/c4 test"
   },
   "devDependencies": {
-    "concurrently": "^5.1.0"
+    "concurrently": "^6.2.0"
   }
 }

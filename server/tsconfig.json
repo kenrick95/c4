@@ -6,8 +6,10 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es2017",
-    "strict": true
+    "esModuleInterop": true,
+    "target": "es2020",
+    "strict": true,
+    "lib": ["es2020", "dom", "dom.iterable"]
   },
   "include": ["@kenrick95/c4", "src/"],
   "exclude": ["node_modules", "**/*.spec.ts"]

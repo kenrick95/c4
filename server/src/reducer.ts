@@ -136,7 +136,7 @@ export function reducer(
         game?.board.debug()
         console.log('---- MOVE DEBUG ----')
       }
-
+ 
       return {
         ...state,
         matches: {
