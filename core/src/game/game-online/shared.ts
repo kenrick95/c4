@@ -1,3 +1,5 @@
+import { BoardPiece } from '../../board'
+
 export enum MESSAGE_TYPE {
   NEW_PLAYER_CONNECTION_REQUEST = 'NEW_PLAYER_CONNECTION_REQUEST',
   NEW_PLAYER_CONNECTION_OK = 'NEW_PLAYER_CONNECTION_OK',
@@ -20,16 +22,56 @@ export enum MESSAGE_TYPE {
   MOVE_SHADOW = 'MOVE_SHADOW',
 }
 
-export function constructMessage(type: MESSAGE_TYPE, payload?: any): string {
+export type PlayerId = string
+
+export type MatchId = string
+
+export type GameOnlineMessage =
+  | { type: 'NEW_PLAYER_CONNECTION_REQUEST'; payload: {} }
+  | {
+      type: 'NEW_PLAYER_CONNECTION_OK'
+      payload: { playerId: PlayerId }
+    }
+  | { type: 'NEW_MATCH_REQUEST'; payload: { playerId: PlayerId } }
+  | { type: 'NEW_MATCH_OK'; payload: { matchId: MatchId } }
+  | { type: 'GAME_READY'; payload: { matchId: MatchId } }
+  | {
+      type: 'GAME_ENDED'
+      payload: {
+        winnerBoardPiece: BoardPiece
+        matchId: MatchId
+        gameWinnerPlayerId: PlayerId
+      }
+    }
+  | { type: 'GAME_RESET'; payload: { matchId: MatchId } }
+  | {
+      type: 'CONNECT_MATCH_REQUEST'
+      payload: { playerId: PlayerId; matchId: MatchId }
+    }
+  | {
+      type: 'CONNECT_MATCH_OK'
+      payload: { matchId: MatchId; playerId: PlayerId }
+    }
+  | {
+      type: 'CONNECT_MATCH_FAIL'
+      payload: { matchId: MatchId; playerId: PlayerId }
+    }
+  | { type: 'HUNG_UP'; payload: {} }
+  | { type: 'OTHER_PLAYER_HUNGUP'; payload: {} }
+  | { type: 'MOVE_MAIN'; payload: { column: number } }
+  | { type: 'MOVE_SHADOW'; payload: { column: number } }
+
+export function constructMessage(
+  type: MESSAGE_TYPE,
+  payload?: GameOnlineMessage['payload']
+): string {
   console.log('[ws] send: ', type, payload)
   return JSON.stringify({
     type,
-    payload,
+    payload: payload || {},
   })
 }
-export function parseMessage(
-  message: string
-): { type: MESSAGE_TYPE; payload: any } {
+export function parseMessage(message: string): GameOnlineMessage {
   const parsedMessage = JSON.parse(message)
   console.log('[ws] receive: ', parsedMessage)
   return parsedMessage

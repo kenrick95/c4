@@ -73,13 +73,14 @@ export class BoardBase {
    * @param column the colum in which the player want to drop a piece
    */
   async applyPlayerAction(player: Player, column: number): Promise<boolean> {
-    const {
-      success: actionSuccessful,
-      map: nextState,
-    } = getMockPlayerAction(this.map, player.boardPiece, column)
+    const { success: actionSuccessful, map: nextState } = getMockPlayerAction(
+      this.map,
+      player.boardPiece,
+      column
+    )
 
     this.map = nextState
-    this.debug()
+    // this.debug()
 
     return actionSuccessful
   }

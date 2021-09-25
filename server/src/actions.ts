@@ -132,7 +132,11 @@ export function connectMatch(
           continue
         }
         const player = state.players[pId]
-        player.ws.send(constructMessage(MESSAGE_TYPE.GAME_READY))
+        player.ws.send(
+          constructMessage(MESSAGE_TYPE.GAME_READY, {
+            matchId,
+          })
+        )
       }
     }
 
