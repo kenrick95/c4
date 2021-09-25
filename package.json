@@ -22,7 +22,7 @@
     "url": "https://github.com/kenrick95/c4/issues"
   },
   "engines": {
-    "node": "12.x"
+    "node": "14.x"
   },
   "homepage": "https://github.com/kenrick95/c4",
   "license": "MIT",
@@ -41,6 +41,6 @@
     "start-server": "yarn workspace @kenrick95/c4-server start-dev"
   },
   "devDependencies": {
-    "concurrently": "^5.1.0"
+    "concurrently": "^6.2.1"
   }
 }

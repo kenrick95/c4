@@ -19,7 +19,7 @@ export class PlayerShadow extends Player {
     }
   }
 
-  async getAction(board: BoardBase): Promise<number> {
+  getAction(board: BoardBase): Promise<number> {
     return new Promise<number>((r) => (this.actionPromiseResolver = r))
   }
 }
