@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -36,6 +36,10 @@ jobs:
       - name: install
         run: yarn install
       - name: run tests
-        run: yarn workspace @kenrick95/c4 test
+        run: yarn workspaces run test
+        env:
+          CI: true
+      - name: run builds
+        run: yarn workspaces run build
         env:
           CI: true

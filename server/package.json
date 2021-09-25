@@ -29,7 +29,8 @@
     "start": "ts-node src/index.ts",
     "start-dev": "nodemon --watch src --ignore 'src/**/*.spec.ts' --exec ts-node src/index.ts",
     "build": "echo 'OK'",
-    "prettier": "prettier --write \"./**/*.?(ts|html|scss|css)\""
+    "prettier": "prettier --write \"./**/*.?(ts|html|scss|css)\"",
+    "test": "echo 'OK'"
   },
   "devDependencies": {
     "@types/node": "^16.9.6",

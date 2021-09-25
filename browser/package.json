@@ -31,7 +31,8 @@
     "build": "yarn clean && parcel build src/index.html",
     "build-gh-pages": "yarn clean && parcel build src/index.html --public-url \"https://kenrick95.github.io/c4/dist/\"",
     "prettier": "prettier --write \"./**/*.?(ts|html|scss|css)\"",
-    "clean": "shx rm -rf dist/"
+    "clean": "shx rm -rf dist/",
+    "test": "echo 'OK'"
   },
   "dependencies": {
     "@kenrick95/c4": "4.0.0",
