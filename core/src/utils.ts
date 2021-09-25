@@ -4,24 +4,24 @@ export const BIG_POSITIVE_NUMBER: number = 10 ** 9 + 7
 export const BIG_NEGATIVE_NUMBER: number = -BIG_POSITIVE_NUMBER
 
 export function showMessage(message: string = ''): void {
-  const messageDOM: Element | null = document
-    .querySelector('.message')
+  const messageDOM: Element | null = document.querySelector('.message')
 
-  if (!messageDOM)
-    return console.error('Message DOM is null!')
+  if (!messageDOM) return console.error('Message DOM is null!')
 
   messageDOM.classList.remove('hidden')
 
-  const messageContentDOM: Element | null = document
-    .querySelector('.message-body-content')
+  const messageContentDOM: Element | null = document.querySelector(
+    '.message-body-content'
+  )
 
   if (!messageContentDOM)
     return console.error('Message body content DOM is null!')
 
   messageContentDOM.innerHTML = message
 
-  const messageDismissDOM: Element | null = document
-    .querySelector('.message-body-dismiss')
+  const messageDismissDOM: Element | null = document.querySelector(
+    '.message-body-dismiss'
+  )
 
   if (!messageDismissDOM)
     return console.error('Message body dismiss DOM is null!')
@@ -55,9 +55,15 @@ export function isCoordOnColumn(
 
 export function getColumnFromCoord(coord: { x: number; y: number }): number {
   for (let i: number = 0; i < BoardBase.COLUMNS; i++)
-    if (isCoordOnColumn(coord, 3 * BoardBase.PIECE_RADIUS * i +
+    if (
+      isCoordOnColumn(
+        coord,
+        3 * BoardBase.PIECE_RADIUS * i +
           BoardBase.MASK_X_BEGIN +
-          2 * BoardBase.PIECE_RADIUS, BoardBase.PIECE_RADIUS))
+          2 * BoardBase.PIECE_RADIUS,
+        BoardBase.PIECE_RADIUS
+      )
+    )
       return i
 
   return -1
@@ -76,10 +82,11 @@ export function choose(choice: Array<any>): any {
  */
 export function animationFrame(): Promise<Function> {
   let resolve: Function | null = null
-  const promise: Promise<Function> = new Promise((r: Function): Function => (resolve = r))
+  const promise: Promise<Function> = new Promise(
+    (r: Function): Function => (resolve = r)
+  )
 
-  if (resolve)
-    window.requestAnimationFrame(resolve)
+  if (resolve) window.requestAnimationFrame(resolve)
 
   return promise
 }
@@ -87,8 +94,7 @@ export function animationFrame(): Promise<Function> {
 export function clone(array: Array<Array<any>>): Array<Array<any>> {
   const arr: Array<Array<any>> = []
 
-  for (let i: number = 0; i < array.length; i++)
-    arr[i] = array[i].slice()
+  for (let i: number = 0; i < array.length; i++) arr[i] = array[i].slice()
 
   return arr
 }
@@ -98,16 +104,19 @@ export function getMockPlayerAction(
   boardPiece: BoardPiece,
   column: number
 ): {
-  success: boolean;
+  success: boolean
   map: Array<Array<number>>
 } {
   const clonedMap: Array<Array<any>> = clone(map)
 
-  if (clonedMap[0][column] !== BoardPiece.EMPTY ||
-    column < 0 || column >= BoardBase.COLUMNS)
+  if (
+    clonedMap[0][column] !== BoardPiece.EMPTY ||
+    column < 0 ||
+    column >= BoardBase.COLUMNS
+  )
     return {
       success: false,
-      map: clonedMap
+      map: clonedMap,
     }
 
   let isColumnEverFilled: boolean = false
@@ -120,14 +129,13 @@ export function getMockPlayerAction(
       break
     }
 
-  if (!isColumnEverFilled)
-    row = BoardBase.ROWS - 1
+  if (!isColumnEverFilled) row = BoardBase.ROWS - 1
 
   clonedMap[row][column] = boardPiece
 
   return {
     success: true,
-    map: clonedMap
+    map: clonedMap,
   }
 }
 
@@ -146,8 +154,7 @@ export function onresize(): { add: Function } {
 
       if (window.requestAnimationFrame)
         window.requestAnimationFrame(runCallbacks)
-      else
-        setTimeout(runCallbacks, 66)
+      else setTimeout(runCallbacks, 66)
     }
   }
 
@@ -162,17 +169,15 @@ export function onresize(): { add: Function } {
 
   // Adds callback to loop.
   function addCallback(callback: Function): void {
-    if (callback)
-      callbacks.push(callback)
+    if (callback) callbacks.push(callback)
   }
 
   return {
     // Public method to add additional callback.
     add: (callback: Function) => {
-      if (!callbacks.length)
-        window.addEventListener('resize', resize)
+      if (!callbacks.length) window.addEventListener('resize', resize)
 
       addCallback(callback)
-    }
+    },
   }
 }

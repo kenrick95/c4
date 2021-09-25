@@ -69,9 +69,7 @@ wss.on('connection', (ws: WebSocket) => {
         break
       case MESSAGE_TYPE.MOVE_MAIN:
         {
-          store.dispatch(
-            move(playerId, matchId, parsedMessage.payload.column)
-          )
+          store.dispatch(move(playerId, matchId, parsedMessage.payload.column))
         }
         break
       case MESSAGE_TYPE.HUNG_UP:

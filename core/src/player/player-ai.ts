@@ -27,9 +27,10 @@ export class PlayerAi extends Player {
       ? 1
       : -1
   }
-  private getStateValue(
-    state: Array<Array<number>>
-  ): { winnerBoardPiece: BoardPiece; chain: number } {
+  private getStateValue(state: Array<Array<number>>): {
+    winnerBoardPiece: BoardPiece
+    chain: number
+  } {
     let winnerBoardPiece = BoardPiece.EMPTY
     let chainValue = 0
     for (let i = 0; i < BoardBase.ROWS; i++) {
