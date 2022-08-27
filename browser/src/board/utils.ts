@@ -46,5 +46,5 @@ export function drawMask(board: Board) {
 }
 
 export function clearCanvas(board: Board) {
-  board.context.clearRect(0, 0, board.canvas.width, board.canvas.height)
+  board.context.clearRect(0, 0, Board.CANVAS_WIDTH, Board.CANVAS_HEIGHT)
 }
