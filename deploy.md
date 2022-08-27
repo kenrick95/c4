@@ -11,11 +11,6 @@ rm -rf dist/
 mv browser/dist/ dist/
 mv dist/index.html index.html
 ```
-
-## To Heroku
-
-No action needed. Automatically deployed on master branch
-
 ## To npm
 
 Publishing [@kenrick95/c4](https://www.npmjs.com/package/@kenrick95/c4)
