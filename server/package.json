@@ -31,7 +31,7 @@
     "start-dev": "ts-node src/index.ts",
     "start-dev-watch": "nodemon --watch src --ignore 'src/**/*.spec.ts' --exec yarn start",
     "build": "yarn clean && tsc --outDir dist/",
-    "clean": "shx rm -rf dist/",
+    "clean": "rimraf dist/",
     "prettier": "prettier --write \"./**/*.?(ts|html|scss|css)\"",
     "test": "echo 'OK'"
   },
@@ -41,7 +41,7 @@
     "@types/ws": "^7.4.7",
     "nodemon": "^2.0.13",
     "prettier": "^2.4.1",
-    "shx": "^0.3.3",
+    "rimraf": "^3.0.2",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3"
   },
