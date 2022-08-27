@@ -1,13 +1,17 @@
 name: Deploy
 
 on:
-  push:
-    branches: [ master ]
+  workflow_run:
+    branches: [master]
+    workflows: [Test]
+    types:
+      - completed
 
 jobs:
   deploy-gh-pages:
 
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     strategy:
       matrix:
@@ -28,11 +32,12 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4.2.5
         with:
           branch: gh-pages
-          folder: app/dist 
+          folder: browser/dist
 
   deploy-fly:
     
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     env:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
