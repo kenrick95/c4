@@ -5,7 +5,7 @@ on:
     branches: [ master ]
 
 jobs:
-  deploy:
+  deploy-gh-pages:
 
     runs-on: ubuntu-latest
 
@@ -29,3 +29,14 @@ jobs:
         with:
           branch: gh-pages
           folder: app/dist 
+
+  deploy-fly:
+    
+    runs-on: ubuntu-latest
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --remote-only
