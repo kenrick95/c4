@@ -31,7 +31,7 @@
     "build": "yarn clean && parcel build src/index.html",
     "build-gh-pages": "yarn clean && parcel build src/index.html --public-url \"https://kenrick95.github.io/c4/dist/\"",
     "prettier": "prettier --write \"./**/*.?(ts|html|scss|css)\"",
-    "clean": "shx rm -rf dist/",
+    "clean": "rimraf dist/",
     "test": "echo 'OK'"
   },
   "dependencies": {
@@ -43,7 +43,7 @@
     "@types/node": "^16.9.6",
     "parcel-bundler": "^1.12.4",
     "prettier": "^2.4.1",
-    "shx": "^0.3.3",
+    "rimraf": "^3.0.2",
     "typescript": "^4.4.3"
   }
 }
