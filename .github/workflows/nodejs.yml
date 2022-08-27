@@ -36,10 +36,10 @@ jobs:
       - name: install
         run: yarn install
       - name: run tests
-        run: yarn workspaces run test
+        run: yarn workspaces foreach --verbose run test
         env:
           CI: true
       - name: run builds
-        run: yarn workspaces run build
+        run: yarn workspaces foreach --verbose run build
         env:
           CI: true
