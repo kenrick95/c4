@@ -21,7 +21,8 @@
     "connect-four",
     "game"
   ],
-  "main": "./dist/lib.ts",
+  "main": "./dist/lib.js",
+  "types": "./src/lib.ts",
   "source": "./src/lib.ts",
   "files": [
     "src/",

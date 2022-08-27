@@ -1,11 +1,11 @@
 import { v4 as uuidV4 } from 'uuid'
 import { PlayerId, MatchId, RenewLastSeenAction, AppThunk } from './types'
 import * as WebSocket from 'ws'
-import { BoardBase, BoardPiece } from '@kenrick95/c4/src/board'
+import { BoardBase, BoardPiece } from '@kenrick95/c4'
 import {
   MESSAGE_TYPE,
   constructMessage,
-} from '@kenrick95/c4/src/game/game-online/shared'
+} from '@kenrick95/c4'
 
 export enum ACTION_TYPE {
   NEW_PLAYER_CONNECTION = 'NEW_PLAYER_CONNECTION',

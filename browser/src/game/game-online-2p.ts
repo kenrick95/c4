@@ -1,14 +1,14 @@
 import { Board } from '../board'
-import { BoardBase, BoardPiece } from '@kenrick95/c4/src/board'
+import { BoardBase, BoardPiece } from '@kenrick95/c4'
 import {
   GameBase,
   MESSAGE_TYPE,
   constructMessage,
   parseMessage,
   GameOnlineMessage,
-} from '@kenrick95/c4/src/game'
-import { Player, PlayerHuman, PlayerShadow } from '@kenrick95/c4/src/player'
-import { showMessage, getColumnFromCoord } from '@kenrick95/c4/src/utils'
+} from '@kenrick95/c4'
+import { Player, PlayerHuman, PlayerShadow } from '@kenrick95/c4'
+import { showMessage, getColumnFromCoord } from '@kenrick95/c4'
 
 enum GAME_MODE {
   FIRST = BoardPiece.PLAYER_1,

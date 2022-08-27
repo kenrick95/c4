@@ -40,7 +40,7 @@
   "scripts": {
     "start": "concurrently --handle-input \"yarn:start-server\" \"yarn:start-browser\"",
     "start-browser": "yarn workspace @kenrick95/c4-browser start",
-    "start-server": "yarn workspace @kenrick95/c4-server start-dev"
+    "start-server": "yarn workspace @kenrick95/c4-server start-dev-watch"
   },
   "devDependencies": {
     "concurrently": "^6.2.1"

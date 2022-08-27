@@ -18,7 +18,7 @@ import { MatchId, State, ActionTypes } from './types'
 import {
   MESSAGE_TYPE,
   parseMessage,
-} from '@kenrick95/c4/src/game/game-online/shared'
+} from '@kenrick95/c4'
 
 const port = parseInt(process.env.PORT || '') || 8080
 const wss = new WebSocket.Server({ port: port })

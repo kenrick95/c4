@@ -35,7 +35,7 @@
     "test": "echo 'OK'"
   },
   "dependencies": {
-    "@kenrick95/c4": "4.0.0",
+    "@kenrick95/c4": "workspace:^",
     "es6-promise": "^4.2.8",
     "url-search-params-polyfill": "^8.1.1"
   },

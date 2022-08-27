@@ -1,12 +1,8 @@
 import { Board } from '../board'
-import { BoardBase, BoardPiece } from '@kenrick95/c4/src/board'
-import { GameBase } from '@kenrick95/c4/src/game'
-import { Player, PlayerHuman, PlayerAi } from '@kenrick95/c4/src/player'
-import {
-  showMessage,
-  animationFrame,
-  getColumnFromCoord,
-} from '@kenrick95/c4/src/utils'
+import { BoardBase, BoardPiece } from '@kenrick95/c4'
+import { GameBase } from '@kenrick95/c4'
+import { Player, PlayerHuman, PlayerAi } from '@kenrick95/c4'
+import { showMessage, animationFrame, getColumnFromCoord } from '@kenrick95/c4'
 
 const statusbox = document.querySelector('.statusbox')
 const statusboxBodyGame = document.querySelector('.statusbox-body-game')
