@@ -26,7 +26,7 @@ const C4_SERVER_ENDPOINT =
   process.env.NODE_ENV === 'production'
     ? process.env.C4_SERVER_ENDPOINT
       ? process.env.C4_SERVER_ENDPOINT
-      : `wss://c4-server.herokuapp.com/`
+      : `wss://c4-server.fly.dev/`
     : `ws://${location.hostname}:8080`
 
 export class GameOnline2p extends GameBase {
