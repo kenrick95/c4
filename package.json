@@ -22,7 +22,8 @@
     "url": "https://github.com/kenrick95/c4/issues"
   },
   "engines": {
-    "node": "^16"
+    "node": "16.x",
+    "yarn": "3.x"
   },
   "packageManager": "yarn@3.2.3",
   "homepage": "https://github.com/kenrick95/c4",
