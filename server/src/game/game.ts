@@ -1,8 +1,8 @@
 import { ServerBoard } from './board'
-import { GameBase } from '@kenrick95/c4/src/game'
+import { GameBase } from '@kenrick95/c4'
 import { ServerPlayer } from './player'
 import { MatchId } from '../types'
-import { BoardPiece } from '@kenrick95/c4/src/board'
+import { BoardPiece } from '@kenrick95/c4'
 import { store } from '..'
 import { gameEnded } from '../actions'
 

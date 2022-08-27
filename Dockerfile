@@ -10,6 +10,7 @@ COPY server/package.json ./server/
 
 RUN yarn install --frozen-lockfile
 COPY . .
+RUN yarn workspaces foreach --verbose --topological run build
 
 EXPOSE ${PORT}
 CMD [ "yarn", "workspace", "@kenrick95/c4-server", "start"]
