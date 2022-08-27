@@ -1,20 +1,18 @@
-name: Test
+name: Deploy
 
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 jobs:
-  test:
+  deploy:
 
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [16]
-
+  
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -24,7 +22,10 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - name: Run Tests
-        run: yarn workspaces foreach --verbose run test
-      - name: Run Builds
-        run: yarn workspaces foreach --verbose run build
+      - name: Build
+        run: yarn workspace @kenrick95/c4-browser run build-gh-pages
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        with:
+          branch: gh-pages
+          folder: app/dist 
