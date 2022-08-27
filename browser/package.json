@@ -29,7 +29,7 @@
   "scripts": {
     "start": "parcel src/index.html",
     "build": "yarn clean && parcel build src/index.html",
-    "build-gh-pages": "yarn clean && parcel build src/index.html --public-url \"https://kenrick95.github.io/c4/dist/\"",
+    "build-gh-pages": "yarn clean && parcel build src/index.html --public-url \"https://kenrick95.github.io/c4/\"",
     "prettier": "prettier --write \"./**/*.?(ts|html|scss|css)\"",
     "clean": "rimraf dist/",
     "test": "echo 'OK'"
