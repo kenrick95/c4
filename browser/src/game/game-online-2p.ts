@@ -93,7 +93,7 @@ export class GameOnline2p extends GameBase {
       console.log('[ws] close event', event)
       setStatusDisconnected()
     })
-    this.ws.addEventListener('error', () => {
+    this.ws.addEventListener('error', (event) => {
       console.log('[ws] error event', event)
       setStatusDisconnected()
     })
