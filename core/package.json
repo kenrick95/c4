@@ -21,26 +21,38 @@
     "connect-four",
     "game"
   ],
-  "main": "./dist/lib.js",
-  "types": "./src/lib.ts",
-  "source": "./src/lib.ts",
+  "source": "src/lib.ts",
+  "main": "./dist/c4.js",
+  "module": "./dist/c4.mjs",
+  "umd:main": "./dist/c4.umd.js",
+  "unpkg": "./dist/c4.umd.js",
+  "exports": {
+    ".": {
+      "import": {
+        "__source": "./src/lib.ts",
+        "default": "./dist/c4.mjs"
+      },
+      "require": "./dist/c4.js"
+    }
+  },
   "files": [
     "src/",
     "dist/"
   ],
   "scripts": {
-    "build": "yarn clean && parcel build ./src/lib.ts",
+    "dev": "vite",
+    "build": "vite build",
     "clean": "rimraf dist/",
     "prettier": "prettier --write \"./**/*.?(ts|html|scss|css)\"",
     "test": "jest"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.2",
-    "jest": "^27.2.1",
-    "parcel-bundler": "^1.12.4",
-    "prettier": "^2.4.1",
-    "rimraf": "^3.0.2",
-    "ts-jest": "^27.0.5",
-    "typescript": "^4.4.3"
+    "@types/jest": "^29.5.0",
+    "jest": "^29.5.0",
+    "prettier": "^2.8.7",
+    "rimraf": "^5.0.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "~5.0.4",
+    "vite": "^4.2.1"
   }
 }

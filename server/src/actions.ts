@@ -1,6 +1,6 @@
 import { v4 as uuidV4 } from 'uuid'
 import { PlayerId, MatchId, RenewLastSeenAction, AppThunk } from './types'
-import * as WebSocket from 'ws'
+import WebSocket from 'ws'
 import { BoardBase, BoardPiece } from '@kenrick95/c4'
 import {
   MESSAGE_TYPE,

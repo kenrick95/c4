@@ -6,7 +6,8 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es2017",
+    "target": "ES2021",
+    "esModuleInterop": true,
     "strict": true
   },
   "include": ["src/"],
