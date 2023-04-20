@@ -28,7 +28,7 @@
   "source": "./src/index.ts",
   "scripts": {
     "start": "yarn node ./dist/index.js",
-    "start-dev-watch": "vite-node src/index.ts",
+    "dev": "vite-node --watch src/index.ts",
     "build": "vite build",
     "prettier": "prettier --write \"./**/*.?(ts|html|scss|css)\"",
     "test": "echo 'OK'"

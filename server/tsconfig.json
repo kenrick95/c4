@@ -1,14 +1,17 @@
 {
   "compilerOptions": {
-    "strictNullChecks": true,
     "declaration": false,
-    "module": "commonjs",
-    "moduleResolution": "node",
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "target": "ES2021",
     "esModuleInterop": true,
-    "strict": true
+    "experimentalDecorators": true,
+    "isolatedModules": true,
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "strict": true,
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "types": ["node", "vite/client", "uuid", "ws"],
   },
   "include": ["src/"],
   "exclude": ["node_modules", "**/*.spec.ts"]

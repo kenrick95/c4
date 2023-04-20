@@ -1,7 +1,7 @@
 import { BoardBase, BoardPiece } from '@kenrick95/c4'
-import { Player } from '@kenrick95/c4'
-import { onresize, animationFrame } from '@kenrick95/c4'
-import { drawMask, drawCircle, clearCanvas } from './utils'
+import { Player } from '@kenrick95/c4' 
+import { onresize, drawMask, drawCircle, clearCanvas } from './utils'
+import { animationFrame } from '../utils/animate-frame'
 
 export class Board extends BoardBase {
   canvas: HTMLCanvasElement

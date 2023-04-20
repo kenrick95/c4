@@ -38,7 +38,6 @@
     "@kenrick95/c4": "workspace:^"
   },
   "devDependencies": {
-    "@types/node": "^18.15.11",
     "prettier": "^2.8.7",
     "rimraf": "^5.0.0",
     "typescript": "~5.0.4",

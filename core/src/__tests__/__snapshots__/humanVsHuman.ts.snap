@@ -1,8 +1,8 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`PlayerHuman vs PlayerHuman Basic test 1`] = `
-Array [
-  Array [
+exports[`PlayerHuman vs PlayerHuman > Basic test 1`] = `
+[
+  [
     0,
     0,
     0,
@@ -11,7 +11,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -20,7 +20,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -29,7 +29,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -38,7 +38,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -47,7 +47,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -59,9 +59,9 @@ Array [
 ]
 `;
 
-exports[`PlayerHuman vs PlayerHuman Basic test 2`] = `
-Array [
-  Array [
+exports[`PlayerHuman vs PlayerHuman > Basic test 2`] = `
+[
+  [
     0,
     0,
     0,
@@ -70,7 +70,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -79,7 +79,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -88,7 +88,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -97,7 +97,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -106,7 +106,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -118,9 +118,9 @@ Array [
 ]
 `;
 
-exports[`PlayerHuman vs PlayerHuman Basic test 3`] = `
-Array [
-  Array [
+exports[`PlayerHuman vs PlayerHuman > Basic test 3`] = `
+[
+  [
     0,
     0,
     0,
@@ -129,7 +129,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -138,7 +138,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -147,7 +147,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -156,7 +156,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -165,7 +165,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -177,9 +177,9 @@ Array [
 ]
 `;
 
-exports[`PlayerHuman vs PlayerHuman Cannot move on a filled column 1`] = `
-Array [
-  Array [
+exports[`PlayerHuman vs PlayerHuman > Cannot move on a filled column 1`] = `
+[
+  [
     0,
     0,
     0,
@@ -188,7 +188,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -197,7 +197,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -206,7 +206,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -215,7 +215,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -224,7 +224,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -236,9 +236,9 @@ Array [
 ]
 `;
 
-exports[`PlayerHuman vs PlayerHuman Cannot move on a filled column 2`] = `
-Array [
-  Array [
+exports[`PlayerHuman vs PlayerHuman > Cannot move on a filled column 2`] = `
+[
+  [
     0,
     0,
     0,
@@ -247,7 +247,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -256,7 +256,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -265,7 +265,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -274,7 +274,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,
@@ -283,7 +283,7 @@ Array [
     0,
     0,
   ],
-  Array [
+  [
     0,
     0,
     0,

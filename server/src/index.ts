@@ -1,7 +1,5 @@
 import WebSocket, { WebSocketServer } from 'ws'
 
-import * as process from 'process'
-
 import { reducer } from './reducer'
 import thunk, { ThunkMiddleware } from 'redux-thunk'
 import { createStore, applyMiddleware } from 'redux'
@@ -15,7 +13,7 @@ import {
   renewLastSeen,
 } from './actions'
 import { MatchId, State, ActionTypes } from './types'
-  
+
 import { MESSAGE_TYPE, parseMessage } from '@kenrick95/c4'
 
 const port = parseInt(process.env.PORT || '') || 8080
@@ -83,4 +81,9 @@ wss.on('connection', (ws: WebSocket) => {
 })
 setInterval(alivenessLoop, 30000)
 
-console.log('meow')
+if (import.meta.hot) {
+  import.meta.hot.on('vite:beforeFullReload', () => {
+    console.log('Closing server before reloading')
+    wss.close()
+  })
+}

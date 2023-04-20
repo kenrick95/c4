@@ -8,7 +8,8 @@ import {
   GameOnlineMessage,
 } from '@kenrick95/c4'
 import { Player, PlayerHuman, PlayerShadow } from '@kenrick95/c4'
-import { showMessage, getColumnFromCoord } from '@kenrick95/c4'
+import { getColumnFromCoord } from '@kenrick95/c4'
+import { showMessage } from '../utils/message'
 
 enum GAME_MODE {
   FIRST = BoardPiece.PLAYER_1,
@@ -23,9 +24,9 @@ const statusboxBodyConnection = document.querySelector(
 const statusboxBodyPlayer = document.querySelector('.statusbox-body-player')
 
 const C4_SERVER_ENDPOINT =
-  process.env.NODE_ENV === 'production'
-    ? process.env.C4_SERVER_ENDPOINT
-      ? process.env.C4_SERVER_ENDPOINT
+  import.meta.env.MODE === 'production'
+    ? import.meta.env.C4_SERVER_ENDPOINT
+      ? import.meta.env.C4_SERVER_ENDPOINT
       : `wss://c4-server.fly.dev/`
     : `ws://${location.hostname}:8080`
 

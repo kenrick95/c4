@@ -11,4 +11,10 @@ export default defineConfig({
       formats: ['cjs', 'es', 'umd'],
     },
   },
+  test: {
+    include: [
+      '**/__tests__/**/*.[jt]s?(x)',
+      '**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+    ],
+  },
 })

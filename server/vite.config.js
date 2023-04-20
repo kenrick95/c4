@@ -11,4 +11,7 @@ export default defineConfig({
       formats: ['cjs', 'es'],
     },
   },
+  resolve: {
+    conditions: ['__source']
+  },
 })

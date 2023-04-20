@@ -1,4 +1,46 @@
 import { Board } from './index'
+/**
+ * From Mozilla Developer Network
+ * https://developer.mozilla.org/en-US/docs/Web/Events/resize
+ */
+export function onresize(): { add: Function } {
+  const callbacks: Array<Function> = []
+  let running: boolean = false
+
+  // Fired on resize event.
+  function resize() {
+    if (!running) {
+      running = true
+
+      if (window.requestAnimationFrame)
+        window.requestAnimationFrame(runCallbacks)
+      else setTimeout(runCallbacks, 66)
+    }
+  }
+
+  // Run the actual callbacks.
+  function runCallbacks() {
+    callbacks.forEach((callback: Function): void => {
+      callback()
+    })
+
+    running = false
+  }
+
+  // Adds callback to loop.
+  function addCallback(callback: Function): void {
+    if (callback) callbacks.push(callback)
+  }
+
+  return {
+    // Public method to add additional callback.
+    add: (callback: Function) => {
+      if (!callbacks.length) window.addEventListener('resize', resize)
+
+      addCallback(callback)
+    },
+  }
+}
 
 export function drawCircle(
   context: CanvasRenderingContext2D,
