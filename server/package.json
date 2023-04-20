@@ -1,6 +1,8 @@
 {
   "name": "@kenrick95/c4-server",
+  "private": true,
   "version": "1.0.0",
+  "type": "module",
   "description": "Server part of Connect Four game to handle player-to-player communication in browser",
   "repository": {
     "type": "git",

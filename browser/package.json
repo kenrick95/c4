@@ -1,5 +1,6 @@
 {
   "name": "@kenrick95/c4-browser",
+  "private": true,
   "version": "1.0.0",
   "description": "Connect Four game in browser",
   "repository": {
@@ -27,7 +28,7 @@
     "dist/"
   ],
   "scripts": {
-    "start": "vite",
+    "dev": "vite",
     "build": "vite build",
     "build-gh-pages": "vite build --base=\"https://kenrick95.github.io/c4/\"",
     "prettier": "prettier --write \"./**/*.?(ts|html|scss|css)\"",
