@@ -24,7 +24,7 @@
     "node": "18.x",
     "yarn": "3.x"
   },
-  "packageManager": "yarn@3.2.3",
+  "packageManager": "yarn@3.5.0",
   "homepage": "https://github.com/kenrick95/c4",
   "license": "MIT",
   "keywords": [
