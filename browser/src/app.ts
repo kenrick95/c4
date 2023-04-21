@@ -1,5 +1,3 @@
-import 'es6-promise/auto'
-import 'url-search-params-polyfill'
 import * as Game from './game'
 import { Board } from './board'
 import './style.css'

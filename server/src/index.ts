@@ -1,5 +1,4 @@
-import * as WebSocket from 'ws'
-import * as process from 'process'
+import WebSocket, { WebSocketServer } from 'ws'
 
 import { reducer } from './reducer'
 import thunk, { ThunkMiddleware } from 'redux-thunk'
@@ -15,13 +14,10 @@ import {
 } from './actions'
 import { MatchId, State, ActionTypes } from './types'
 
-import {
-  MESSAGE_TYPE,
-  parseMessage,
-} from '@kenrick95/c4'
+import { MESSAGE_TYPE, parseMessage } from '@kenrick95/c4'
 
 const port = parseInt(process.env.PORT || '') || 8080
-const wss = new WebSocket.Server({ port: port })
+const wss = new WebSocketServer({ port: port })
 console.log(`[server] Started listening on ws://localhost:${port}`)
 
 function configureStore() {
@@ -84,3 +80,10 @@ wss.on('connection', (ws: WebSocket) => {
   })
 })
 setInterval(alivenessLoop, 30000)
+
+if (import.meta.hot) {
+  import.meta.hot.on('vite:beforeFullReload', () => {
+    console.log('Closing server before reloading')
+    wss.close()
+  })
+}

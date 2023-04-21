@@ -1,4 +1,4 @@
-import * as WebSocket from 'ws'
+import WebSocket from 'ws'
 import { ThunkAction } from 'redux-thunk'
 import { Action } from 'redux'
 import { ServerGame } from './game/game'

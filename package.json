@@ -2,7 +2,6 @@
   "name": "@kenrick95/c4-root",
   "version": "0.0.0",
   "description": "Connect Four game",
-  "main": "./dist/lib.js",
   "private": true,
   "workspaces": [
     "core",
@@ -22,7 +21,7 @@
     "url": "https://github.com/kenrick95/c4/issues"
   },
   "engines": {
-    "node": "16.x",
+    "node": "18.x",
     "yarn": "3.x"
   },
   "packageManager": "yarn@3.2.3",
@@ -38,11 +37,11 @@
     "dist/"
   ],
   "scripts": {
-    "start": "concurrently --handle-input \"yarn:start-server\" \"yarn:start-browser\"",
-    "start-browser": "yarn workspace @kenrick95/c4-browser start",
-    "start-server": "yarn workspace @kenrick95/c4-server start-dev-watch"
+    "dev": "concurrently --handle-input \"yarn:dev-server\" \"yarn:dev-browser\"",
+    "dev-browser": "yarn workspace @kenrick95/c4-browser dev",
+    "dev-server": "yarn workspace @kenrick95/c4-server dev"
   },
   "devDependencies": {
-    "concurrently": "^6.2.1"
+    "concurrently": "^8.0.1"
   }
 }
