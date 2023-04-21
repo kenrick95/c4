@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
-import { resolve } from 'path'
+import { resolve } from 'path' 
+import dts from 'vite-plugin-dts'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,6 +12,7 @@ export default defineConfig({
       formats: ['cjs', 'es', 'umd'],
     },
   },
+  plugins: [dts()],
   test: {
     include: [
       '**/__tests__/**/*.[jt]s?(x)',
