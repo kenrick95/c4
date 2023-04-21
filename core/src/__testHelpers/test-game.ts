@@ -3,8 +3,8 @@ import { BoardBase } from '../board'
 import { Player } from '../player'
 
 export class TestGame extends GameBase {
-  afterMoveResolve: null | (() => void) = null
-  afterMovePromise: null | Promise<void> = null
+  afterMoveResolve: null | ((action: number) => void) = null
+  afterMovePromise: null | Promise<number> = null
 
   constructor(players: Array<Player>, board: BoardBase) {
     super(players, board)
@@ -17,9 +17,9 @@ export class TestGame extends GameBase {
   beforeMoveApplied() {
     // no-op
   }
-  afterMove() {
+  afterMove(action: number) {
     if (this.afterMoveResolve) {
-      this.afterMoveResolve()
+      this.afterMoveResolve(action)
     }
     this.renewAfterMovePromise()
   }

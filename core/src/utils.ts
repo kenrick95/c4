@@ -37,12 +37,12 @@ export function getRandomColumnNumber(): number {
   return Math.floor(Math.random() * BoardBase.COLUMNS)
 }
 
-export function choose(choice: Array<any>): any {
+export function choose<T>(choice: Array<T>): T {
   return choice[Math.floor(Math.random() * choice.length)]
 }
 
-export function clone(array: Array<Array<any>>): Array<Array<any>> {
-  const arr: Array<Array<any>> = []
+export function clone<T>(array: Array<Array<T>>): Array<Array<T>> {
+  const arr: Array<Array<T>> = []
 
   for (let i: number = 0; i < array.length; i++) arr[i] = array[i].slice()
 
@@ -57,7 +57,7 @@ export function getMockPlayerAction(
   success: boolean
   map: Array<Array<number>>
 } {
-  const clonedMap: Array<Array<any>> = clone(map)
+  const clonedMap: Array<Array<number>> = clone(map)
 
   if (
     clonedMap[0][column] !== BoardPiece.EMPTY ||
