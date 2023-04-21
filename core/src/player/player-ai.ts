@@ -100,17 +100,14 @@ export class PlayerAi extends Player {
   ): number {
     const isWon = winnerBoardPiece === this.boardPiece
     const isLost = winnerBoardPiece === this.enemyBoardPiece
-
-    // value is slightly higher than BIG_NEGATIVE_NUMBER & lower than BIG_POSITIVE_NUMBER
-    // so that minState(...) and maxState(...) could "catch"" this value and AI take this move
-    // This is just my hypothesis, I haven't tested without it yet.
-    // My point is that this AI implementation is basically a heuristic function :P
-    if (isWon) {
-      returnValue = BIG_POSITIVE_NUMBER - 100
-    } else if (isLost) {
-      returnValue = BIG_NEGATIVE_NUMBER + 100
-    }
     returnValue -= depth * depth
+    if (isWon) {
+      // Prefer to win in closer steps
+      returnValue = BIG_POSITIVE_NUMBER - 100 - depth * depth
+    } else if (isLost) {
+      // Prefer to lose in more steps
+      returnValue = BIG_NEGATIVE_NUMBER + 100 + depth * depth
+    }
     return returnValue
   }
   private getMove(
@@ -128,11 +125,12 @@ export class PlayerAi extends Player {
 
     if (depth >= PlayerAi.MAX_DEPTH || isWon || isLost) {
       return {
-        value: this.transformValues(
-          stateValue.chain * this.ownBoardPieceValue,
-          stateValue.winnerBoardPiece,
-          depth
-        ),
+        value:
+          this.transformValues(
+            stateValue.chain,
+            stateValue.winnerBoardPiece,
+            depth
+          ) * this.ownBoardPieceValue,
         move: -1, // leaf node
       }
     }
@@ -159,24 +157,25 @@ export class PlayerAi extends Player {
         this.boardPiece,
         column
       )
-      if (actionSuccessful) {
-        const { value: nextValue } = this.getMove(nextState, depth, alpha, beta)
-        if (nextValue > value) {
-          value = nextValue
-          moveQueue = [column]
-        } else if (nextValue === value) {
-          moveQueue.push(column)
-        }
-
-        // alpha-beta pruning
-        if (value > beta) {
-          return {
-            value: value,
-            move: choose(moveQueue),
-          }
-        }
-        alpha = Math.max(alpha, value)
+      if (!actionSuccessful) {
+        continue
       }
+      const { value: nextValue } = this.getMove(nextState, depth, alpha, beta)
+      if (nextValue > value) {
+        value = nextValue
+        moveQueue = [column]
+      } else if (nextValue === value) {
+        moveQueue.push(column)
+      }
+
+      // alpha-beta pruning
+      if (value > beta) {
+        return {
+          value: value,
+          move: choose(moveQueue),
+        }
+      }
+      alpha = Math.max(alpha, value)
     }
 
     return {
@@ -201,25 +200,27 @@ export class PlayerAi extends Player {
         this.enemyBoardPiece,
         column
       )
-      if (actionSuccessful) {
-        const { value: nextValue } = this.getMove(nextState, depth, alpha, beta)
-        if (nextValue < value) {
-          value = nextValue
-          moveQueue = [column]
-        } else if (nextValue === value) {
-          moveQueue.push(column)
-        }
-
-        // alpha-beta pruning
-        if (value < alpha) {
-          return {
-            value: value,
-            move: choose(moveQueue),
-          }
-        }
-        beta = Math.min(beta, value)
+      if (!actionSuccessful) {
+        continue
       }
+      const { value: nextValue } = this.getMove(nextState, depth, alpha, beta)
+      if (nextValue < value) {
+        value = nextValue
+        moveQueue = [column]
+      } else if (nextValue === value) {
+        moveQueue.push(column)
+      }
+
+      // alpha-beta pruning
+      if (value < alpha) {
+        return {
+          value: value,
+          move: choose(moveQueue),
+        }
+      }
+      beta = Math.min(beta, value)
     }
+
     return {
       value: value,
       move: choose(moveQueue),
