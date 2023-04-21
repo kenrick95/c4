@@ -32,7 +32,6 @@
     "build": "vite build",
     "build-gh-pages": "vite build --base=\"https://kenrick95.github.io/c4/\"",
     "prettier": "prettier --write \"./**/*.?(ts|html|scss|css)\"",
-    "clean": "rimraf dist/",
     "test": "echo 'OK'"
   },
   "dependencies": {
@@ -40,7 +39,6 @@
   },
   "devDependencies": {
     "prettier": "^2.8.7",
-    "rimraf": "^5.0.0",
     "typescript": "~5.0.4",
     "vite": "^4.3.1"
   }

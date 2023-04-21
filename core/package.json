@@ -41,15 +41,14 @@
     "dist/"
   ],
   "scripts": {
+    "prepack": "yarn build",
     "dev": "vite",
     "build": "vite build",
-    "clean": "rimraf dist/",
     "prettier": "prettier --write \"./**/*.?(ts|html|scss|css)\"",
     "test": "vitest --watch=false"
   },
   "devDependencies": {
     "prettier": "^2.8.7",
-    "rimraf": "^5.0.0",
     "typescript": "~5.0.4",
     "vite": "^4.3.1",
     "vitest": "^0.30.1"
