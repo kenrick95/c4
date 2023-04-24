@@ -79,6 +79,10 @@ h2 {
   padding: 0.5em 1em 1em 1em;
   max-width: 30em;
 }
+.mode-chooser-list {
+  list-style: none;
+  padding-left: 0;
+}
 .copy-box {
   width: 100%;
   max-width: 28em;

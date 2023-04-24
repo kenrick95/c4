@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
           Game.initGameLocalAi()
         } else if (chosenMode === 'online-human') {
           Game.initGameOnline2p()
+        } else if (chosenMode === 'ai-vs-ai') {
+          Game.initGameAiVsAi()
         }
 
         modeDOM.classList.add('invisible')

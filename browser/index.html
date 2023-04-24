@@ -26,33 +26,53 @@
           for how to play.
         </p>
         <h2>Mode chooser</h2>
-        <label
-          ><input
-            class="mode-chooser-input"
-            type="radio"
-            name="mode"
-            value="offline-ai"
-            checked
-          />
-          Offline: Human player vs AI player</label
-        ><br />
-        <label
-          ><input
-            class="mode-chooser-input"
-            type="radio"
-            name="mode"
-            value="offline-human"
-          />
-          Offline: Human player vs human player</label
-        ><br /><label
-          ><input
-            class="mode-chooser-input"
-            type="radio"
-            name="mode"
-            value="online-human"
-          />
-          Online: Human player vs human player</label
-        ><br />
+        <ul class="mode-chooser-list">
+          <li>
+            <label
+              ><input
+                class="mode-chooser-input"
+                type="radio"
+                name="mode"
+                value="offline-ai"
+                checked
+              />
+              Offline: Human player vs AI player</label
+            >
+          </li>
+          <li>
+            <label
+              ><input
+                class="mode-chooser-input"
+                type="radio"
+                name="mode"
+                value="offline-human"
+              />
+              Offline: Human player vs human player</label
+            >
+          </li>
+          <li>
+            <label
+              ><input
+                class="mode-chooser-input"
+                type="radio"
+                name="mode"
+                value="ai-vs-ai"
+              />
+              Spectator: AI player vs AI player</label
+            >
+          </li>
+          <li>
+            <label
+              ><input
+                class="mode-chooser-input"
+                type="radio"
+                name="mode"
+                value="online-human"
+              />
+              Online: Human player vs human player</label
+            >
+          </li>
+        </ul>
         <button class="mode-chooser-submit">Start game</button>
       </div>
     </div>
