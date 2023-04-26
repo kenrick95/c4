@@ -147,9 +147,11 @@ export class GameOnline2p extends GameBase {
           console.log('[url] Share this', shareUrl)
           showMessage(
             `<h1>Share this URL</h1>` +
+              `<p>` +
               `Please share this URL to your friend to start the game: ` +
               `<input type="text" id="copy-box" class="copy-box" readonly value="${shareUrl}" />` +
-              `<button type="button" id="copy-button">Copy</button>`
+              `<button type="button" id="copy-button">Copy</button>` +
+              `</p>`
           )
           // Select all
           const copyBox: HTMLInputElement | null = document.getElementById(

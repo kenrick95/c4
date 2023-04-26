@@ -3,9 +3,15 @@ import { Board } from './board'
 import './style.css'
 
 document.addEventListener('DOMContentLoaded', () => {
-  const canvas = document.querySelector('canvas')
+  const canvas = document.querySelector('.section-canvas') as HTMLCanvasElement
+
   if (!canvas) {
-    console.error('Canvas DOM is null')
+    console.error('Canvas element not found')
+    return
+  }
+  const modeDOM = document.querySelector('.mode-chooser') as HTMLDialogElement
+  if (!modeDOM) {
+    console.error('Mode element not found ')
     return
   }
   const board = new Board(canvas)
@@ -15,45 +21,39 @@ document.addEventListener('DOMContentLoaded', () => {
   const connectionMatchId = searchParams.get('matchId')
   if (!!connectionMatchId) {
     Game.initGameOnline2p()
-    const modeDOM = document.querySelector('.mode')
-    if (modeDOM) {
-      modeDOM.classList.add('hidden')
-    }
+    return
   }
+  modeDOM.showModal()
 
-  const modeChooser = document.querySelector('.mode-chooser-submit')
-  if (modeChooser) {
-    modeChooser.addEventListener('click', () => {
-      const modeDOM = document.querySelector('.mode')
-      if (modeDOM) {
-        const modeInputDOMs = <NodeListOf<HTMLInputElement>>(
-          document.querySelectorAll('.mode-chooser-input')
-        )
-        let chosenMode = null
-        for (let i = 0; i < modeInputDOMs.length; i++) {
-          chosenMode = modeInputDOMs[i].checked ? modeInputDOMs[i].value : null
-          if (chosenMode) {
-            break
-          }
-        }
-        if (!chosenMode) {
-          chosenMode = 'offline-ai'
-        }
-        if (chosenMode === 'offline-human') {
-          Game.initGameLocal2p()
-        } else if (chosenMode === 'offline-ai') {
-          Game.initGameLocalAi()
-        } else if (chosenMode === 'online-human') {
-          Game.initGameOnline2p()
-        } else if (chosenMode === 'ai-vs-ai') {
-          Game.initGameAiVsAi()
-        }
+  const modeChooser = document.querySelector(
+    '.mode-chooser-form'
+  ) as HTMLFormElement
 
-        modeDOM.classList.add('invisible')
-        modeDOM.addEventListener('transitionend', () => {
-          modeDOM.classList.add('hidden')
-        })
-      }
-    })
+  if (!modeChooser) {
+    console.error('.mode-chooser-form not found ')
+    return
+  }
+  modeDOM.addEventListener('cancel', (ev) => {
+    ev.preventDefault()
+  })
+
+  modeDOM.addEventListener('close', (ev) => {
+    const formData = new FormData(modeChooser)
+    initGame(formData.get('mode') as string)
+  })
+
+  function initGame(chosenMode: string | null) {
+    console.log('initGame chosenMode:', chosenMode)
+    if (chosenMode === 'offline-human') {
+      Game.initGameLocal2p()
+    } else if (chosenMode === 'offline-ai') {
+      Game.initGameLocalAi()
+    } else if (chosenMode === 'online-human') {
+      Game.initGameOnline2p()
+    } else if (chosenMode === 'ai-vs-ai') {
+      Game.initGameAiVsAi()
+    } else {
+      console.error('Invalid game mode received', chosenMode)
+    }
   }
 })

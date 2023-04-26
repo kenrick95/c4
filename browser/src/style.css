@@ -54,31 +54,22 @@ h2 {
 .section {
   margin: 1em auto 0 auto;
 }
-.mode,
-.message {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 10;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.7);
-  transition: opacity 0.2s ease-in;
-  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
-}
+
 .mode-chooser,
 .message-body {
-  flex: 0 1 auto;
   text-align: left;
   background: white;
+  border: none;
   border-radius: 2px;
-  margin: 0.5em;
   padding: 0.5em 1em 1em 1em;
   max-width: 30em;
 }
+.mode-chooser::backdrop,
+.message-body::backdrop {
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+}
+
 .mode-chooser-list {
   list-style: none;
   padding-left: 0;
@@ -88,9 +79,6 @@ h2 {
   max-width: 28em;
   margin-right: 1em;
   padding: 6px 12px;
-}
-.invisible {
-  opacity: 0;
 }
 .hidden {
   display: none;
