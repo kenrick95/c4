@@ -163,10 +163,24 @@ export class GameOnline2p extends GameBase {
           // Click to copy
           document
             .getElementById('copy-button')
-            ?.addEventListener('click', () => {
-              copyBox?.select()
-              copyBox?.setSelectionRange(0, 99999)
-              document.execCommand('copy')
+            ?.addEventListener('click', async () => {
+              let isClipboardApiSuccessful = false
+
+              if (navigator.clipboard) {
+                try {
+                  await navigator.clipboard.writeText(shareUrl)
+                  console.log('Using Clipboard API to write share url into clipboard')
+                  isClipboardApiSuccessful = true
+                } catch (err) {}
+              }
+
+              if (!isClipboardApiSuccessful) {
+                // Old method: use as fallback
+                copyBox?.select()
+                copyBox?.setSelectionRange(0, 99999)
+                document.execCommand('copy')
+                console.log('Using fallback method to write share url into clipboard')
+              }
             })
         }
         break
