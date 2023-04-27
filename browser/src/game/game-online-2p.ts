@@ -56,6 +56,17 @@ export class GameOnline2p extends GameBase {
     this.initConnection()
   }
 
+  end() {
+    super.end()
+    this.endConnection()
+  }
+
+  endConnection() {
+    if (this.ws) {
+      this.ws.close()
+    }
+  }
+
   initConnection() {
     this.connectionPlayerId = null
     this.connectionMatchId = null
@@ -88,6 +99,12 @@ export class GameOnline2p extends GameBase {
       }
       if (statusboxBodyConnection) {
         statusboxBodyConnection.textContent = 'Connected to server'
+      } 
+      if (statusboxBodyGame) {
+        statusboxBodyGame.textContent = ``
+      }
+      if (statusboxBodyPlayer) {
+        statusboxBodyPlayer.textContent = ``
       }
     })
     this.ws.addEventListener('close', (event) => {
@@ -144,6 +161,7 @@ export class GameOnline2p extends GameBase {
         {
           this.connectionMatchId = message.payload.matchId
           const shareUrl = `${location.href}?matchId=${this.connectionMatchId}`
+          // TODO: button to copy share url again?
           console.log('[url] Share this', shareUrl)
           showMessage(
             `<h1>Share this URL</h1>` +
@@ -169,7 +187,9 @@ export class GameOnline2p extends GameBase {
               if (navigator.clipboard) {
                 try {
                   await navigator.clipboard.writeText(shareUrl)
-                  console.log('Using Clipboard API to write share url into clipboard')
+                  console.log(
+                    'Using Clipboard API to write share url into clipboard'
+                  )
                   isClipboardApiSuccessful = true
                 } catch (err) {}
               }
@@ -179,7 +199,9 @@ export class GameOnline2p extends GameBase {
                 copyBox?.select()
                 copyBox?.setSelectionRange(0, 99999)
                 document.execCommand('copy')
-                console.log('Using fallback method to write share url into clipboard')
+                console.log(
+                  'Using fallback method to write share url into clipboard'
+                )
               }
             })
         }
@@ -340,14 +362,28 @@ export function initGameOnline2p() {
     gameMode,
   })
   statusbox?.classList.remove('hidden')
+  statusboxBodyConnection?.classList.remove('hidden')
 
-  canvas.addEventListener('click', async (event: MouseEvent) => {
+  async function handleCanvasClick(event: MouseEvent) {
     if (!game.isGameWon) {
+      if (!canvas) {
+        return
+      }
       const rect = canvas.getBoundingClientRect()
       const x = event.clientX - rect.left
       const y = event.clientY - rect.top
       const column = getColumnFromCoord({ x: x, y: y })
       game.playerMain.doAction(column)
     }
-  })
+  }
+
+  canvas.addEventListener('click', handleCanvasClick)
+
+  return {
+    end: () => { 
+      game.end()
+      canvas.removeEventListener('click', handleCanvasClick)
+      statusbox?.classList.add('hidden')
+    },
+  }
 }

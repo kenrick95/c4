@@ -15,6 +15,9 @@ class GameAiVsAi extends GameLocal {
   constructor(players: Array<PlayerAi>, board: BoardBase) {
     super(players, board)
   }
+  announceWinner(winnerBoardPiece: BoardPiece): void {
+    super.announceWinner(winnerBoardPiece)
+  }
 }
 export function initGameAiVsAi() {
   const canvas = document.querySelector('canvas')
@@ -31,11 +34,19 @@ export function initGameAiVsAi() {
   statusboxBodyConnection?.classList.add('hidden')
   game.start()
 
-  canvas.addEventListener('click', async (event: MouseEvent) => {
+  async function handleCanvasClick(event: MouseEvent) {
     if (game.isGameWon) {
       game.reset()
       await animationFrame()
       game.start()
     }
-  })
+  }
+
+  canvas.addEventListener('click', handleCanvasClick)
+  return {
+    end: () => {
+      game.end()
+      canvas.removeEventListener('click', handleCanvasClick)
+    },
+  }
 }

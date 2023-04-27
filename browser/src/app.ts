@@ -19,10 +19,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const searchParams = new URLSearchParams(location.search)
   const connectionMatchId = searchParams.get('matchId')
+  const backToModeSelector = document.querySelector(
+    '.statusbox-button-back'
+  ) as HTMLDivElement
+  let currentGameHandler:
+    | {
+        end: () => void
+      }
+    | undefined
+    | null = null
+
   if (!!connectionMatchId) {
-    Game.initGameOnline2p()
+    currentGameHandler = Game.initGameOnline2p()
     return
   }
+  backToModeSelector?.classList.add('hidden')
   modeDOM.showModal()
 
   const modeChooser = document.querySelector(
@@ -33,6 +44,15 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('.mode-chooser-form not found ')
     return
   }
+
+  backToModeSelector?.addEventListener('click', () => {
+    if (currentGameHandler && currentGameHandler.end) {
+      currentGameHandler.end()
+    }
+    backToModeSelector?.classList.add('hidden')
+    modeDOM.showModal()
+  })
+
   modeDOM.addEventListener('cancel', (ev) => {
     ev.preventDefault()
   })
@@ -44,14 +64,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function initGame(chosenMode: string | null) {
     console.log('initGame chosenMode:', chosenMode)
+    backToModeSelector?.classList.remove('hidden')
     if (chosenMode === 'offline-human') {
-      Game.initGameLocal2p()
+      currentGameHandler = Game.initGameLocal2p()
     } else if (chosenMode === 'offline-ai') {
-      Game.initGameLocalAi()
+      currentGameHandler = Game.initGameLocalAi()
     } else if (chosenMode === 'online-human') {
-      Game.initGameOnline2p()
+      currentGameHandler = Game.initGameOnline2p()
     } else if (chosenMode === 'ai-vs-ai') {
-      Game.initGameAiVsAi()
+      currentGameHandler = Game.initGameAiVsAi()
     } else {
       console.error('Invalid game mode received', chosenMode)
     }
