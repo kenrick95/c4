@@ -13,6 +13,9 @@ export function showMessage(message: string = ''): void {
     return
   }
 
+  if (messageDOM.hasAttribute('open')) {
+    messageDOM.close()
+  }
   messageContentDOM.innerHTML = message
   messageDOM.showModal()
 }

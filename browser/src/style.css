@@ -38,7 +38,6 @@ button {
 }
 button:hover {
   cursor: pointer;
-  outline: 0;
   box-shadow: inset 0 3px 5px rgba(255, 255, 255, 0.125);
   border: 1px solid #51b4db;
   background: #76c9eb;
@@ -54,7 +53,11 @@ h2 {
 .section {
   margin: 1em auto 0 auto;
 }
-
+.header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+}
 .mode-chooser,
 .message-body {
   text-align: left;
@@ -85,15 +88,30 @@ h2 {
 }
 .footer {
   font-size: 0.8em;
+  margin-bottom: 2em;
 }
 .statusbox {
   padding: 1em;
   width: 100%;
   background-color: rgba(255, 255, 255, 0.9);
 }
-.statusbox-body {
+.statusbox-body,
+.statusbox-controls {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
   max-width: 550px;
   margin: 0 auto;
+}
+.statusbox-controls {
+  margin-top: 1em;
+  justify-content: center;
+}
+.statusbox-button-back  { 
+  border: 1px solid #a1a1a1;
+  background: #d8d8d8;
+}
+.statusbox-button-back:hover { 
+  border: 1px solid #6e6e6e;
+  background: #a1a1a1;
 }

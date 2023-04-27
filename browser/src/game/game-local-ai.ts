@@ -4,5 +4,5 @@ import { GameLocal, initGameLocal } from './game-local'
 
 class GameLocalAi extends GameLocal {}
 export function initGameLocalAi() {
-  initGameLocal(GameLocalAi, new PlayerAi(BoardPiece.PLAYER_2))
+  return initGameLocal(GameLocalAi, new PlayerAi(BoardPiece.PLAYER_2))
 }

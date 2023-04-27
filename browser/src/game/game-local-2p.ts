@@ -4,5 +4,5 @@ import { GameLocal, initGameLocal } from './game-local'
 
 class GameLocal2p extends GameLocal {}
 export function initGameLocal2p() {
-  initGameLocal(GameLocal2p, new PlayerHuman(BoardPiece.PLAYER_2))
+  return initGameLocal(GameLocal2p, new PlayerHuman(BoardPiece.PLAYER_2))
 }

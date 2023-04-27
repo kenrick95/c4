@@ -7,6 +7,7 @@ export abstract class GameBase<P extends Player = Player> {
   currentPlayerId: number
   isMoveAllowed: boolean = false
   isGameWon: boolean = false
+  isGameEnded: boolean = false
 
   constructor(players: Array<P>, board: BoardBase) {
     this.board = board
@@ -20,10 +21,17 @@ export abstract class GameBase<P extends Player = Player> {
     this.board.reset()
     // this.board.debug()
   }
+  end() {
+    this.reset()
+    this.isGameEnded = true
+  }
 
   async start() {
     this.isMoveAllowed = true
     while (!this.isGameWon) {
+      if (this.isGameEnded) {
+        return
+      }
       await this.move()
       const winner = this.board.getWinner()
       if (winner !== BoardPiece.EMPTY) {
@@ -36,12 +44,18 @@ export abstract class GameBase<P extends Player = Player> {
     }
   }
   async move() {
+    if (this.isGameEnded) {
+      return
+    }
     if (!this.isMoveAllowed) {
       return
     }
     const currentPlayer = this.players[this.currentPlayerId]
     let actionSuccesful = false
     while (!actionSuccesful) {
+      if (this.isGameEnded) {
+        return
+      }
       this.waitingForMove()
       const action = await currentPlayer.getAction(this.board)
       this.isMoveAllowed = false

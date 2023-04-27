@@ -96,12 +96,15 @@ export function initGameLocal(
     statusboxBodyPlayer.textContent = `Player 1 🔴`
   }
 
-  canvas.addEventListener('click', async (event: MouseEvent) => {
+  async function handleCanvasClick(event: MouseEvent) {
     if (game.isGameWon) {
       game.reset()
       await animationFrame()
       game.start()
     } else {
+      if (!canvas) {
+        return
+      }
       const rect = canvas.getBoundingClientRect()
       const x = event.clientX - rect.left
       const y = event.clientY - rect.top
@@ -115,5 +118,14 @@ export function initGameLocal(
         secondPlayer.doAction(column)
       }
     }
-  })
+  }
+
+  canvas.addEventListener('click', handleCanvasClick)
+  return {
+    end: () => {
+      game.end()
+      canvas.removeEventListener('click', handleCanvasClick)
+      statusbox?.classList.add('hidden')
+    }
+  }
 }
