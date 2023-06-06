@@ -53,7 +53,7 @@
   "devDependencies": {
     "prettier": "^2.8.7",
     "typescript": "~4.8.4",
-    "vite": "^4.3.1",
+    "vite": "^4.3.9",
     "vite-dts": "^1.0.4",
     "vite-plugin-dts": "^2.3.0",
     "vitest": "^0.30.1"
