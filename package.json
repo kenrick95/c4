@@ -22,9 +22,9 @@
   },
   "engines": {
     "node": "18.x",
-    "yarn": "3.x"
+    "yarn": "4.x"
   },
-  "packageManager": "yarn@3.5.0",
+  "packageManager": "yarn@4.0.1",
   "homepage": "https://github.com/kenrick95/c4",
   "license": "MIT",
   "keywords": [
