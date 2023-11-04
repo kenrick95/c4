@@ -10,7 +10,7 @@ COPY server/package.json ./server/
 
 RUN yarn install --frozen-lockfile
 COPY . .
-RUN yarn workspaces foreach --verbose --topological run build
+RUN yarn workspaces foreach --all --verbose --topological run build
 
 EXPOSE ${PORT}
 CMD [ "node", "./server/dist/index.js"]

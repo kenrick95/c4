@@ -25,6 +25,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Run Tests
-        run: yarn workspaces foreach --verbose run test
+        run: yarn workspaces foreach --all --verbose run test
       - name: Run Builds
-        run: yarn workspaces foreach --verbose --topological run build
+        run: yarn workspaces foreach --all --verbose --topological run build
