@@ -22,9 +22,9 @@
   },
   "engines": {
     "node": "18.x",
-    "yarn": "3.x"
+    "yarn": "4.x"
   },
-  "packageManager": "yarn@3.5.0",
+  "packageManager": "yarn@4.0.1",
   "homepage": "https://github.com/kenrick95/c4",
   "license": "MIT",
   "keywords": [
@@ -42,6 +42,6 @@
     "dev-server": "yarn workspace @kenrick95/c4-server dev"
   },
   "devDependencies": {
-    "concurrently": "^8.0.1"
+    "concurrently": "^8.2.2"
   }
 }
