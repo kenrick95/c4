@@ -14,6 +14,7 @@ export type MatchState = {
 }
 export type PlayerState = {
   playerId: PlayerId
+  playerName: string
   /**
    * JS timestamp
    */
@@ -54,6 +55,7 @@ export type NewPlayerConnectionAction = {
   type: 'NEW_PLAYER_CONNECTION'
   payload: {
     playerId: PlayerId
+    playerName: string
     ws: WebSocket
   }
 }

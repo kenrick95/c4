@@ -26,8 +26,8 @@ export function initGameAiVsAi() {
     return
   }
   const board = new Board(canvas)
-  const firstPlayer = new PlayerAi(BoardPiece.PLAYER_1)
-  const secondPlayer = new PlayerAi(BoardPiece.PLAYER_2)
+  const firstPlayer = new PlayerAi(BoardPiece.PLAYER_1, `AI Player 1`)
+  const secondPlayer = new PlayerAi(BoardPiece.PLAYER_2, `AI Player 2`)
   const game = new GameAiVsAi([firstPlayer, secondPlayer], board)
 
   statusbox?.classList.remove('hidden')

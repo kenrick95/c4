@@ -50,14 +50,14 @@ export function clone<T>(array: Array<Array<T>>): Array<Array<T>> {
 }
 
 export function getMockPlayerAction(
-  map: Array<Array<number>>,
+  map: Array<Array<BoardPiece>>,
   boardPiece: BoardPiece,
   column: number
 ): {
   success: boolean
-  map: Array<Array<number>>
+  map: Array<Array<BoardPiece>>
 } {
-  const clonedMap: Array<Array<number>> = clone(map)
+  const clonedMap: Array<Array<BoardPiece>> = clone(map)
 
   if (
     clonedMap[0][column] !== BoardPiece.EMPTY ||

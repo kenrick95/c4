@@ -12,8 +12,8 @@ export class PlayerAi extends Player {
   static readonly MAX_DEPTH = 4
   private ownBoardPieceValue: number
   private enemyBoardPiece: BoardPiece
-  constructor(boardPiece: BoardPiece) {
-    super(boardPiece)
+  constructor(boardPiece: BoardPiece, label: string) {
+    super(boardPiece, label)
     this.ownBoardPieceValue = this.getBoardPieceValue(boardPiece)
     this.enemyBoardPiece =
       boardPiece === BoardPiece.PLAYER_1
@@ -27,7 +27,7 @@ export class PlayerAi extends Player {
       ? 1
       : -1
   }
-  private getStateValue(state: Array<Array<number>>): {
+  private getStateValue(state: Array<Array<BoardPiece>>): {
     winnerBoardPiece: BoardPiece
     chain: number
   } {
@@ -111,7 +111,7 @@ export class PlayerAi extends Player {
     return returnValue
   }
   private getMove(
-    state: Array<Array<number>>,
+    state: Array<Array<BoardPiece>>,
     depth: number,
     alpha: number,
     beta: number
@@ -141,7 +141,7 @@ export class PlayerAi extends Player {
   }
 
   private maxState(
-    state: Array<Array<number>>,
+    state: Array<Array<BoardPiece>>,
     depth: number,
     alpha: number,
     beta: number
@@ -184,7 +184,7 @@ export class PlayerAi extends Player {
     }
   }
   private minState(
-    state: Array<Array<number>>,
+    state: Array<Array<BoardPiece>>,
     depth: number,
     alpha: number,
     beta: number

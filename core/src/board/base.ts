@@ -2,10 +2,10 @@ import { Player } from '../player'
 import { getMockPlayerAction } from '../utils'
 
 export enum BoardPiece {
-  EMPTY,
-  PLAYER_1,
-  PLAYER_2,
-  DRAW,
+  EMPTY = ' ',
+  PLAYER_1 = '🔴',
+  PLAYER_2 = '🔵',
+  DRAW = 'D',
 }
 export class BoardBase {
   static readonly ROWS: number = 6
@@ -24,7 +24,7 @@ export class BoardBase {
   static MESSAGE_Y_BEGIN: number
   static SCALE: number
 
-  map: Array<Array<number>>
+  map: Array<Array<BoardPiece>>
   protected winnerBoardPiece: BoardPiece
 
   constructor() {

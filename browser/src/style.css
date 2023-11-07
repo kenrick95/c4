@@ -58,7 +58,7 @@ h2 {
   top: 0;
   background-color: white;
 }
-.mode-chooser,
+.init-screen,
 .message-body {
   text-align: left;
   background: white;
@@ -67,15 +67,28 @@ h2 {
   padding: 0.5em 1em 1em 1em;
   max-width: 30em;
 }
-.mode-chooser::backdrop,
+.init-screen::backdrop,
 .message-body::backdrop {
   background-color: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(5px);
 }
-
-.mode-chooser-list {
+.game-settings-form {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: 1em;
+  margin-bottom: 1em;
+}
+.game-settings-form-section {
+  grid-column: 1 / span 2;
+}
+.game-settings-mode-list {
   list-style: none;
   padding-left: 0;
+  margin-top: 0.5em;
+  margin-bottom: 0;
+}
+.game-settings-submit {
+  justify-self: start;
 }
 .copy-box {
   width: 100%;
@@ -107,11 +120,11 @@ h2 {
   margin-top: 1em;
   justify-content: center;
 }
-.statusbox-button-back  { 
+.statusbox-button-back {
   border: 1px solid #a1a1a1;
   background: #d8d8d8;
 }
-.statusbox-button-back:hover { 
+.statusbox-button-back:hover {
   border: 1px solid #6e6e6e;
   background: #a1a1a1;
 }
