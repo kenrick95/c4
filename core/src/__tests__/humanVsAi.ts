@@ -5,8 +5,8 @@ import { describe, test, expect } from 'vitest'
 import { PlayerAi } from '../player'
 
 describe('PlayerHuman vs PlayerAi', () => {
-  const testPlayer = new TestPlayer(BoardPiece.PLAYER_1)
-  const aiPlayer = new PlayerAi(BoardPiece.PLAYER_2)
+  const testPlayer = new TestPlayer(BoardPiece.PLAYER_1, `Test Player`)
+  const aiPlayer = new PlayerAi(BoardPiece.PLAYER_2, `AI Player`)
   const players = [testPlayer, aiPlayer]
   test('Issue #3', async () => {
     const board = new BoardBase()

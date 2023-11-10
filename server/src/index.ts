@@ -14,7 +14,7 @@ import {
 } from './actions'
 import { MatchId, State, ActionTypes } from './types'
 
-import { MESSAGE_TYPE, parseMessage } from '@kenrick95/c4'
+import { MESSAGE_TYPE, PlayerId, parseMessage } from '@kenrick95/c4'
 
 const port = parseInt(process.env.PORT || '') || 8080
 const wss = new WebSocketServer({ port: port })
@@ -22,7 +22,7 @@ console.log(`[server] Started listening on ws://localhost:${port}`)
 
 function configureStore() {
   const middleware = applyMiddleware(
-    thunk as ThunkMiddleware<State, ActionTypes>
+    thunk as ThunkMiddleware<State, ActionTypes>,
   )
   return createStore(reducer, middleware)
 }
@@ -41,41 +41,65 @@ function alivenessLoop() {
 }
 
 wss.on('connection', (ws: WebSocket) => {
-  const playerId = store.dispatch(newPlayerConnection(ws))
+  let playerId: null | PlayerId = null
   let matchId: null | MatchId = null
 
   ws.on('pong', () => {
+    if (!playerId) {
+      return
+    }
     store.dispatch(renewLastSeen(playerId))
   })
 
   ws.on('message', (message: string) => {
     const parsedMessage = parseMessage(message)
     switch (parsedMessage.type) {
+      case MESSAGE_TYPE.NEW_PLAYER_CONNECTION_REQUEST: {
+        playerId = store.dispatch(
+          newPlayerConnection(ws, parsedMessage.payload.playerName),
+        )
+        break
+      }
       case MESSAGE_TYPE.NEW_MATCH_REQUEST:
         {
+          if (!playerId) {
+            return
+          }
           matchId = store.dispatch(newMatch(playerId))
         }
         break
       case MESSAGE_TYPE.CONNECT_MATCH_REQUEST:
         {
+          if (!playerId) {
+            return
+          }
           matchId = store.dispatch(
-            connectMatch(playerId, parsedMessage.payload.matchId)
+            connectMatch(playerId, parsedMessage.payload.matchId),
           )
         }
         break
       case MESSAGE_TYPE.MOVE_MAIN:
         {
+          if (!playerId) {
+            return
+          }
           store.dispatch(move(playerId, matchId, parsedMessage.payload.column))
         }
         break
       case MESSAGE_TYPE.HUNG_UP:
         {
+          if (!playerId) {
+            return
+          }
           store.dispatch(hungUp(playerId))
         }
         break
     }
   })
   ws.on('close', () => {
+    if (!playerId) {
+      return
+    }
     store.dispatch(hungUp(playerId))
   })
 })

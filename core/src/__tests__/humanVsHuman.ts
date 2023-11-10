@@ -6,8 +6,8 @@ import { describe, test, expect } from 'vitest'
 
 describe('PlayerHuman vs PlayerHuman', () => {
   const players = [
-    new TestPlayer(BoardPiece.PLAYER_1),
-    new TestPlayer(BoardPiece.PLAYER_2),
+    new TestPlayer(BoardPiece.PLAYER_1, `Test player 1`),
+    new TestPlayer(BoardPiece.PLAYER_2, `Test player 2`),
   ]
   test('Basic test', async () => {
     const board = new BoardBase()

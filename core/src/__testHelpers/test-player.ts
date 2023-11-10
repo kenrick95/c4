@@ -10,8 +10,8 @@ export class TestPlayer extends Player {
   getActionWaiting: null | Promise<void> = null
   getActionWaitingResolver: null | (() => void)
 
-  constructor(boardPiece: BoardPiece) {
-    super(boardPiece)
+  constructor(boardPiece: BoardPiece, playerName: string) {
+    super(boardPiece, playerName)
     this.getActionPromiseResolver = null
 
     this.getActionWaitingResolver = null

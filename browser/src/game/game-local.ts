@@ -9,7 +9,7 @@ import { animationFrame } from '../utils/animate-frame'
 const statusbox = document.querySelector('.statusbox')
 const statusboxBodyGame = document.querySelector('.statusbox-body-game')
 const statusboxBodyConnection = document.querySelector(
-  '.statusbox-body-connection'
+  '.statusbox-body-connection',
 )
 const statusboxBodyPlayer = document.querySelector('.statusbox-body-player')
 
@@ -19,9 +19,8 @@ export class GameLocal extends GameBase {
   }
   beforeMoveApplied() {
     if (statusboxBodyGame) {
-      statusboxBodyGame.textContent = `Dropping ${
-        this.currentPlayerId === 0 ? '🔴' : '🔵'
-      } disc`
+      const currentPlayer = this.players[this.currentPlayerId]
+      statusboxBodyGame.textContent = `Dropping ${currentPlayer.boardPiece} disc`
     }
   }
   waitingForMove() {
@@ -35,8 +34,8 @@ export class GameLocal extends GameBase {
 
     if (statusboxBodyPlayer) {
       // `currentPlayerId` is not updated yet
-      statusboxBodyPlayer.textContent =
-        this.currentPlayerId === 0 ? `Player 1 🔴` : `Player 2 🔵`
+      const currentPlayer = this.players[this.currentPlayerId]
+      statusboxBodyPlayer.textContent = `${currentPlayer.label} ${currentPlayer.boardPiece}`
     }
   }
   afterMove() {
@@ -49,11 +48,19 @@ export class GameLocal extends GameBase {
     if (winnerBoardPiece === BoardPiece.EMPTY) {
       return
     }
+    let winnerPlayer: Player | undefined
     let message = '<h1>Thank you for playing.</h1>'
     if (winnerBoardPiece === BoardPiece.DRAW) {
       message += `It's a draw`
     } else {
-      message += `Player ${winnerBoardPiece} wins`
+      winnerPlayer = this.players.find(
+        (player) => player.boardPiece === winnerBoardPiece,
+      )
+      if (winnerPlayer) {
+        message += `${winnerPlayer.label} ${winnerPlayer.boardPiece} won`
+      } else {
+        message += `Player ${winnerBoardPiece} won`
+      }
     }
     message +=
       '.<br />After dismissing this message, click the board to reset game.'
@@ -66,15 +73,18 @@ export class GameLocal extends GameBase {
       statusboxBodyPlayer.textContent =
         winnerBoardPiece === BoardPiece.DRAW
           ? `It's a draw`
+          : winnerPlayer
+          ? `${winnerPlayer.label} ${winnerPlayer.boardPiece} won`
           : `Player ${
               winnerBoardPiece === BoardPiece.PLAYER_1 ? '1 🔴' : '2 🔵'
-            } wins`
+            } won`
     }
   }
 }
 export function initGameLocal(
   GameLocalCosntructor: typeof GameLocal,
-  secondPlayer: PlayerHuman | PlayerAi
+  firstPlayer: PlayerHuman,
+  secondPlayer: PlayerHuman | PlayerAi,
 ) {
   const canvas = document.querySelector('canvas')
   if (!canvas) {
@@ -82,7 +92,6 @@ export function initGameLocal(
     return
   }
   const board = new Board(canvas)
-  const firstPlayer = new PlayerHuman(BoardPiece.PLAYER_1)
   const game = new GameLocalCosntructor([firstPlayer, secondPlayer], board)
   statusbox?.classList.remove('hidden')
   statusboxBodyConnection?.classList.add('hidden')
@@ -93,7 +102,7 @@ export function initGameLocal(
   }
 
   if (statusboxBodyPlayer) {
-    statusboxBodyPlayer.textContent = `Player 1 🔴`
+    statusboxBodyPlayer.textContent = `${firstPlayer.label} ${firstPlayer.boardPiece}`
   }
 
   async function handleCanvasClick(event: MouseEvent) {
@@ -126,6 +135,6 @@ export function initGameLocal(
       game.end()
       canvas.removeEventListener('click', handleCanvasClick)
       statusbox?.classList.add('hidden')
-    }
+    },
   }
 }

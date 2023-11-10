@@ -4,8 +4,8 @@ import { BoardBase, BoardPiece } from '../board'
 export class PlayerHuman extends Player {
   clickPromiseResolver: null | ((column: number) => void)
 
-  constructor(boardPiece: BoardPiece) {
-    super(boardPiece)
+  constructor(boardPiece: BoardPiece, label: string) {
+    super(boardPiece, label)
     this.clickPromiseResolver = null
   }
 

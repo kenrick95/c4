@@ -18,13 +18,14 @@ export function reducer(
   switch (action.type) {
     case ACTION_TYPE.NEW_PLAYER_CONNECTION: {
       // Add player to server, no game/match yet
-      const { ws, playerId } = action.payload
+      const { ws, playerId, playerName } = action.payload
       return {
         ...state,
         players: {
           ...state.players,
           [playerId]: {
             playerId: playerId,
+            playerName: playerName,
             lastSeen: Date.now(),
             ws: ws,
             matchId: null,

@@ -2,10 +2,7 @@ import { v4 as uuidV4 } from 'uuid'
 import { PlayerId, MatchId, RenewLastSeenAction, AppThunk } from './types'
 import WebSocket from 'ws'
 import { BoardBase, BoardPiece } from '@kenrick95/c4'
-import {
-  MESSAGE_TYPE,
-  constructMessage,
-} from '@kenrick95/c4'
+import { MESSAGE_TYPE, constructMessage } from '@kenrick95/c4'
 
 export enum ACTION_TYPE {
   NEW_PLAYER_CONNECTION = 'NEW_PLAYER_CONNECTION',
@@ -18,13 +15,14 @@ export enum ACTION_TYPE {
   END_GAME = 'END_GAME',
   RESET_GAME = 'RESET_GAME',
 }
-export function newPlayerConnection(ws: WebSocket): AppThunk<PlayerId> {
+export function newPlayerConnection(ws: WebSocket, playerName: string): AppThunk<PlayerId> {
   return (dispatch) => {
     const playerId = uuidV4()
     dispatch({
       type: ACTION_TYPE.NEW_PLAYER_CONNECTION,
       payload: {
         playerId,
+        playerName,
         ws,
       },
     })
@@ -32,7 +30,7 @@ export function newPlayerConnection(ws: WebSocket): AppThunk<PlayerId> {
     ws.send(
       constructMessage(MESSAGE_TYPE.NEW_PLAYER_CONNECTION_OK, {
         playerId,
-      })
+      }),
     )
 
     return playerId
@@ -58,7 +56,7 @@ export function newMatch(playerId: PlayerId): AppThunk<MatchId> {
       constructMessage(MESSAGE_TYPE.NEW_MATCH_OK, {
         playerId,
         matchId,
-      })
+      }),
     )
 
     return matchId
@@ -66,7 +64,7 @@ export function newMatch(playerId: PlayerId): AppThunk<MatchId> {
 }
 export function connectMatch(
   playerId: PlayerId,
-  matchId: MatchId | null
+  matchId: MatchId | null,
 ): AppThunk<MatchId | null> {
   return (dispatch, getState) => {
     {
@@ -95,7 +93,7 @@ export function connectMatch(
           constructMessage(MESSAGE_TYPE.CONNECT_MATCH_FAIL, {
             playerId,
             matchId,
-          })
+          }),
         )
         return null
       }
@@ -118,7 +116,7 @@ export function connectMatch(
         constructMessage(MESSAGE_TYPE.CONNECT_MATCH_OK, {
           playerId,
           matchId,
-        })
+        }),
       )
     }
 
@@ -126,16 +124,16 @@ export function connectMatch(
       // Tell all players that game is ready
       const state = getState()
       const match = state.matches[matchId]
-      const playerIds = match.players
-      for (const pId of playerIds) {
-        if (!pId) {
-          continue
-        }
-        const player = state.players[pId]
+      const playerIds = match.players.filter((p): p is string => !!p)
+
+      for (let i = 0; i < playerIds.length; i++) { 
+        const player = state.players[playerIds[i]]
+        const otherPlayer = state.players[i === 0 ? playerIds[1] : playerIds[0]]
         player.ws.send(
           constructMessage(MESSAGE_TYPE.GAME_READY, {
             matchId,
-          })
+            otherPlayerName: otherPlayer.playerName,
+          }),
         )
       }
     }
@@ -146,7 +144,7 @@ export function connectMatch(
 export function move(
   playerId: PlayerId,
   matchId: MatchId | null,
-  column: number
+  column: number,
 ): AppThunk {
   return (dispatch, getState) => {
     if (!matchId) {
@@ -163,7 +161,7 @@ export function move(
         otherPlayer.ws.send(
           constructMessage(MESSAGE_TYPE.MOVE_SHADOW, {
             column,
-          })
+          }),
         )
       }
 
@@ -218,7 +216,7 @@ export function renewLastSeen(playerId: PlayerId): RenewLastSeenAction {
 
 export function gameEnded(
   matchId: MatchId,
-  winnerBoardPiece: BoardPiece
+  winnerBoardPiece: BoardPiece,
 ): AppThunk {
   return (dispatch, getState) => {
     const state = getState()
@@ -250,7 +248,7 @@ export function gameEnded(
           matchId,
           winnerBoardPiece,
           gameWinnerPlayerId,
-        })
+        }),
       )
     }
 
@@ -277,7 +275,7 @@ export function gameReset(matchId: MatchId): AppThunk {
       const player = state.players[playerId]
       if (!player) {
         console.warn(
-          `[actions] Player ${playerId} is gone but still have reference to it`
+          `[actions] Player ${playerId} is gone but still have reference to it`,
         )
         continue
       }
@@ -285,12 +283,12 @@ export function gameReset(matchId: MatchId): AppThunk {
       player.ws.send(
         constructMessage(MESSAGE_TYPE.GAME_RESET, {
           matchId,
-        })
+        }),
       )
       player.ws.send(
         constructMessage(MESSAGE_TYPE.GAME_READY, {
           matchId,
-        })
+        }),
       )
     }
   }

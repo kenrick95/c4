@@ -4,8 +4,8 @@ import { BoardBase, BoardPiece } from '../board'
 export class PlayerShadow extends Player {
   actionPromiseResolver: null | ((column: number) => void)
 
-  constructor(boardPiece: BoardPiece) {
-    super(boardPiece)
+  constructor(boardPiece: BoardPiece, label: string) {
+    super(boardPiece, label)
     this.actionPromiseResolver = null
   }
 

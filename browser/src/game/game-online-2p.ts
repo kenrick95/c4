@@ -19,7 +19,7 @@ enum GAME_MODE {
 const statusbox = document.querySelector('.statusbox')
 const statusboxBodyGame = document.querySelector('.statusbox-body-game')
 const statusboxBodyConnection = document.querySelector(
-  '.statusbox-body-connection'
+  '.statusbox-body-connection',
 )
 const statusboxBodyPlayer = document.querySelector('.statusbox-body-player')
 
@@ -42,7 +42,7 @@ export class GameOnline2p extends GameBase {
   constructor(
     players: Array<Player>,
     board: BoardBase,
-    { gameMode }: { gameMode: GAME_MODE }
+    { gameMode, playerName }: { gameMode: GAME_MODE; playerName: string },
   ) {
     super(players, board)
     this.gameMode = gameMode
@@ -53,6 +53,7 @@ export class GameOnline2p extends GameBase {
       this.playerMain = players[1] as PlayerHuman
       this.playerShadow = players[0] as PlayerShadow
     }
+    this.playerMain.label = playerName
     this.initConnection()
   }
 
@@ -68,6 +69,7 @@ export class GameOnline2p extends GameBase {
   }
 
   initConnection() {
+    console.log('initConnection')
     this.connectionPlayerId = null
     this.connectionMatchId = null
     if (this.ws) {
@@ -94,12 +96,14 @@ export class GameOnline2p extends GameBase {
     this.ws.addEventListener('open', () => {
       if (this.ws) {
         this.ws.send(
-          constructMessage(MESSAGE_TYPE.NEW_PLAYER_CONNECTION_REQUEST)
+          constructMessage(MESSAGE_TYPE.NEW_PLAYER_CONNECTION_REQUEST, {
+            playerName: this.playerMain.label,
+          }),
         )
       }
       if (statusboxBodyConnection) {
         statusboxBodyConnection.textContent = 'Connected to server'
-      } 
+      }
       if (statusboxBodyGame) {
         statusboxBodyGame.textContent = ``
       }
@@ -122,7 +126,7 @@ export class GameOnline2p extends GameBase {
       this.ws.send(
         constructMessage(MESSAGE_TYPE.NEW_MATCH_REQUEST, {
           playerId: this.connectionPlayerId,
-        })
+        }),
       )
     }
   }
@@ -135,7 +139,7 @@ export class GameOnline2p extends GameBase {
       constructMessage(MESSAGE_TYPE.CONNECT_MATCH_REQUEST, {
         playerId: this.connectionPlayerId,
         matchId,
-      })
+      }),
     )
   }
 
@@ -169,11 +173,11 @@ export class GameOnline2p extends GameBase {
               `Please share this URL to your friend to start the game: ` +
               `<input type="text" id="copy-box" class="copy-box" readonly value="${shareUrl}" />` +
               `<button type="button" id="copy-button">Copy</button>` +
-              `</p>`
+              `</p>`,
           )
           // Select all
           const copyBox: HTMLInputElement | null = document.getElementById(
-            'copy-box'
+            'copy-box',
           ) as HTMLInputElement
           copyBox.focus()
           copyBox.select()
@@ -188,7 +192,7 @@ export class GameOnline2p extends GameBase {
                 try {
                   await navigator.clipboard.writeText(shareUrl)
                   console.log(
-                    'Using Clipboard API to write share url into clipboard'
+                    'Using Clipboard API to write share url into clipboard',
                   )
                   isClipboardApiSuccessful = true
                 } catch (err) {}
@@ -200,7 +204,7 @@ export class GameOnline2p extends GameBase {
                 copyBox?.setSelectionRange(0, 99999)
                 document.execCommand('copy')
                 console.log(
-                  'Using fallback method to write share url into clipboard'
+                  'Using fallback method to write share url into clipboard',
                 )
               }
             })
@@ -222,10 +226,11 @@ export class GameOnline2p extends GameBase {
         break
       case MESSAGE_TYPE.GAME_READY:
         {
+          this.playerShadow.label = message.payload.otherPlayerName
           showMessage(
             `<h1>Game started</h1> The first piece should be dropped by ${
               this.isCurrentMoveByCurrentPlayer() ? 'you' : 'the other player'
-            }`
+            }`,
           )
 
           if (statusboxBodyGame) {
@@ -233,8 +238,9 @@ export class GameOnline2p extends GameBase {
           }
 
           if (statusboxBodyPlayer) {
+            const currentPlayer = this.players[this.currentPlayerId]
             statusboxBodyPlayer.textContent =
-              (this.currentPlayerId === 0 ? `Player 1 🔴` : `Player 2 🔵`) +
+              `${currentPlayer.label} ${currentPlayer.boardPiece}` +
               ` ` +
               (this.isCurrentMoveByCurrentPlayer()
                 ? `(you)`
@@ -252,17 +258,23 @@ export class GameOnline2p extends GameBase {
         {
           const { winnerBoardPiece } = message.payload
 
+          let winnerPlayer = this.players.find(
+            (player) => player.boardPiece === winnerBoardPiece,
+          )
+
           const messageWinner =
             winnerBoardPiece === BoardPiece.DRAW
               ? `It's a draw`
+              : winnerPlayer
+              ? `${winnerPlayer.label} ${winnerPlayer.boardPiece} won`
               : `Player ${
                   winnerBoardPiece === BoardPiece.PLAYER_1 ? '1 🔴' : '2 🔵'
-                } wins`
+                } won`
 
           showMessage(
             `<h1>Thank you for playing</h1>` +
               messageWinner +
-              `<br />Next game will be started in 10 seconds.`
+              `<br />Next game will be started in 10 seconds.`,
           )
 
           if (statusboxBodyGame) {
@@ -282,7 +294,7 @@ export class GameOnline2p extends GameBase {
       case MESSAGE_TYPE.OTHER_PLAYER_HUNGUP:
         {
           showMessage(
-            `<h1>Other player disconnected</h1> Please reload the page to start a new match`
+            `<h1>Other player disconnected</h1> Please reload the page to start a new match`,
           )
         }
         break
@@ -293,14 +305,17 @@ export class GameOnline2p extends GameBase {
    * @returns true if the game is waiting for current player to make a move
    */
   isCurrentMoveByCurrentPlayer() {
-    return this.currentPlayerId + 1 === this.gameMode
+    if (this.gameMode === GAME_MODE.FIRST) {
+      return this.currentPlayerId === 0
+    } else {
+      return this.currentPlayerId === 1
+    }
   }
 
   beforeMoveApplied = () => {
     if (statusboxBodyGame) {
-      statusboxBodyGame.textContent = `Dropping ${
-        this.currentPlayerId === 0 ? '🔴' : '🔵'
-      } disc`
+      const currentPlayer = this.players[this.currentPlayerId]
+      statusboxBodyGame.textContent = `Dropping ${currentPlayer.boardPiece} disc`
     }
   }
 
@@ -310,8 +325,9 @@ export class GameOnline2p extends GameBase {
     }
 
     if (statusboxBodyPlayer) {
+      const currentPlayer = this.players[this.currentPlayerId]
       statusboxBodyPlayer.textContent =
-        (this.currentPlayerId === 0 ? `Player 1 🔴` : `Player 2 🔵`) +
+        `${currentPlayer.label} ${currentPlayer.boardPiece}` +
         ` ` +
         (this.isCurrentMoveByCurrentPlayer() ? `(you)` : `(the other player)`)
     }
@@ -324,7 +340,7 @@ export class GameOnline2p extends GameBase {
           playerId: this.connectionPlayerId,
           matchId: this.connectionMatchId,
           column: action,
-        })
+        }),
       )
     }
   }
@@ -335,7 +351,7 @@ export class GameOnline2p extends GameBase {
   }
 }
 
-export function initGameOnline2p() {
+export function initGameOnline2p(playerName: string) {
   const canvas = document.querySelector('canvas')
   if (!canvas) {
     console.error('Canvas DOM is null')
@@ -350,16 +366,17 @@ export function initGameOnline2p() {
   const players =
     gameMode === GAME_MODE.FIRST
       ? [
-          new PlayerHuman(BoardPiece.PLAYER_1),
-          new PlayerShadow(BoardPiece.PLAYER_2),
+          new PlayerHuman(BoardPiece.PLAYER_1, playerName),
+          new PlayerShadow(BoardPiece.PLAYER_2, `Other player`),
         ]
       : [
-          new PlayerShadow(BoardPiece.PLAYER_1),
-          new PlayerHuman(BoardPiece.PLAYER_2),
+          new PlayerShadow(BoardPiece.PLAYER_1, `Other player`),
+          new PlayerHuman(BoardPiece.PLAYER_2, playerName),
         ]
 
   const game = new GameOnline2p(players, board, {
     gameMode,
+    playerName,
   })
   statusbox?.classList.remove('hidden')
   statusboxBodyConnection?.classList.remove('hidden')
@@ -380,7 +397,7 @@ export function initGameOnline2p() {
   canvas.addEventListener('click', handleCanvasClick)
 
   return {
-    end: () => { 
+    end: () => {
       game.end()
       canvas.removeEventListener('click', handleCanvasClick)
       statusbox?.classList.add('hidden')

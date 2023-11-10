@@ -27,14 +27,14 @@ export type PlayerId = string
 export type MatchId = string
 
 export type GameOnlineMessage =
-  | { type: 'NEW_PLAYER_CONNECTION_REQUEST'; payload: {} }
+  | { type: 'NEW_PLAYER_CONNECTION_REQUEST'; payload: { playerName: string } }
   | {
       type: 'NEW_PLAYER_CONNECTION_OK'
       payload: { playerId: PlayerId }
     }
   | { type: 'NEW_MATCH_REQUEST'; payload: { playerId: PlayerId } }
   | { type: 'NEW_MATCH_OK'; payload: { matchId: MatchId } }
-  | { type: 'GAME_READY'; payload: { matchId: MatchId } }
+  | { type: 'GAME_READY'; payload: { matchId: MatchId; otherPlayerName: string } }
   | {
       type: 'GAME_ENDED'
       payload: {
@@ -63,7 +63,7 @@ export type GameOnlineMessage =
 
 export function constructMessage(
   type: MESSAGE_TYPE,
-  payload?: GameOnlineMessage['payload']
+  payload?: GameOnlineMessage['payload'],
 ): string {
   console.log('[ws] send: ', type, payload)
   return JSON.stringify({
