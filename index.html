@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -16,8 +16,8 @@
       property="og:description"
       content="Connect Four game in JS + Canvas. Play against artificial intelligence or with other human offline or online!"
     />
-    <script type="module" crossorigin src="https://kenrick95.github.io/c4/assets/index-e01bd7b2.js"></script>
-    <link rel="stylesheet" href="https://kenrick95.github.io/c4/assets/index-6ae6ee65.css">
+    <script type="module" crossorigin src="https://kenrick95.github.io/c4/assets/index-18fce8ce.js"></script>
+    <link rel="stylesheet" href="https://kenrick95.github.io/c4/assets/index-1039f4b4.css">
   </head>
 
   <body>
@@ -29,7 +29,7 @@
       <canvas class="section-canvas"></canvas>
     </section>
 
-    <dialog class="mode-chooser">
+    <dialog class="init-screen">
       <h1>c4 - Connect Four</h1>
       <h2>How to play?</h2>
       <p>Connect Four is a two-player game.</p>
@@ -49,57 +49,80 @@
           >Connect Four article on Wikipedia</a
         >.
       </p>
-      <h2>Choose playing mode:</h2>
-      <form method="dialog" class="mode-chooser-form">
-        <ul class="mode-chooser-list">
-          <li>
-            <label
-              ><input
-                class="mode-chooser-input"
-                type="radio"
-                name="mode"
-                value="offline-ai"
-                checked
-                autofocus
-              />
-              Offline: Human player vs AI player</label
-            >
-          </li>
-          <li>
-            <label
-              ><input
-                class="mode-chooser-input"
-                type="radio"
-                name="mode"
-                value="offline-human"
-              />
-              Offline: Human player vs human player</label
-            >
-          </li>
-          <li>
-            <label
-              ><input
-                class="mode-chooser-input"
-                type="radio"
-                name="mode"
-                value="ai-vs-ai"
-              />
-              Spectator: AI player vs AI player</label
-            >
-          </li>
-          <li>
-            <label
-              ><input
-                class="mode-chooser-input"
-                type="radio"
-                name="mode"
-                value="online-human"
-              />
-              Online: Human player vs human player</label
-            >
-          </li>
-        </ul>
-        <button class="mode-chooser-submit" type="submit" value="confirm">
+      <h2>Game Settings</h2>
+      <form method="dialog" class="game-settings-form">
+        <div class="game-settings-form-section">
+          Playing Mode:
+          <ul class="game-settings-mode-list">
+            <li>
+              <label
+                ><input
+                  class="game-settings-mode-input"
+                  type="radio"
+                  name="mode"
+                  value="offline-ai"
+                  checked
+                  autofocus
+                />
+                Offline: Human player vs AI player</label
+              >
+            </li>
+            <li>
+              <label
+                ><input
+                  class="game-settings-mode-input"
+                  type="radio"
+                  name="mode"
+                  value="offline-human"
+                />
+                Offline: Human player vs human player</label
+              >
+            </li>
+            <li>
+              <label
+                ><input
+                  class="game-settings-mode-input"
+                  type="radio"
+                  name="mode"
+                  value="ai-vs-ai"
+                />
+                Spectator: AI player vs AI player</label
+              >
+            </li>
+            <li>
+              <label
+                ><input
+                  class="game-settings-mode-input"
+                  type="radio"
+                  name="mode"
+                  value="online-human"
+                />
+                Online: Human player vs human player</label
+              >
+            </li>
+          </ul>
+        </div>
+        <label class="game-settings-player-1-name-label" for="player-1-name">
+          Player's name:
+        </label>
+        <input
+          type="text"
+          class="game-settings-player-1-name-input"
+          value="Player 1"
+          name="player-1-name"
+          placeholder="Player 1"
+        />
+        <label class="game-settings-player-2-name-label" for="player-2-name">
+          Player's name:
+        </label>
+        <input
+          type="text"
+          class="game-settings-player-2-name-input"
+          value="Player 2"
+          name="player-2-name"
+          placeholder="Player 2"
+        />
+        <button class="game-settings-submit" type="submit" value="confirm">
           Start game
         </button>
       </form>
