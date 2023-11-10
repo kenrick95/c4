@@ -29,6 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
     '.game-settings-form',
   ) as HTMLFormElement
 
+  if (!settingsForm) {
+    console.error('.game-settings-form not found ')
+    return
+  }
+
   const player1NameLabel = settingsForm.querySelector(
     '.game-settings-player-1-name-label',
   ) as HTMLLabelElement
@@ -51,11 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   backToModeSelector?.classList.add('hidden')
   initScreenDOM.showModal()
-
-  if (!settingsForm) {
-    console.error('.game-settings-form not found ')
-    return
-  }
 
   let chosenMode: string = !!connectionMatchId ? 'online-human' : 'offline-ai'
   renderForm()
