@@ -414,7 +414,7 @@ __metadata:
     "@kenrick95/c4": "workspace:^"
     prettier: "npm:^3.0.3"
     typescript: "npm:~5.2.2"
-    vite: "npm:^4.5.0"
+    vite: "npm:^4.5.2"
   languageName: unknown
   linkType: soft
 
@@ -439,7 +439,7 @@ __metadata:
     redux-thunk: "npm:^2.4.2"
     typescript: "npm:~5.2.2"
     uuid: "npm:^9.0.1"
-    vite: "npm:^4.5.0"
+    vite: "npm:^4.5.2"
     vite-node: "npm:0.34.6"
     ws: "npm:^8.14.2"
   languageName: unknown
@@ -451,7 +451,7 @@ __metadata:
   dependencies:
     prettier: "npm:^3.0.3"
     typescript: "npm:~5.2.2"
-    vite: "npm:^4.5.0"
+    vite: "npm:^4.5.2"
     vite-dts: "npm:^1.0.4"
     vite-plugin-dts: "npm:^3.6.3"
     vitest: "npm:^0.34.6"
@@ -2884,9 +2884,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "vite@npm:4.5.0"
+"vite@npm:^4.5.2":
+  version: 4.5.2
+  resolution: "vite@npm:4.5.2"
   dependencies:
     esbuild: "npm:^0.18.10"
     fsevents: "npm:~2.3.2"
@@ -2920,7 +2920,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: b262ea4880ba7de8a77b0a665c771561ae3cb7f0d6c5b90e65298039755192550bf90cb96a2910d564506e2d499aa20e9becd330b835c34d414249083ac6e40c
+  checksum: 3feb39f8da038fb2b1ad074c19a9579c263c1d7a872c5c6e0269b82d67805bb8c93cf9fc393e852807483ae9a918b1ac2861c72f73ee92fb3935ea68333a2cf7
   languageName: node
   linkType: hard
 
