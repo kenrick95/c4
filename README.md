@@ -10,6 +10,8 @@
 
 ## Gameplay
 
+![Screenshot 2024-03-07 202120](https://github.com/kenrick95/c4/assets/3090380/6cc9e901-83d8-4daf-b535-8cab72a56a4e)
+
 ### Objective
 
 _Connect four_ of your game pieces vertically, horizontally, or diagonally before the other player do so.
