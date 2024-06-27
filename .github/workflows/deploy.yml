@@ -15,12 +15,12 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18]
+        node-version: [18, 20]
   
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.1.7
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4.0.2
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
@@ -29,7 +29,7 @@ jobs:
       - name: Build
         run: yarn workspace @kenrick95/c4-browser run build-gh-pages
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4.4.1
+        uses: JamesIves/github-pages-deploy-action@v4.6.1
         with:
           branch: gh-pages
           folder: browser/dist
@@ -42,6 +42,6 @@ jobs:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.1.7
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only
