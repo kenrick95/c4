@@ -38,8 +38,8 @@
     "@kenrick95/c4": "workspace:^"
   },
   "devDependencies": {
-    "prettier": "^3.0.3",
-    "typescript": "~5.2.2",
+    "prettier": "3.3.2",
+    "typescript": "~5.5.2",
     "vite": "^4.5.3"
   }
 }
