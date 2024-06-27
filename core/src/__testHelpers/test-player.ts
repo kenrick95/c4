@@ -19,7 +19,7 @@ export class TestPlayer extends Player {
   }
   renewPromise() {
     this.getActionWaiting = new Promise(
-      (resolve) => (this.getActionWaitingResolver = resolve)
+      (resolve) => (this.getActionWaitingResolver = resolve),
     )
   }
   async getAction() {

@@ -11,7 +11,7 @@ export class ServerGame extends GameBase<ServerPlayer> {
   constructor(
     players: Array<ServerPlayer>,
     board: ServerBoard,
-    matchId: MatchId
+    matchId: MatchId,
   ) {
     super(players, board)
     this.matchId = matchId

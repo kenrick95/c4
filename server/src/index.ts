@@ -1,7 +1,7 @@
 import WebSocket, { WebSocketServer } from 'ws'
 
 import { reducer } from './reducer'
-import thunk, { ThunkMiddleware } from 'redux-thunk'
+import { thunk, ThunkMiddleware } from 'redux-thunk'
 import { createStore, applyMiddleware } from 'redux'
 
 import {

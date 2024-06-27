@@ -15,7 +15,10 @@ export enum ACTION_TYPE {
   END_GAME = 'END_GAME',
   RESET_GAME = 'RESET_GAME',
 }
-export function newPlayerConnection(ws: WebSocket, playerName: string): AppThunk<PlayerId> {
+export function newPlayerConnection(
+  ws: WebSocket,
+  playerName: string,
+): AppThunk<PlayerId> {
   return (dispatch) => {
     const playerId = uuidV4()
     dispatch({
@@ -126,7 +129,7 @@ export function connectMatch(
       const match = state.matches[matchId]
       const playerIds = match.players.filter((p): p is string => !!p)
 
-      for (let i = 0; i < playerIds.length; i++) { 
+      for (let i = 0; i < playerIds.length; i++) {
         const player = state.players[playerIds[i]]
         const otherPlayer = state.players[i === 0 ? playerIds[1] : playerIds[0]]
         player.ws.send(

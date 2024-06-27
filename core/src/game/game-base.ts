@@ -62,7 +62,7 @@ export abstract class GameBase<P extends Player = Player> {
       this.beforeMoveApplied(action)
       actionSuccesful = await this.board.applyPlayerAction(
         currentPlayer,
-        action
+        action,
       )
       this.isMoveAllowed = true
       if (!actionSuccesful) {

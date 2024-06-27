@@ -12,7 +12,7 @@ export const BIG_NEGATIVE_NUMBER: number = -BIG_POSITIVE_NUMBER
 export function isCoordOnColumn(
   coord: { x: number; y: number },
   columnXBegin: number,
-  radius: number
+  radius: number,
 ): boolean {
   return (coord.x - columnXBegin) * (coord.x - columnXBegin) <= radius * radius
 }
@@ -25,7 +25,7 @@ export function getColumnFromCoord(coord: { x: number; y: number }): number {
         3 * BoardBase.PIECE_RADIUS * i +
           BoardBase.MASK_X_BEGIN +
           2 * BoardBase.PIECE_RADIUS,
-        BoardBase.PIECE_RADIUS
+        BoardBase.PIECE_RADIUS,
       )
     )
       return i
@@ -52,7 +52,7 @@ export function clone<T>(array: Array<Array<T>>): Array<Array<T>> {
 export function getMockPlayerAction(
   map: Array<Array<BoardPiece>>,
   boardPiece: BoardPiece,
-  column: number
+  column: number,
 ): {
   success: boolean
   map: Array<Array<BoardPiece>>

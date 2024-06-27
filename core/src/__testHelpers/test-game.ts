@@ -26,7 +26,7 @@ export class TestGame extends GameBase {
 
   renewAfterMovePromise() {
     this.afterMovePromise = new Promise(
-      (resolve) => (this.afterMoveResolve = resolve)
+      (resolve) => (this.afterMoveResolve = resolve),
     )
   }
 }

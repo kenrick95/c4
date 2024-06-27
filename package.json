@@ -21,10 +21,10 @@
     "url": "https://github.com/kenrick95/c4/issues"
   },
   "engines": {
-    "node": "18.x",
+    "node": "18.x || 20.x",
     "yarn": "4.x"
   },
-  "packageManager": "yarn@4.0.1",
+  "packageManager": "yarn@4.3.1",
   "homepage": "https://github.com/kenrick95/c4",
   "license": "MIT",
   "keywords": [

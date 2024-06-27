@@ -12,7 +12,7 @@ const INITIAL_STATE: State = {
 
 export function reducer(
   state: State = INITIAL_STATE,
-  action: ActionTypes
+  action: ActionTypes,
 ): State {
   console.log('[reducer] Action: ', action.type)
   switch (action.type) {
@@ -74,7 +74,7 @@ export function reducer(
           new ServerPlayer(BoardPiece.PLAYER_2, playerId),
         ],
         board,
-        matchId
+        matchId,
       )
       game.start()
       return {
