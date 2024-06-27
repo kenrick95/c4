@@ -11,11 +11,11 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['ws', 'crypto'],
+      external: ['ws', 'crypto', 'node:crypto'],
     },
   },
   resolve: {
-    browserField: false,
+    mainFields: ['module', 'jsnext:main', 'jsnext'],
     conditions: [
       '__source',
       'import',

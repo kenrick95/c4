@@ -53,13 +53,13 @@ export class BoardBase {
       Math.max(
         0,
         BoardBase.CANVAS_WIDTH -
-          (3 * BoardBase.COLUMNS + 1) * BoardBase.PIECE_RADIUS
+          (3 * BoardBase.COLUMNS + 1) * BoardBase.PIECE_RADIUS,
       ) / 2
     BoardBase.MASK_Y_BEGIN =
       Math.max(
         0,
         BoardBase.CANVAS_HEIGHT -
-          (3 * BoardBase.ROWS + 1) * BoardBase.PIECE_RADIUS
+          (3 * BoardBase.ROWS + 1) * BoardBase.PIECE_RADIUS,
       ) / 2
     BoardBase.MESSAGE_WIDTH = BoardBase.SCALE * 400
     BoardBase.MESSAGE_X_BEGIN =
@@ -76,7 +76,7 @@ export class BoardBase {
     const { success: actionSuccessful, map: nextState } = getMockPlayerAction(
       this.map,
       player.boardPiece,
-      column
+      column,
     )
 
     this.map = nextState
@@ -108,7 +108,7 @@ export class BoardBase {
       j: number,
       playerPiece: BoardPiece,
       dir: Array<number>,
-      count: number
+      count: number,
     ): boolean => {
       if (count >= 4) {
         return true
@@ -127,7 +127,7 @@ export class BoardBase {
         j + dir[1],
         playerPiece,
         dir,
-        count + 1
+        count + 1,
       )
     }
     let countEmpty = 0
@@ -141,7 +141,7 @@ export class BoardBase {
               j + direction[k][1],
               playerPiece,
               direction[k],
-              1
+              1,
             )
             if (isWon) {
               return (this.winnerBoardPiece = playerPiece)

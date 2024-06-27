@@ -6,7 +6,7 @@ export function showMessage(message: string = ''): void {
     return
   }
   const messageContentDOM: HTMLDivElement | null = document.querySelector(
-    '.message-body-content'
+    '.message-body-content',
   )
   if (!messageContentDOM) {
     console.error('.message-body-content not found')

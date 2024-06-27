@@ -7,7 +7,7 @@ import { animationFrame } from '../utils/animate-frame'
 const statusbox = document.querySelector('.statusbox')
 const statusboxBodyGame = document.querySelector('.statusbox-body-game')
 const statusboxBodyConnection = document.querySelector(
-  '.statusbox-body-connection'
+  '.statusbox-body-connection',
 )
 const statusboxBodyPlayer = document.querySelector('.statusbox-body-player')
 

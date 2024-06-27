@@ -2,6 +2,7 @@
   "name": "@kenrick95/c4",
   "version": "5.0.0",
   "description": "Building blocks for a Connect Four game",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/kenrick95/c4.git"
@@ -53,9 +54,9 @@
   "devDependencies": {
     "prettier": "3.3.2",
     "typescript": "~5.5.2",
-    "vite": "^4.5.3",
+    "vite": "^5.3.1",
     "vite-dts": "^1.0.4",
-    "vite-plugin-dts": "^3.6.3",
-    "vitest": "^0.34.6"
+    "vite-plugin-dts": "^3.9.1",
+    "vitest": "^1.6.0"
   }
 }

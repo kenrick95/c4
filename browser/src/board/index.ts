@@ -1,5 +1,5 @@
 import { BoardBase, BoardPiece } from '@kenrick95/c4'
-import { Player } from '@kenrick95/c4' 
+import { Player } from '@kenrick95/c4'
 import { onresize, drawMask, drawCircle, clearCanvas } from './utils'
 import { animationFrame } from '../utils/animate-frame'
 
@@ -63,7 +63,7 @@ export class Board extends BoardBase {
   private async animateAction(
     newRow: number,
     column: number,
-    boardPiece: BoardPiece
+    boardPiece: BoardPiece,
   ): Promise<void> {
     const fillStyle = this.getPlayerColor(boardPiece)
     let currentY = 0

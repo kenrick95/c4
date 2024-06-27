@@ -34,7 +34,10 @@ export type GameOnlineMessage =
     }
   | { type: 'NEW_MATCH_REQUEST'; payload: { playerId: PlayerId } }
   | { type: 'NEW_MATCH_OK'; payload: { matchId: MatchId } }
-  | { type: 'GAME_READY'; payload: { matchId: MatchId; otherPlayerName: string } }
+  | {
+      type: 'GAME_READY'
+      payload: { matchId: MatchId; otherPlayerName: string }
+    }
   | {
       type: 'GAME_ENDED'
       payload: {

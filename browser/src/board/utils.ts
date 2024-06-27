@@ -44,7 +44,7 @@ export function onresize(): { add: Function } {
 
 export function drawCircle(
   context: CanvasRenderingContext2D,
-  { x = 0, y = 0, r = 0, fillStyle = '', strokeStyle = '' }
+  { x = 0, y = 0, r = 0, fillStyle = '', strokeStyle = '' },
 ) {
   context.save()
   context.fillStyle = fillStyle
@@ -73,13 +73,13 @@ export function drawMask(board: Board) {
         tripleRadius * y + Board.MASK_Y_BEGIN + doubleRadius,
         Board.PIECE_RADIUS,
         0,
-        2 * Math.PI
+        2 * Math.PI,
       )
       context.rect(
         tripleRadius * x + Board.MASK_X_BEGIN + 2 * doubleRadius,
         tripleRadius * y + Board.MASK_Y_BEGIN,
         -2 * doubleRadius,
-        2 * doubleRadius
+        2 * doubleRadius,
       )
     }
   }

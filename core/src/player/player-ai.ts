@@ -24,8 +24,8 @@ export class PlayerAi extends Player {
     return boardPiece === BoardPiece.EMPTY
       ? 0
       : boardPiece === this.boardPiece
-      ? 1
-      : -1
+        ? 1
+        : -1
   }
   private getStateValue(state: Array<Array<BoardPiece>>): {
     winnerBoardPiece: BoardPiece
@@ -96,7 +96,7 @@ export class PlayerAi extends Player {
   private transformValues(
     returnValue: number,
     winnerBoardPiece: BoardPiece,
-    depth: number
+    depth: number,
   ): number {
     const isWon = winnerBoardPiece === this.boardPiece
     const isLost = winnerBoardPiece === this.enemyBoardPiece
@@ -114,7 +114,7 @@ export class PlayerAi extends Player {
     state: Array<Array<BoardPiece>>,
     depth: number,
     alpha: number,
-    beta: number
+    beta: number,
   ): {
     value: number
     move: number
@@ -129,7 +129,7 @@ export class PlayerAi extends Player {
           this.transformValues(
             stateValue.chain,
             stateValue.winnerBoardPiece,
-            depth
+            depth,
           ) * this.ownBoardPieceValue,
         move: -1, // leaf node
       }
@@ -144,7 +144,7 @@ export class PlayerAi extends Player {
     state: Array<Array<BoardPiece>>,
     depth: number,
     alpha: number,
-    beta: number
+    beta: number,
   ): {
     value: number
     move: number
@@ -155,7 +155,7 @@ export class PlayerAi extends Player {
       const { success: actionSuccessful, map: nextState } = getMockPlayerAction(
         state,
         this.boardPiece,
-        column
+        column,
       )
       if (!actionSuccessful) {
         continue
@@ -187,7 +187,7 @@ export class PlayerAi extends Player {
     state: Array<Array<BoardPiece>>,
     depth: number,
     alpha: number,
-    beta: number
+    beta: number,
   ): {
     value: number
     move: number
@@ -198,7 +198,7 @@ export class PlayerAi extends Player {
       const { success: actionSuccessful, map: nextState } = getMockPlayerAction(
         state,
         this.enemyBoardPiece,
-        column
+        column,
       )
       if (!actionSuccessful) {
         continue
@@ -233,10 +233,10 @@ export class PlayerAi extends Player {
       state,
       0,
       BIG_NEGATIVE_NUMBER,
-      BIG_POSITIVE_NUMBER
+      BIG_POSITIVE_NUMBER,
     )
     console.log(
-      `AI ${this.boardPiece} choose column ${action.move} with value of ${action.value}`
+      `AI ${this.boardPiece} choose column ${action.move} with value of ${action.value}`,
     )
     return action.move
   }

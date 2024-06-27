@@ -266,10 +266,10 @@ export class GameOnline2p extends GameBase {
             winnerBoardPiece === BoardPiece.DRAW
               ? `It's a draw`
               : winnerPlayer
-              ? `${winnerPlayer.label} ${winnerPlayer.boardPiece} won`
-              : `Player ${
-                  winnerBoardPiece === BoardPiece.PLAYER_1 ? '1 🔴' : '2 🔵'
-                } won`
+                ? `${winnerPlayer.label} ${winnerPlayer.boardPiece} won`
+                : `Player ${
+                    winnerBoardPiece === BoardPiece.PLAYER_1 ? '1 🔴' : '2 🔵'
+                  } won`
 
           showMessage(
             `<h1>Thank you for playing</h1>` +
