@@ -82,7 +82,7 @@ export class GameLocal extends GameBase {
   }
 }
 export function initGameLocal(
-  GameLocalCosntructor: typeof GameLocal,
+  GameLocalConstructor: typeof GameLocal,
   firstPlayer: PlayerHuman,
   secondPlayer: PlayerHuman | PlayerAi,
 ) {
@@ -92,7 +92,7 @@ export function initGameLocal(
     return
   }
   const board = new Board(canvas)
-  const game = new GameLocalCosntructor([firstPlayer, secondPlayer], board)
+  const game = new GameLocalConstructor([firstPlayer, secondPlayer], board)
   statusbox?.classList.remove('hidden')
   statusboxBodyConnection?.classList.add('hidden')
 
@@ -117,7 +117,7 @@ export function initGameLocal(
       const rect = canvas.getBoundingClientRect()
       const x = event.clientX - rect.left
       const y = event.clientY - rect.top
-      const column = getColumnFromCoord({ x: x, y: y })
+      const column = getColumnFromCoord({ x, y })
       if (game.currentPlayerId === 0) {
         firstPlayer.doAction(column)
       } else if (
