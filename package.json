@@ -21,7 +21,7 @@
     "url": "https://github.com/kenrick95/c4/issues"
   },
   "engines": {
-    "node": "18.x || 20.x",
+    "node": "22.x",
     "yarn": "4.x"
   },
   "packageManager": "yarn@4.3.1",
