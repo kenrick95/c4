@@ -1,6 +1,6 @@
 {
   "name": "@kenrick95/c4",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "Building blocks for a Connect Four game",
   "type": "module",
   "repository": {
