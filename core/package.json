@@ -26,17 +26,22 @@
     "game"
   ],
   "source": "src/lib.ts",
-  "main": "./dist/c4.js",
-  "module": "./dist/c4.mjs",
-  "umd:main": "./dist/c4.umd.js",
-  "unpkg": "./dist/c4.umd.js",
+  "main": "./dist/c4.cjs",
+  "module": "./dist/c4.js",
+  "umd:main": "./dist/c4.umd.cjs",
+  "unpkg": "./dist/c4.umd.cjs",
   "exports": {
+    "./package.json": "./package.json",
     ".": {
       "import": {
         "__source": "./src/lib.ts",
-        "default": "./dist/c4.mjs"
+        "types": "./dist/lib.d.ts",
+        "default": "./dist/c4.js"
       },
-      "require": "./dist/c4.js"
+      "require": {
+        "types": "./dist/lib.d.cts",
+        "default": "./dist/c4.cjs"
+      }
     }
   },
   "types": "./dist/lib.d.ts",
@@ -48,10 +53,12 @@
     "prepack": "yarn build",
     "dev": "vite",
     "build": "vite build",
+    "check-package-json": "attw --pack .",
     "prettier": "prettier --write \"./**/*.?(ts|html|scss|css)\"",
     "test": "vitest --watch=false"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "~0.18.1",
     "prettier": "3.3.2",
     "typescript": "~5.5.2",
     "vite": "^6.3.5",
