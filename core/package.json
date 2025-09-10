@@ -61,7 +61,7 @@
     "@arethetypeswrong/cli": "~0.18.1",
     "prettier": "3.3.2",
     "typescript": "~5.5.2",
-    "vite": "^6.3.5",
+    "vite": "^6.3.6",
     "vite-dts": "^1.0.4",
     "vite-plugin-dts": "^3.9.1",
     "vitest": "^1.6.1"
