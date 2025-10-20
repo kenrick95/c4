@@ -41,7 +41,7 @@
     "@types/ws": "^8.5.10",
     "prettier": "3.3.2",
     "typescript": "~5.5.2",
-    "vite": "^7.0.7",
+    "vite": "^7.1.11",
     "vite-node": "1.6.0"
   },
   "dependencies": {
