@@ -497,7 +497,7 @@ __metadata:
     "@kenrick95/c4": "workspace:^"
     prettier: "npm:3.3.2"
     typescript: "npm:~5.5.2"
-    vite: "npm:^7.1.11"
+    vite: "npm:^7.1.12"
   languageName: unknown
   linkType: soft
 
@@ -522,7 +522,7 @@ __metadata:
     redux-thunk: "npm:^3.1.0"
     typescript: "npm:~5.5.2"
     uuid: "npm:^10.0.0"
-    vite: "npm:^7.1.11"
+    vite: "npm:^7.1.12"
     vite-node: "npm:1.6.0"
     ws: "npm:^8.17.1"
   languageName: unknown
@@ -535,7 +535,7 @@ __metadata:
     "@arethetypeswrong/cli": "npm:~0.18.1"
     prettier: "npm:3.3.2"
     typescript: "npm:~5.5.2"
-    vite: "npm:^7.1.11"
+    vite: "npm:^7.1.12"
     vite-dts: "npm:^1.0.4"
     vite-plugin-dts: "npm:^3.9.1"
     vitest: "npm:^1.6.1"
@@ -2039,8 +2039,8 @@ __metadata:
   linkType: hard
 
 "glob@npm:^10.2.2, glob@npm:^10.3.10":
-  version: 10.4.2
-  resolution: "glob@npm:10.4.2"
+  version: 10.4.5
+  resolution: "glob@npm:10.4.5"
   dependencies:
     foreground-child: "npm:^3.1.0"
     jackspeak: "npm:^3.1.2"
@@ -2050,7 +2050,7 @@ __metadata:
     path-scurry: "npm:^1.11.1"
   bin:
     glob: dist/esm/bin.mjs
-  checksum: 10/e412776b5952a818eba790c830bea161c9a56813fd767d8c4c49f855603b1fb962b3e73f1f627a47298a57d2992b9f0f2fe15cf93e74ecaaa63fb45d63fdd090
+  checksum: 10/698dfe11828b7efd0514cd11e573eaed26b2dff611f0400907281ce3eab0c1e56143ef9b35adc7c77ecc71fba74717b510c7c223d34ca8a98ec81777b293d4ac
   languageName: node
   linkType: hard
 
@@ -3681,9 +3681,9 @@ __metadata:
   linkType: hard
 
 "validator@npm:^13.7.0":
-  version: 13.12.0
-  resolution: "validator@npm:13.12.0"
-  checksum: 10/db6eb0725e2b67d60d30073ae8573982713b5903195d031dc3c7db7e82df8b74e8c13baef8e2106d146d979599fd61a06cde1fec5c148e4abd53d52817ff0fd9
+  version: 13.15.23
+  resolution: "validator@npm:13.15.23"
+  checksum: 10/03e4a37c04c4e8337b0c91e529bdb6376de6b52ef683616e2e909276be73903e6054203d274ed35e88e3498ec68764125b194338dd2ee893818d3008fbad1ba7
   languageName: node
   linkType: hard
 
@@ -3792,9 +3792,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^7.1.11":
-  version: 7.1.11
-  resolution: "vite@npm:7.1.11"
+"vite@npm:^7.1.12":
+  version: 7.2.2
+  resolution: "vite@npm:7.2.2"
   dependencies:
     esbuild: "npm:^0.25.0"
     fdir: "npm:^6.5.0"
@@ -3843,7 +3843,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10/b75ce7a38beeba7800751938df4fe2638cfb77509647329ac824332af51831eaed52ab0a0bae1d9162ac41ef59fff1c754e0acf7e1470dfa7d3da51fc3bf0985
+  checksum: 10/aee08b420646d5bcd92d5f4130b13b90303cab1cf48ee4772030f5fa7b464cc602ba578e9b1800a71f9b1c9b8daf1336e8c069a4cf1bb90b7b05ae5b13f62b06
   languageName: node
   linkType: hard
 
