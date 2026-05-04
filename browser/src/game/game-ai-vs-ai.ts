@@ -1,8 +1,7 @@
-import { BoardBase, BoardPiece } from '@kenrick95/c4'
-import { PlayerAi } from '@kenrick95/c4'
-import { GameLocal } from './game-local'
+import { type BoardBase, BoardPiece, PlayerAi } from '@kenrick95/c4'
 import { Board } from '../board'
 import { animationFrame } from '../utils/animate-frame'
+import { GameLocal } from './game-local'
 
 const statusbox = document.querySelector('.statusbox')
 const statusboxBodyGame = document.querySelector('.statusbox-body-game')
@@ -34,7 +33,7 @@ export function initGameAiVsAi() {
   statusboxBodyConnection?.classList.add('hidden')
   game.start()
 
-  async function handleCanvasClick(event: MouseEvent) {
+  async function handleCanvasClick(_event: MouseEvent) {
     if (game.isGameWon) {
       game.reset()
       await animationFrame()

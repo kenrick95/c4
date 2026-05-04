@@ -1,8 +1,12 @@
-import { v4 as uuidV4 } from 'uuid'
-import { PlayerId, MatchId, RenewLastSeenAction, AppThunk } from './types'
-import WebSocket from 'ws'
-import { BoardBase, BoardPiece } from '@kenrick95/c4'
-import { MESSAGE_TYPE, constructMessage } from '@kenrick95/c4'
+import { randomUUID } from 'node:crypto'
+import {
+  BoardBase,
+  BoardPiece,
+  constructMessage,
+  MESSAGE_TYPE,
+} from '@kenrick95/c4'
+import type WebSocket from 'ws'
+import type { AppThunk, MatchId, PlayerId, RenewLastSeenAction } from './types'
 
 export enum ACTION_TYPE {
   NEW_PLAYER_CONNECTION = 'NEW_PLAYER_CONNECTION',
@@ -20,7 +24,7 @@ export function newPlayerConnection(
   playerName: string,
 ): AppThunk<PlayerId> {
   return (dispatch) => {
-    const playerId = uuidV4()
+    const playerId = randomUUID()
     dispatch({
       type: ACTION_TYPE.NEW_PLAYER_CONNECTION,
       payload: {
@@ -41,7 +45,7 @@ export function newPlayerConnection(
 }
 export function newMatch(playerId: PlayerId): AppThunk<MatchId> {
   return (dispatch, getState) => {
-    const matchId = uuidV4()
+    const matchId = randomUUID()
 
     dispatch({
       type: ACTION_TYPE.NEW_MATCH,

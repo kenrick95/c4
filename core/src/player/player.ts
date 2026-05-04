@@ -1,4 +1,4 @@
-import { BoardBase, BoardPiece } from '../board'
+import type { BoardBase, BoardPiece } from '../board'
 
 export abstract class Player {
   boardPiece: BoardPiece

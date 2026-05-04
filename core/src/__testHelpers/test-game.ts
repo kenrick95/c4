@@ -1,6 +1,6 @@
+import type { BoardBase } from '../board'
 import { GameBase } from '../game'
-import { BoardBase } from '../board'
-import { Player } from '../player'
+import type { Player } from '../player'
 
 export class TestGame extends GameBase {
   afterMoveResolve: null | ((action: number) => void) = null

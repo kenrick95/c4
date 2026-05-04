@@ -1,7 +1,6 @@
-import { BoardBase, BoardPiece } from '@kenrick95/c4'
-import { Player } from '@kenrick95/c4'
-import { onresize, drawMask, drawCircle, clearCanvas } from './utils'
+import { BoardBase, BoardPiece, type Player } from '@kenrick95/c4'
 import { animationFrame } from '../utils/animate-frame'
+import { clearCanvas, drawCircle, drawMask, onresize } from './utils'
 
 export class Board extends BoardBase {
   canvas: HTMLCanvasElement
@@ -18,9 +17,12 @@ export class Board extends BoardBase {
   }
 
   getBoardScale() {
-    return window.innerWidth < 640
-      ? (BoardBase.SCALE = 0.5)
-      : (BoardBase.SCALE = 1.0)
+    if (window.innerWidth < 640) {
+      BoardBase.SCALE = 0.5
+    } else {
+      BoardBase.SCALE = 1.0
+    }
+    return BoardBase.SCALE
   }
 
   onresize() {

@@ -1,10 +1,9 @@
-import { ServerBoard } from './board'
-import { GameBase } from '@kenrick95/c4'
-import { ServerPlayer } from './player'
-import { MatchId } from '../types'
-import { BoardPiece } from '@kenrick95/c4'
+import { type BoardPiece, GameBase } from '@kenrick95/c4'
 import { store } from '..'
 import { gameEnded } from '../actions'
+import type { MatchId } from '../types'
+import type { ServerBoard } from './board'
+import type { ServerPlayer } from './player'
 
 export class ServerGame extends GameBase<ServerPlayer> {
   matchId: MatchId

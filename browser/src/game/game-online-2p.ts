@@ -1,14 +1,17 @@
-import { Board } from '../board'
-import { BoardBase, BoardPiece } from '@kenrick95/c4'
 import {
-  GameBase,
-  MESSAGE_TYPE,
+  type BoardBase,
+  BoardPiece,
   constructMessage,
+  GameBase,
+  type GameOnlineMessage,
+  getColumnFromCoord,
+  MESSAGE_TYPE,
+  type Player,
+  PlayerHuman,
+  PlayerShadow,
   parseMessage,
-  GameOnlineMessage,
 } from '@kenrick95/c4'
-import { Player, PlayerHuman, PlayerShadow } from '@kenrick95/c4'
-import { getColumnFromCoord } from '@kenrick95/c4'
+import { Board } from '../board'
 import { showMessage } from '../utils/message'
 
 enum GAME_MODE {
@@ -122,7 +125,7 @@ export class GameOnline2p extends GameBase {
   }
 
   initMatch = () => {
-    if (this.ws) {
+    if (this.ws && this.connectionPlayerId) {
       this.ws.send(
         constructMessage(MESSAGE_TYPE.NEW_MATCH_REQUEST, {
           playerId: this.connectionPlayerId,
@@ -132,7 +135,7 @@ export class GameOnline2p extends GameBase {
   }
 
   connectToMatch = (matchId: string) => {
-    if (!this.ws) {
+    if (!this.ws || !this.connectionPlayerId) {
       return
     }
     this.ws.send(
@@ -195,7 +198,7 @@ export class GameOnline2p extends GameBase {
                     'Using Clipboard API to write share url into clipboard',
                   )
                   isClipboardApiSuccessful = true
-                } catch (err) {}
+                } catch (_err) {}
               }
 
               if (!isClipboardApiSuccessful) {
@@ -258,7 +261,7 @@ export class GameOnline2p extends GameBase {
         {
           const { winnerBoardPiece } = message.payload
 
-          let winnerPlayer = this.players.find(
+          const winnerPlayer = this.players.find(
             (player) => player.boardPiece === winnerBoardPiece,
           )
 
@@ -334,6 +337,9 @@ export class GameOnline2p extends GameBase {
   }
 
   afterMove = (action: number) => {
+    if (!this.connectionPlayerId || !this.connectionMatchId) {
+      return
+    }
     if (this.ws && this.isCurrentMoveByCurrentPlayer()) {
       this.ws.send(
         constructMessage(MESSAGE_TYPE.MOVE_MAIN, {
@@ -360,7 +366,7 @@ export function initGameOnline2p(playerName: string) {
 
   const searchParams = new URLSearchParams(location.search)
   const connectionMatchId = searchParams.get('matchId')
-  const gameMode = !!connectionMatchId ? GAME_MODE.SECOND : GAME_MODE.FIRST
+  const gameMode = connectionMatchId ? GAME_MODE.SECOND : GAME_MODE.FIRST
 
   const board = new Board(canvas)
   const players =

@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite'
-import { resolve } from 'path'
-import dts from 'vite-plugin-dts'
 import { copyFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { defineConfig } from 'vite'
+import dts from 'vite-plugin-dts'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -15,7 +15,7 @@ export default defineConfig({
   },
   plugins: [
     dts({
-      rollupTypes: true,
+      bundleTypes: true,
       afterBuild: () => {
         // https://github.com/qmhc/vite-plugin-dts/issues/267
         copyFileSync('dist/lib.d.ts', 'dist/lib.d.cts')

@@ -1,4 +1,4 @@
-import { BoardPiece, BoardBase } from './board/base'
+import { BoardBase, BoardPiece } from './board/base'
 
 export const BIG_POSITIVE_NUMBER: number = 10 ** 9 + 7
 export const BIG_NEGATIVE_NUMBER: number = -BIG_POSITIVE_NUMBER

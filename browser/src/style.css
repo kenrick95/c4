@@ -1,20 +1,4 @@
 @charset "utf-8";
-@font-face {
-  font-family: system-font;
-  font-style: normal;
-  font-weight: 400;
-  src: local('.SFNSText-Regular'), local('.HelveticaNeueDeskInterface-Regular'),
-    local('.LucidaGrandeUI'), local('Segoe UI'), local('Ubuntu'),
-    local('Roboto-Regular'), local('DroidSans'), local('Tahoma');
-}
-@font-face {
-  font-family: system-font;
-  font-style: normal;
-  font-weight: 700;
-  src: local('.SFNSText-Bold'), local('.HelveticaNeueDeskInterface-Bold'),
-    local('.LucidaGrandeUI'), local('Segoe UI Bold'), local('Ubuntu Bold'),
-    local('Roboto-Bold'), local('DroidSans-Bold'), local('Tahoma Bold');
-}
 * {
   box-sizing: border-box;
 }
@@ -24,11 +8,11 @@ body {
   margin: 0;
   padding: 0;
   text-align: center;
-  font-family: system-font;
+  font-family: system-ui, sans-serif;
   color: #111;
 }
 button {
-  font-family: system-font;
+  font-family: system-ui, sans-serif;
   font-size: 0.9em;
   margin-top: 0.5em;
   padding: 6px 12px;

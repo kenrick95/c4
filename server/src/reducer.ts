@@ -1,9 +1,9 @@
-import { State, ActionTypes } from './types'
-import { ACTION_TYPE } from './actions'
 import { BoardPiece } from '@kenrick95/c4'
+import { ACTION_TYPE } from './actions'
+import { ServerBoard } from './game/board'
 import { ServerGame } from './game/game'
 import { ServerPlayer } from './game/player'
-import { ServerBoard } from './game/board'
+import type { ActionTypes, PlayerId, State } from './types'
 
 const INITIAL_STATE: State = {
   matches: {},
@@ -66,7 +66,7 @@ export function reducer(
       const player = state.players[playerId]
 
       // Guaranteed players[0] to be non-null here, already checked before dispatching action
-      const firstPlayer = players[0]!
+      const firstPlayer = players[0] as PlayerId
 
       const game = new ServerGame(
         [
