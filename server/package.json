@@ -48,7 +48,7 @@
     "@kenrick95/c4": "workspace:^",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
-    "uuid": "^10.0.0",
+    "uuid": "^14.0.0",
     "ws": "^8.17.1"
   }
 }
