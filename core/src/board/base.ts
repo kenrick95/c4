@@ -1,4 +1,4 @@
-import { Player } from '../player'
+import type { Player } from '../player'
 import { getMockPlayerAction } from '../utils'
 
 export enum BoardPiece {
@@ -144,7 +144,8 @@ export class BoardBase {
               1,
             )
             if (isWon) {
-              return (this.winnerBoardPiece = playerPiece)
+              this.winnerBoardPiece = playerPiece
+              return playerPiece
             }
           }
         } else {
@@ -153,7 +154,8 @@ export class BoardBase {
       }
     }
     if (countEmpty === 0) {
-      return (this.winnerBoardPiece = BoardPiece.DRAW)
+      this.winnerBoardPiece = BoardPiece.DRAW
+      return BoardPiece.DRAW
     }
 
     return BoardPiece.EMPTY

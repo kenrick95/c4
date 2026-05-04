@@ -1,12 +1,12 @@
-import { Player } from './player'
 import { BoardBase, BoardPiece } from '../board'
 import {
-  BIG_POSITIVE_NUMBER,
   BIG_NEGATIVE_NUMBER,
-  getMockPlayerAction,
+  BIG_POSITIVE_NUMBER,
   choose,
   clone,
+  getMockPlayerAction,
 } from '../utils'
+import { Player } from './player'
 
 export class PlayerAi extends Player {
   static readonly MAX_DEPTH = 4

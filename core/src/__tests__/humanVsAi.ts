@@ -1,7 +1,7 @@
+import { describe, expect, test } from 'vitest'
 import { TestGame } from '../__testHelpers/test-game'
-import { BoardPiece, BoardBase } from '../board'
 import { TestPlayer } from '../__testHelpers/test-player'
-import { describe, test, expect } from 'vitest'
+import { BoardBase, BoardPiece } from '../board'
 import { PlayerAi } from '../player'
 
 describe('PlayerHuman vs PlayerAi', () => {

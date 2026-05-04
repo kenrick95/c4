@@ -1,8 +1,8 @@
-import WebSocket from 'ws'
-import { ThunkAction } from 'redux-thunk'
-import { Action } from 'redux'
-import { ServerGame } from './game/game'
-import { ServerBoard } from './game/board'
+import type { Action } from 'redux'
+import type { ThunkAction } from 'redux-thunk'
+import type WebSocket from 'ws'
+import type { ServerBoard } from './game/board'
+import type { ServerGame } from './game/game'
 
 export type PlayerId = string
 export type MatchId = string

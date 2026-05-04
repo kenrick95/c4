@@ -39,8 +39,7 @@
     "@kenrick95/c4": "workspace:^"
   },
   "devDependencies": {
-    "prettier": "3.3.2",
-    "typescript": "~5.5.2",
+    "typescript": "~6.0.3",
     "vite": "^8.0.5"
   }
 }

@@ -1,20 +1,18 @@
 {
   "compilerOptions": {
+    "rootDir": "./src",
     "declaration": false,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "isolatedModules": true,
-    "module": "ES2022",
-    "moduleResolution": "node",
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "strict": true,
     "target": "ES2022",
     "useDefineForClassFields": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "paths": {
-      "@kenrick95/c4": ["../core/src/lib.ts"]
-    }
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
   "include": ["src/"],
   "exclude": ["node_modules", "**/*.spec.ts"]

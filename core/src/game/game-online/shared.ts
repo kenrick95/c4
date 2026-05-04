@@ -1,4 +1,4 @@
-import { BoardPiece } from '../../board'
+import type { BoardPiece } from '../../board'
 
 export enum MESSAGE_TYPE {
   NEW_PLAYER_CONNECTION_REQUEST = 'NEW_PLAYER_CONNECTION_REQUEST',
@@ -59,8 +59,8 @@ export type GameOnlineMessage =
       type: 'CONNECT_MATCH_FAIL'
       payload: { matchId: MatchId; playerId: PlayerId }
     }
-  | { type: 'HUNG_UP'; payload: {} }
-  | { type: 'OTHER_PLAYER_HUNGUP'; payload: {} }
+  | { type: 'HUNG_UP'; payload: Record<never, never> }
+  | { type: 'OTHER_PLAYER_HUNGUP'; payload: Record<never, never> }
   | { type: 'MOVE_MAIN'; payload: { column: number } }
   | { type: 'MOVE_SHADOW'; payload: { column: number } }
 

@@ -1,10 +1,15 @@
+import {
+  type BoardBase,
+  BoardPiece,
+  GameBase,
+  getColumnFromCoord,
+  type Player,
+  type PlayerAi,
+  PlayerHuman,
+} from '@kenrick95/c4'
 import { Board } from '../board'
-import { BoardBase, BoardPiece } from '@kenrick95/c4'
-import { GameBase } from '@kenrick95/c4'
-import { Player, PlayerHuman, PlayerAi } from '@kenrick95/c4'
-import { getColumnFromCoord } from '@kenrick95/c4'
-import { showMessage } from '../utils/message'
 import { animationFrame } from '../utils/animate-frame'
+import { showMessage } from '../utils/message'
 
 const statusbox = document.querySelector('.statusbox')
 const statusboxBodyGame = document.querySelector('.statusbox-body-game')

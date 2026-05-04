@@ -1,5 +1,5 @@
+import { BoardBase, type BoardPiece } from '../board'
 import { Player } from './player'
-import { BoardBase, BoardPiece } from '../board'
 
 export class PlayerHuman extends Player {
   clickPromiseResolver: null | ((column: number) => void)
@@ -19,7 +19,7 @@ export class PlayerHuman extends Player {
     }
   }
 
-  getAction(board: BoardBase): Promise<number> {
+  getAction(_board: BoardBase): Promise<number> {
     return new Promise<number>((r) => (this.clickPromiseResolver = r))
   }
 }

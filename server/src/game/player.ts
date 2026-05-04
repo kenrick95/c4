@@ -1,6 +1,5 @@
-import { BoardPiece } from '@kenrick95/c4'
-import { PlayerShadow } from '@kenrick95/c4'
-import { PlayerId } from '../types'
+import { type BoardPiece, PlayerShadow } from '@kenrick95/c4'
+import type { PlayerId } from '../types'
 
 export class ServerPlayer extends PlayerShadow {
   playerId: PlayerId

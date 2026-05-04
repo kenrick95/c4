@@ -1,4 +1,4 @@
-import { BoardPiece, PlayerHuman, PlayerAi } from '@kenrick95/c4'
+import { BoardPiece, PlayerAi, PlayerHuman } from '@kenrick95/c4'
 import { GameLocal, initGameLocal } from './game-local'
 
 class GameLocalAi extends GameLocal {}

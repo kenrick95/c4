@@ -1,20 +1,19 @@
-import WebSocket, { WebSocketServer } from 'ws'
-
-import { reducer } from './reducer'
-import { thunk, ThunkMiddleware } from 'redux-thunk'
-import { createStore, applyMiddleware } from 'redux'
+import { MESSAGE_TYPE, type PlayerId, parseMessage } from '@kenrick95/c4'
+import { applyMiddleware, createStore } from 'redux'
+import { type ThunkMiddleware, thunk } from 'redux-thunk'
+import type WebSocket from 'ws'
+import { WebSocketServer } from 'ws'
 
 import {
-  newPlayerConnection,
-  newMatch,
   connectMatch,
   hungUp,
   move,
+  newMatch,
+  newPlayerConnection,
   renewLastSeen,
 } from './actions'
-import { MatchId, State, ActionTypes } from './types'
-
-import { MESSAGE_TYPE, PlayerId, parseMessage } from '@kenrick95/c4'
+import { reducer } from './reducer'
+import type { ActionTypes, MatchId, State } from './types'
 
 const port = parseInt(process.env.PORT || '') || 8080
 const wss = new WebSocketServer({ port: port })

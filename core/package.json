@@ -16,7 +16,24 @@
     "url": "https://github.com/kenrick95/c4/issues"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "main": "./dist/c4.cjs",
+    "module": "./dist/c4.js",
+    "unpkg": "./dist/c4.umd.cjs",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": {
+          "types": "./dist/lib.d.ts",
+          "default": "./dist/c4.js"
+        },
+        "require": {
+          "types": "./dist/lib.d.cts",
+          "default": "./dist/c4.cjs"
+        }
+      }
+    },
+    "types": "./dist/lib.d.ts"
   },
   "homepage": "https://github.com/kenrick95/c4",
   "license": "MIT",
@@ -26,25 +43,15 @@
     "game"
   ],
   "source": "src/lib.ts",
-  "main": "./dist/c4.cjs",
-  "module": "./dist/c4.js",
+  "main": "./src/lib.ts",
+  "module": "./src/lib.ts",
   "umd:main": "./dist/c4.umd.cjs",
   "unpkg": "./dist/c4.umd.cjs",
   "exports": {
     "./package.json": "./package.json",
-    ".": {
-      "import": {
-        "__source": "./src/lib.ts",
-        "types": "./dist/lib.d.ts",
-        "default": "./dist/c4.js"
-      },
-      "require": {
-        "types": "./dist/lib.d.cts",
-        "default": "./dist/c4.cjs"
-      }
-    }
+    ".": "./src/lib.ts"
   },
-  "types": "./dist/lib.d.ts",
+  "types": "./src/lib.ts",
   "files": [
     "src/",
     "dist/"
@@ -53,17 +60,17 @@
     "prepack": "yarn build",
     "dev": "vite",
     "build": "vite build",
-    "check-package-json": "attw --pack .",
-    "prettier": "prettier --write \"./**/*.?(ts|html|scss|css)\"",
+    "check-package-json": "node ./check-package-json.js",
     "test": "vitest --watch=false"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "~0.18.1",
-    "prettier": "3.3.2",
-    "typescript": "~5.5.2",
+    "@microsoft/api-extractor": "^7.58.7",
+    "@types/node": "24",
+    "typescript": "~6.0.3",
     "vite": "^8.0.5",
     "vite-dts": "^1.0.4",
-    "vite-plugin-dts": "^3.9.1",
-    "vitest": "^1.6.1"
+    "vite-plugin-dts": "^5.0.0",
+    "vitest": "^4.1.5"
   }
 }

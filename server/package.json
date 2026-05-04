@@ -32,23 +32,19 @@
     "start": "yarn node ./dist/index.js",
     "dev": "vite-node --watch src/index.ts",
     "build": "vite build",
-    "prettier": "prettier --write \"./**/*.?(ts|html|scss|css)\"",
     "test": "echo 'OK'"
   },
   "devDependencies": {
-    "@types/node": "^20.14.9",
-    "@types/uuid": "^10.0.0",
+    "@types/node": "24",
     "@types/ws": "^8.5.10",
-    "prettier": "3.3.2",
-    "typescript": "~5.5.2",
+    "typescript": "~6.0.3",
     "vite": "^8.0.5",
-    "vite-node": "1.6.0"
+    "vite-node": "6.0.0"
   },
   "dependencies": {
     "@kenrick95/c4": "workspace:^",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
-    "uuid": "^10.0.0",
     "ws": "^8.17.1"
   }
 }

@@ -1,5 +1,5 @@
+import type { BoardPiece } from '../board'
 import { Player } from '../player'
-import { BoardPiece } from '../board'
 
 export class TestPlayer extends Player {
   getActionPromiseResolver: null | ((column: number) => void)

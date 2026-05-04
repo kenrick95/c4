@@ -1,8 +1,8 @@
+import { describe, expect, test } from 'vitest'
 import { TestGame } from '../__testHelpers/test-game'
-import { BoardPiece, BoardBase } from '../board'
 import { TestPlayer } from '../__testHelpers/test-player'
+import { BoardBase, BoardPiece } from '../board'
 import { clone } from '../utils'
-import { describe, test, expect } from 'vitest'
 
 describe('PlayerHuman vs PlayerHuman', () => {
   const players = [

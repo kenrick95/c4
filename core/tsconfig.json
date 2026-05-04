@@ -1,17 +1,19 @@
 {
   "compilerOptions": {
+    "rootDir": "./src",
     "declaration": false,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "isolatedModules": true,
-    "module": "ES2022",
-    "moduleResolution": "node",
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "strict": true,
     "target": "ES2022",
     "useDefineForClassFields": true,
-    "lib": ["ES2022"]
+    "lib": ["ES2022"],
+    "types": ["node"]
   },
   "include": ["src/"],
   "exclude": ["node_modules", "**/*.spec.ts"]

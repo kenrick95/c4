@@ -1,5 +1,5 @@
-import * as Game from './game'
 import { Board } from './board'
+import * as Game from './game'
 import './style.css'
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -57,11 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
   backToModeSelector?.classList.add('hidden')
   initScreenDOM.showModal()
 
-  let chosenMode: string = !!connectionMatchId ? 'online-human' : 'offline-ai'
+  let chosenMode: string = connectionMatchId ? 'online-human' : 'offline-ai'
   renderForm()
 
   backToModeSelector?.addEventListener('click', () => {
-    if (currentGameHandler && currentGameHandler.end) {
+    if (currentGameHandler?.end) {
       currentGameHandler.end()
     }
     backToModeSelector?.classList.add('hidden')
@@ -87,8 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   function renderForm() {
-    if (!!connectionMatchId) {
-      for (let el of settingsForm.querySelectorAll(
+    if (connectionMatchId) {
+      for (const el of settingsForm.querySelectorAll(
         '.game-settings-mode-input',
       )) {
         const checkboxEl = el as HTMLInputElement
