@@ -308,7 +308,6 @@ export class GameOnline2p extends GameBase {
           document.execCommand('copy')
           console.log('Using fallback method to write share url into clipboard')
         }
-
       })
   }
 
