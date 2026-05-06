@@ -32,7 +32,6 @@
     "dev": "vite",
     "build": "vite build",
     "build-gh-pages": "vite build --base=\"https://kenrick95.github.io/c4/\"",
-    "prettier": "prettier --write \"./**/*.?(ts|html|scss|css)\"",
     "test": "echo 'OK'"
   },
   "dependencies": {
