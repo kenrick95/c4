@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const backToModeSelector = document.querySelector(
     '.statusbox-button-back',
   ) as HTMLDivElement
+  const shareButton = document.querySelector(
+    '.statusbox-button-share',
+  ) as HTMLDivElement
 
   const settingsForm = document.querySelector(
     '.game-settings-form',
@@ -55,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     | null = null
 
   backToModeSelector?.classList.add('hidden')
+  shareButton?.classList.add('hidden')
   initScreenDOM.showModal()
 
   let chosenMode: string = connectionMatchId ? 'online-human' : 'offline-ai'
@@ -65,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
       currentGameHandler.end()
     }
     backToModeSelector?.classList.add('hidden')
+    shareButton?.classList.add('hidden')
     initScreenDOM.showModal()
   })
 

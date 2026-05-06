@@ -25,6 +25,9 @@ const statusboxBodyConnection = document.querySelector(
   '.statusbox-body-connection',
 )
 const statusboxBodyPlayer = document.querySelector('.statusbox-body-player')
+const shareButton = document.querySelector(
+  '.statusbox-button-share',
+) as HTMLDivElement
 
 const C4_SERVER_ENDPOINT =
   import.meta.env.MODE === 'production'
@@ -167,50 +170,9 @@ export class GameOnline2p extends GameBase {
       case MESSAGE_TYPE.NEW_MATCH_OK:
         {
           this.connectionMatchId = message.payload.matchId
-          const shareUrl = `${location.href}?matchId=${this.connectionMatchId}`
-          // TODO: button to copy share url again?
-          console.log('[url] Share this', shareUrl)
-          showMessage(
-            `<h1>Share this URL</h1>` +
-              `<p>` +
-              `Please share this URL to your friend to start the game: ` +
-              `<input type="text" id="copy-box" class="copy-box" readonly value="${shareUrl}" />` +
-              `<button type="button" id="copy-button">Copy</button>` +
-              `</p>`,
-          )
-          // Select all
-          const copyBox: HTMLInputElement | null = document.getElementById(
-            'copy-box',
-          ) as HTMLInputElement
-          copyBox.focus()
-          copyBox.select()
-
-          // Click to copy
-          document
-            .getElementById('copy-button')
-            ?.addEventListener('click', async () => {
-              let isClipboardApiSuccessful = false
-
-              if (navigator.clipboard) {
-                try {
-                  await navigator.clipboard.writeText(shareUrl)
-                  console.log(
-                    'Using Clipboard API to write share url into clipboard',
-                  )
-                  isClipboardApiSuccessful = true
-                } catch (_err) {}
-              }
-
-              if (!isClipboardApiSuccessful) {
-                // Old method: use as fallback
-                copyBox?.select()
-                copyBox?.setSelectionRange(0, 99999)
-                document.execCommand('copy')
-                console.log(
-                  'Using fallback method to write share url into clipboard',
-                )
-              }
-            })
+          shareButton.classList.remove('hidden')
+          shareButton.addEventListener('click', this.showShareLink)
+          this.showShareLink()
         }
         break
       case MESSAGE_TYPE.CONNECT_MATCH_OK:
@@ -302,6 +264,52 @@ export class GameOnline2p extends GameBase {
         }
         break
     }
+  }
+
+  showShareLink = () => {
+    if (!this.connectionMatchId) {
+      return
+    }
+    const shareUrl = `${location.href}?matchId=${this.connectionMatchId}`
+    console.log('[url] Share this', shareUrl)
+    showMessage(
+      `<h1>Share this URL</h1>` +
+        `<p>` +
+        `Please share this URL to your friend to start the game: ` +
+        `<input type="text" id="copy-box" class="copy-box" readonly value="${shareUrl}" />` +
+        `<button type="button" id="copy-button">Copy</button>` +
+        `</p>`,
+    )
+    // Select all
+    const copyBox: HTMLInputElement | null = document.getElementById(
+      'copy-box',
+    ) as HTMLInputElement
+    copyBox.focus()
+    copyBox.select()
+
+    // Click to copy
+    document
+      .getElementById('copy-button')
+      ?.addEventListener('click', async () => {
+        let isClipboardApiSuccessful = false
+
+        if (navigator.clipboard) {
+          try {
+            await navigator.clipboard.writeText(shareUrl)
+            console.log('Using Clipboard API to write share url into clipboard')
+            isClipboardApiSuccessful = true
+          } catch (_err) {}
+        }
+
+        if (!isClipboardApiSuccessful) {
+          // Old method: use as fallback
+          copyBox?.select()
+          copyBox?.setSelectionRange(0, 99999)
+          document.execCommand('copy')
+          console.log('Using fallback method to write share url into clipboard')
+        }
+
+      })
   }
 
   /**

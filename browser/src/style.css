@@ -99,16 +99,17 @@ h2 {
   align-items: baseline;
   max-width: 550px;
   margin: 0 auto;
+  gap: 1em;
 }
 .statusbox-controls {
   margin-top: 1em;
   justify-content: center;
 }
-.statusbox-button-back {
+.statusbox-button {
   border: 1px solid #a1a1a1;
   background: #d8d8d8;
 }
-.statusbox-button-back:hover {
+.statusbox-button:hover {
   border: 1px solid #6e6e6e;
   background: #a1a1a1;
 }
