@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   build-gh-pages:
+    name: "Build for GitHub Pages"
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -38,10 +39,11 @@ jobs:
           path: browser/dist
 
   deploy-gh-pages:
+    name: "Deploy to GitHub Pages"
     needs: build-gh-pages
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # Required for deploying to GitHub Pages
 
     steps:
       - name: Download build artifact
@@ -57,6 +59,7 @@ jobs:
           folder: browser/dist
 
   deploy-fly:
+    name: "Deploy to Fly.io"
     runs-on: ubuntu-latest
     permissions:
       contents: read

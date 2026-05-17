@@ -13,6 +13,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    name: "Lint, Test, Build"
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+      cancel-in-progress: true
+
     strategy:
       matrix:
         node-version: [24]
@@ -38,7 +44,7 @@ jobs:
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     permissions:
-      contents: write
+      contents: write # Required for deploying to GitHub Pages
     uses: ./.github/workflows/deploy.yml
     secrets:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
