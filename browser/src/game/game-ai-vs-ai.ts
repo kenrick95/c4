@@ -9,6 +9,9 @@ const statusboxBodyConnection = document.querySelector(
   '.statusbox-body-connection',
 )
 const statusboxBodyPlayer = document.querySelector('.statusbox-body-player')
+const playAgainButton = document.querySelector(
+  '.statusbox-button-play-again',
+) as HTMLButtonElement
 
 class GameAiVsAi extends GameLocal {
   constructor(players: Array<PlayerAi>, board: BoardBase) {
@@ -31,21 +34,24 @@ export function initGameAiVsAi() {
 
   statusbox?.classList.remove('hidden')
   statusboxBodyConnection?.classList.add('hidden')
+  playAgainButton?.classList.add('hidden')
   game.start()
 
-  async function handleCanvasClick(_event: MouseEvent) {
-    if (game.isGameWon) {
-      game.reset()
-      await animationFrame()
-      game.start()
+  async function restartGame() {
+    if (!game.isGameWon) {
+      return
     }
+    playAgainButton?.classList.add('hidden')
+    game.reset()
+    await animationFrame()
+    game.start()
   }
 
-  canvas.addEventListener('click', handleCanvasClick)
   return {
     end: () => {
       game.end()
-      canvas.removeEventListener('click', handleCanvasClick)
+      playAgainButton?.classList.add('hidden')
     },
+    restart: restartGame,
   }
 }

@@ -10,6 +10,7 @@ import {
 import { Board } from '../board'
 import { animationFrame } from '../utils/animate-frame'
 import { showMessage } from '../utils/message'
+import { activateGameControls } from './game-controls'
 
 const statusbox = document.querySelector('.statusbox')
 const statusboxBodyGame = document.querySelector('.statusbox-body-game')
@@ -17,6 +18,9 @@ const statusboxBodyConnection = document.querySelector(
   '.statusbox-body-connection',
 )
 const statusboxBodyPlayer = document.querySelector('.statusbox-body-player')
+const playAgainButton = document.querySelector(
+  '.statusbox-button-play-again',
+) as HTMLButtonElement
 
 export class GameLocal extends GameBase {
   constructor(players: Array<Player>, board: BoardBase) {
@@ -67,9 +71,9 @@ export class GameLocal extends GameBase {
         message += `Player ${winnerBoardPiece} won`
       }
     }
-    message +=
-      '.<br />After dismissing this message, click the board to reset game.'
+    message += '.<br />Use the Play again button to start a new game.'
     showMessage(message)
+    playAgainButton?.classList.remove('hidden')
 
     if (statusboxBodyGame) {
       statusboxBodyGame.textContent = 'Game over'
@@ -100,6 +104,7 @@ export function initGameLocal(
   const game = new GameLocalConstructor([firstPlayer, secondPlayer], board)
   statusbox?.classList.remove('hidden')
   statusboxBodyConnection?.classList.add('hidden')
+  playAgainButton?.classList.add('hidden')
 
   game.start()
   if (statusboxBodyGame) {
@@ -110,36 +115,47 @@ export function initGameLocal(
     statusboxBodyPlayer.textContent = `${firstPlayer.label} ${firstPlayer.boardPiece}`
   }
 
-  async function handleCanvasClick(event: MouseEvent) {
-    if (game.isGameWon) {
-      game.reset()
-      await animationFrame()
-      game.start()
-    } else {
-      if (!canvas) {
-        return
-      }
-      const rect = canvas.getBoundingClientRect()
-      const x = event.clientX - rect.left
-      const y = event.clientY - rect.top
-      const column = getColumnFromCoord({ x, y })
-      if (game.currentPlayerId === 0) {
-        firstPlayer.doAction(column)
-      } else if (
-        game.currentPlayerId === 1 &&
-        secondPlayer instanceof PlayerHuman
-      ) {
-        secondPlayer.doAction(column)
-      }
+  function playColumn(column: number) {
+    if (game.isGameWon || !game.isMoveAllowed) {
+      return
+    }
+    if (game.currentPlayerId === 0) {
+      firstPlayer.doAction(column)
+    } else if (
+      game.currentPlayerId === 1 &&
+      secondPlayer instanceof PlayerHuman
+    ) {
+      secondPlayer.doAction(column)
     }
   }
 
+  async function restartGame() {
+    if (!game.isGameWon) {
+      return
+    }
+    playAgainButton?.classList.add('hidden')
+    game.reset()
+    await animationFrame()
+    game.start()
+  }
+
+  function handleCanvasClick(event: MouseEvent) {
+    const rect = canvas.getBoundingClientRect()
+    const x = event.clientX - rect.left
+    const y = event.clientY - rect.top
+    playColumn(getColumnFromCoord({ x, y }))
+  }
+
+  const deactivateGameControls = activateGameControls(playColumn)
   canvas.addEventListener('click', handleCanvasClick)
   return {
     end: () => {
       game.end()
+      deactivateGameControls()
       canvas.removeEventListener('click', handleCanvasClick)
+      playAgainButton?.classList.add('hidden')
       statusbox?.classList.add('hidden')
     },
+    restart: restartGame,
   }
 }

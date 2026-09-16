@@ -27,6 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const shareButton = document.querySelector(
     '.statusbox-button-share',
   ) as HTMLDivElement
+  const playAgainButton = document.querySelector(
+    '.statusbox-button-play-again',
+  ) as HTMLButtonElement
 
   const settingsForm = document.querySelector(
     '.game-settings-form',
@@ -53,12 +56,14 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentGameHandler:
     | {
         end: () => void
+        restart?: () => void
       }
     | undefined
     | null = null
 
   backToModeSelector?.classList.add('hidden')
   shareButton?.classList.add('hidden')
+  playAgainButton?.classList.add('hidden')
   initScreenDOM.showModal()
 
   let chosenMode: string = connectionMatchId ? 'online-human' : 'offline-ai'
@@ -70,7 +75,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     backToModeSelector?.classList.add('hidden')
     shareButton?.classList.add('hidden')
+    playAgainButton?.classList.add('hidden')
     initScreenDOM.showModal()
+  })
+
+  playAgainButton?.addEventListener('click', () => {
+    currentGameHandler?.restart?.()
   })
 
   initScreenDOM.addEventListener('cancel', (ev) => {
@@ -154,6 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function initGame(chosenMode: string | null, playerNames: (string | null)[]) {
     console.log('initGame chosenMode:', chosenMode)
     backToModeSelector?.classList.remove('hidden')
+    playAgainButton?.classList.add('hidden')
     if (chosenMode === 'offline-human') {
       currentGameHandler = Game.initGameLocal2p(
         playerNames[0] || 'Player 1',

@@ -83,6 +83,27 @@ h2 {
 .hidden {
   display: none;
 }
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.visually-hidden:focus-visible {
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
 .footer {
   font-size: 0.8em;
   margin-bottom: 2em;
