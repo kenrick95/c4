@@ -13,6 +13,7 @@ import {
 } from '@kenrick95/c4'
 import { Board } from '../board'
 import { showMessage } from '../utils/message'
+import { activateGameControls } from './game-controls'
 
 enum GAME_MODE {
   FIRST = BoardPiece.PLAYER_1,
@@ -394,24 +395,26 @@ export function initGameOnline2p(playerName: string) {
   statusbox?.classList.remove('hidden')
   statusboxBodyConnection?.classList.remove('hidden')
 
-  async function handleCanvasClick(event: MouseEvent) {
-    if (!game.isGameWon) {
-      if (!canvas) {
-        return
-      }
-      const rect = canvas.getBoundingClientRect()
-      const x = event.clientX - rect.left
-      const y = event.clientY - rect.top
-      const column = getColumnFromCoord({ x: x, y: y })
+  function playColumn(column: number) {
+    if (!game.isGameWon && game.isMoveAllowed) {
       game.playerMain.doAction(column)
     }
   }
 
+  function handleCanvasClick(event: MouseEvent) {
+    const rect = canvas.getBoundingClientRect()
+    const x = event.clientX - rect.left
+    const y = event.clientY - rect.top
+    playColumn(getColumnFromCoord({ x: x, y: y }))
+  }
+
+  const deactivateGameControls = activateGameControls(playColumn)
   canvas.addEventListener('click', handleCanvasClick)
 
   return {
     end: () => {
       game.end()
+      deactivateGameControls()
       canvas.removeEventListener('click', handleCanvasClick)
       statusbox?.classList.add('hidden')
     },
