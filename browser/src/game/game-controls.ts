@@ -7,7 +7,9 @@ function isTextInput(target: EventTarget | null): boolean {
   )
 }
 
-export function activateGameControls(onColumnSelected: (column: number) => void) {
+export function activateGameControls(
+  onColumnSelected: (column: number) => void,
+) {
   const controls = Array.from(
     document.querySelectorAll<HTMLButtonElement>('.game-control'),
   )
