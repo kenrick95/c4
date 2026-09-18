@@ -83,6 +83,10 @@ h2 {
 .hidden {
   display: none;
 }
+.game-controls:focus {
+  /* This container only sets the starting point for keyboard navigation. */
+  outline: none;
+}
 .visually-hidden {
   position: absolute;
   width: 1px;
