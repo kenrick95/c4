@@ -38,6 +38,8 @@ const C4_SERVER_ENDPOINT =
     : `ws://${location.hostname}:8080`
 
 export class GameOnline2p extends GameBase {
+  controls?: ReturnType<typeof activateGameControls>
+
   connectionPlayerId: null | string = null
   connectionMatchId: null | string = null
   ws: null | WebSocket = null
@@ -65,6 +67,7 @@ export class GameOnline2p extends GameBase {
   }
 
   end() {
+    this.controls?.setTurn(false)
     super.end()
     this.endConnection()
   }
@@ -85,6 +88,7 @@ export class GameOnline2p extends GameBase {
 
     const setStatusDisconnected = () => {
       this.isMoveAllowed = false
+      this.controls?.setTurn(false)
       if (statusboxBodyConnection) {
         statusboxBodyConnection.textContent = 'Disconnected from server'
       }
@@ -222,6 +226,7 @@ export class GameOnline2p extends GameBase {
         break
       case MESSAGE_TYPE.GAME_ENDED:
         {
+          this.controls?.setTurn(false)
           const { winnerBoardPiece } = message.payload
 
           const winnerPlayer = this.players.find(
@@ -253,12 +258,15 @@ export class GameOnline2p extends GameBase {
         break
       case MESSAGE_TYPE.GAME_RESET:
         {
+          this.controls?.setTurn(false)
           this.reset()
         }
         break
 
       case MESSAGE_TYPE.OTHER_PLAYER_HUNGUP:
         {
+          this.isMoveAllowed = false
+          this.controls?.setTurn(false)
           showMessage(
             `<h1>Other player disconnected</h1> Please reload the page to start a new match`,
           )
@@ -324,6 +332,7 @@ export class GameOnline2p extends GameBase {
   }
 
   beforeMoveApplied = () => {
+    this.controls?.setTurn(false)
     if (statusboxBodyGame) {
       const currentPlayer = this.players[this.currentPlayerId]
       statusboxBodyGame.textContent = `Dropping ${currentPlayer.boardPiece} disc`
@@ -331,6 +340,12 @@ export class GameOnline2p extends GameBase {
   }
 
   waitingForMove = () => {
+    this.controls?.setTurn(
+      this.isMoveAllowed &&
+        !this.isGameWon &&
+        !this.isGameEnded &&
+        this.isCurrentMoveByCurrentPlayer(),
+    )
     if (statusboxBodyGame) {
       statusboxBodyGame.textContent = 'Wating for move'
     }
@@ -360,6 +375,7 @@ export class GameOnline2p extends GameBase {
   }
 
   announceWinner(winnerBoardPiece: BoardPiece) {
+    this.controls?.setTurn(false)
     super.announceWinner(winnerBoardPiece)
     // Do nothing here, will wait for server to announce
   }
@@ -396,7 +412,12 @@ export function initGameOnline2p(playerName: string) {
   statusboxBodyConnection?.classList.remove('hidden')
 
   function playColumn(column: number) {
-    if (!game.isGameWon && game.isMoveAllowed) {
+    if (
+      !game.isGameWon &&
+      !game.isGameEnded &&
+      game.isMoveAllowed &&
+      game.isCurrentMoveByCurrentPlayer()
+    ) {
       game.playerMain.doAction(column)
     }
   }
@@ -405,16 +426,20 @@ export function initGameOnline2p(playerName: string) {
     const rect = canvas.getBoundingClientRect()
     const x = event.clientX - rect.left
     const y = event.clientY - rect.top
-    playColumn(getColumnFromCoord({ x: x, y: y }))
+    controls.playColumn(getColumnFromCoord({ x: x, y: y }))
   }
 
-  const deactivateGameControls = activateGameControls(playColumn)
+  const controls = activateGameControls(
+    playColumn,
+    (column) => board.map[0][column] === BoardPiece.EMPTY,
+  )
+  game.controls = controls
   canvas.addEventListener('click', handleCanvasClick)
 
   return {
     end: () => {
       game.end()
-      deactivateGameControls()
+      controls.dispose()
       canvas.removeEventListener('click', handleCanvasClick)
       statusbox?.classList.add('hidden')
     },
