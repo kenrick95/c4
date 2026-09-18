@@ -17,8 +17,8 @@
       content="Connect Four game in JS + Canvas. Play against artificial intelligence or with other human offline or online!"
     />
     <link rel="icon" type="image/svg+xml" href="https://kenrick95.github.io/c4/logo.svg" />
-    <script type="module" crossorigin src="https://kenrick95.github.io/c4/assets/index-BM0ics1E.js"></script>
-    <link rel="stylesheet" crossorigin href="https://kenrick95.github.io/c4/assets/index-DCAvk-OH.css">
+    <script type="module" crossorigin src="https://kenrick95.github.io/c4/assets/index-47cmAndh.js"></script>
+    <link rel="stylesheet" crossorigin href="https://kenrick95.github.io/c4/assets/index-9WwFEtzK.css">
   </head>
 
   <body>
@@ -34,8 +34,69 @@
       </h1>
     </header>
     <section class="section">
-      <div class="section-message"></div>
-      <canvas class="section-canvas"></canvas>
+      <div
+        class="section-message"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      ></div>
+      <canvas class="section-canvas" aria-hidden="true"></canvas>
+      <div
+        class="hidden game-controls"
+        role="group"
+        aria-label="Connect Four columns"
+        tabindex="-1"
+      >
+        <button
+          class="visually-hidden game-control"
+          type="button"
+          data-column="0"
+        >
+          Drop a disc in column 1
+        </button>
+        <button
+          class="visually-hidden game-control"
+          type="button"
+          data-column="1"
+        >
+          Drop a disc in column 2
+        </button>
+        <button
+          class="visually-hidden game-control"
+          type="button"
+          data-column="2"
+        >
+          Drop a disc in column 3
+        </button>
+        <button
+          class="visually-hidden game-control"
+          type="button"
+          data-column="3"
+        >
+          Drop a disc in column 4
+        </button>
+        <button
+          class="visually-hidden game-control"
+          type="button"
+          data-column="4"
+        >
+          Drop a disc in column 5
+        </button>
+        <button
+          class="visually-hidden game-control"
+          type="button"
+          data-column="5"
+        >
+          Drop a disc in column 6
+        </button>
+        <button
+          class="visually-hidden game-control"
+          type="button"
+          data-column="6"
+        >
+          Drop a disc in column 7
+        </button>
+      </div>
     </section>
 
     <dialog class="init-screen">
@@ -165,6 +226,12 @@
           type="button"
         >
           End game
+        </button>
+        <button
+          class="hidden statusbox-button statusbox-button-play-again"
+          type="button"
+        >
+          Play again
         </button>
       </div>
     </div>
