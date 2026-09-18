@@ -23,16 +23,25 @@ const playAgainButton = document.querySelector(
 ) as HTMLButtonElement
 
 export class GameLocal extends GameBase {
+  controls?: ReturnType<typeof activateGameControls>
+
   constructor(players: Array<Player>, board: BoardBase) {
     super(players, board)
   }
   beforeMoveApplied() {
+    this.controls?.setTurn(false)
     if (statusboxBodyGame) {
       const currentPlayer = this.players[this.currentPlayerId]
       statusboxBodyGame.textContent = `Dropping ${currentPlayer.boardPiece} disc`
     }
   }
   waitingForMove() {
+    this.controls?.setTurn(
+      this.isMoveAllowed &&
+        !this.isGameWon &&
+        !this.isGameEnded &&
+        this.players[this.currentPlayerId] instanceof PlayerHuman,
+    )
     if (!this.isMoveAllowed || this.isGameWon) {
       return
     }
@@ -52,6 +61,7 @@ export class GameLocal extends GameBase {
   }
 
   announceWinner(winnerBoardPiece: BoardPiece) {
+    this.controls?.setTurn(false)
     super.announceWinner(winnerBoardPiece)
 
     if (winnerBoardPiece === BoardPiece.EMPTY) {
@@ -106,7 +116,6 @@ export function initGameLocal(
   statusboxBodyConnection?.classList.add('hidden')
   playAgainButton?.classList.add('hidden')
 
-  game.start()
   if (statusboxBodyGame) {
     statusboxBodyGame.textContent = 'Wating for move'
   }
@@ -116,7 +125,7 @@ export function initGameLocal(
   }
 
   function playColumn(column: number) {
-    if (game.isGameWon || !game.isMoveAllowed) {
+    if (game.isGameWon || game.isGameEnded || !game.isMoveAllowed) {
       return
     }
     if (game.currentPlayerId === 0) {
@@ -143,15 +152,20 @@ export function initGameLocal(
     const rect = canvas.getBoundingClientRect()
     const x = event.clientX - rect.left
     const y = event.clientY - rect.top
-    playColumn(getColumnFromCoord({ x, y }))
+    controls.playColumn(getColumnFromCoord({ x, y }))
   }
 
-  const deactivateGameControls = activateGameControls(playColumn)
+  const controls = activateGameControls(
+    playColumn,
+    (column) => board.map[0][column] === BoardPiece.EMPTY,
+  )
+  game.controls = controls
+  game.start()
   canvas.addEventListener('click', handleCanvasClick)
   return {
     end: () => {
       game.end()
-      deactivateGameControls()
+      controls.dispose()
       canvas.removeEventListener('click', handleCanvasClick)
       playAgainButton?.classList.add('hidden')
       statusbox?.classList.add('hidden')
