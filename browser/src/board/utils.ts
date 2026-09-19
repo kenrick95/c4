@@ -4,27 +4,47 @@ type Callback = () => void
 
 export function onresize(callback: Callback): () => void {
   let running: boolean = false
+  let disposed: boolean = false
+  let animationFrameId: number | undefined
+  let timeoutId: ReturnType<typeof setTimeout> | undefined
 
   // Fired on resize event.
   function resize() {
-    if (!running) {
+    if (!disposed && !running) {
       running = true
 
-      if (window.requestAnimationFrame)
-        window.requestAnimationFrame(runCallbacks)
-      else setTimeout(runCallbacks, 66)
+      if (window.requestAnimationFrame) {
+        animationFrameId = window.requestAnimationFrame(runCallbacks)
+      } else {
+        timeoutId = setTimeout(runCallbacks, 66)
+      }
     }
   }
 
   // Run the actual callbacks.
   function runCallbacks() {
-    callback()
+    animationFrameId = undefined
+    timeoutId = undefined
+    if (!disposed) {
+      callback()
+    }
     running = false
   }
 
   window.addEventListener('resize', resize)
   return () => {
+    if (disposed) {
+      return
+    }
+    disposed = true
     window.removeEventListener('resize', resize)
+    if (animationFrameId !== undefined) {
+      window.cancelAnimationFrame(animationFrameId)
+    }
+    if (timeoutId !== undefined) {
+      clearTimeout(timeoutId)
+    }
+    running = false
   }
 }
 

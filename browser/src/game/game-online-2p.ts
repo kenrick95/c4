@@ -69,6 +69,9 @@ export class GameOnline2p extends GameBase {
   }
 
   end() {
+    if (this.disposed) {
+      return
+    }
     this.disposed = true
     this.controls?.setTurn(false)
     super.end()
@@ -77,9 +80,9 @@ export class GameOnline2p extends GameBase {
   }
 
   endConnection() {
-    if (this.ws) {
-      this.ws.close()
-    }
+    const ws = this.ws
+    this.ws = null
+    ws?.close()
   }
 
   initConnection() {
@@ -91,6 +94,7 @@ export class GameOnline2p extends GameBase {
     }
 
     const setStatusDisconnected = () => {
+      this.ws = null
       this.stopCurrentSession()
       this.isGameEnded = true
       this.controls?.setTurn(false)
@@ -114,13 +118,14 @@ export class GameOnline2p extends GameBase {
       this.messageActionHandler(parseMessage(event.data))
     })
     ws.addEventListener('open', () => {
-      if (!this.disposed && this.ws === ws) {
-        ws.send(
-          constructMessage(MESSAGE_TYPE.NEW_PLAYER_CONNECTION_REQUEST, {
-            playerName: this.playerMain.label,
-          }),
-        )
+      if (this.disposed || this.ws !== ws) {
+        return
       }
+      ws.send(
+        constructMessage(MESSAGE_TYPE.NEW_PLAYER_CONNECTION_REQUEST, {
+          playerName: this.playerMain.label,
+        }),
+      )
       if (statusboxBodyConnection) {
         statusboxBodyConnection.textContent = 'Connected to server'
       }

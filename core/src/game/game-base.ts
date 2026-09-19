@@ -35,23 +35,31 @@ export abstract class GameBase<P extends Player = Player> {
     if (this.isGameEnded) {
       return
     }
-    const sessionId = ++this.sessionId
+    this.stopCurrentSession()
+    const sessionId = this.sessionId
     this.isMoveAllowed = true
-    while (!this.isGameWon && this.isCurrentSession(sessionId)) {
-      if (this.isGameEnded) {
-        return
+    try {
+      while (!this.isGameWon && this.isCurrentSession(sessionId)) {
+        if (this.isGameEnded) {
+          return
+        }
+        await this.move(sessionId)
+        if (!this.isCurrentSession(sessionId)) {
+          return
+        }
+        const winner = this.board.getWinner()
+        if (winner !== BoardPiece.EMPTY) {
+          console.log('[GameBase] Game over: winner is player ', winner)
+          this.isGameWon = true
+          this.isMoveAllowed = false
+          this.announceWinner(winner)
+          break
+        }
       }
-      await this.move(sessionId)
-      if (!this.isCurrentSession(sessionId)) {
-        return
-      }
-      const winner = this.board.getWinner()
-      if (winner !== BoardPiece.EMPTY) {
-        console.log('[GameBase] Game over: winner is player ', winner)
-        this.isGameWon = true
+    } catch (error) {
+      if (this.isCurrentSession(sessionId)) {
         this.isMoveAllowed = false
-        this.announceWinner(winner)
-        break
+        console.error('[GameBase] Game stopped after an unexpected error', error)
       }
     }
   }
