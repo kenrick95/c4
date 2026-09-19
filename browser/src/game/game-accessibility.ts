@@ -2,6 +2,7 @@ import { BoardBase, BoardPiece, type Player } from '@kenrick95/c4'
 
 const liveRegion = document.querySelector('.section-message')
 const boardStateBody = document.querySelector('.board-state-body')
+const boardPlayerLegend = document.querySelector('.board-player-legend')
 let lastRenderedBoardState: string | undefined
 
 const boardPieceLabel = {
@@ -37,6 +38,13 @@ export function renderBoardState(
   const labels = new Map(
     players.map((player) => [player.boardPiece, player.label]),
   )
+  if (boardPlayerLegend) {
+    boardPlayerLegend.textContent = players
+      .map(
+        (player) => `${boardPieceLabel[player.boardPiece]} is ${player.label}.`,
+      )
+      .join(' ')
+  }
   const rows = board.map.map((row, rowIndex) => {
     const tableRow = document.createElement('tr')
     const rowHeader = document.createElement('th')

@@ -41,6 +41,7 @@ const C4_SERVER_ENDPOINT =
 export class GameOnline2p extends GameBase {
   controls?: ReturnType<typeof activateGameControls>
   private disposed: boolean = false
+  private pendingMoveAnnouncement: string | undefined
 
   connectionPlayerId: null | string = null
   connectionMatchId: null | string = null
@@ -66,6 +67,11 @@ export class GameOnline2p extends GameBase {
     }
     this.playerMain.label = playerName
     this.initConnection()
+  }
+
+  reset() {
+    this.pendingMoveAnnouncement = undefined
+    super.reset()
   }
 
   end() {
@@ -256,6 +262,7 @@ export class GameOnline2p extends GameBase {
         {
           this.stopCurrentSession()
           this.controls?.setTurn(false)
+          this.pendingMoveAnnouncement = undefined
           const { winnerBoardPiece } = message.payload
 
           const winnerPlayer = this.players.find(
@@ -383,29 +390,32 @@ export class GameOnline2p extends GameBase {
       statusboxBodyGame.textContent = 'Wating for move'
     }
 
+    const currentPlayer = this.players[this.currentPlayerId]
+    const turnAnnouncement = `${currentPlayer.label}'s turn${
+      this.isCurrentMoveByCurrentPlayer() ? ' (you)' : ''
+    }.`
     if (statusboxBodyPlayer) {
-      const currentPlayer = this.players[this.currentPlayerId]
       statusboxBodyPlayer.textContent =
         `${currentPlayer.label} ${currentPlayer.boardPiece}` +
         ` ` +
         (this.isCurrentMoveByCurrentPlayer() ? `(you)` : `(the other player)`)
-      announce(
-        `${currentPlayer.label}'s turn${
-          this.isCurrentMoveByCurrentPlayer() ? ' (you)' : ''
-        }.`,
-      )
     }
+    announce(
+      this.pendingMoveAnnouncement
+        ? `${this.pendingMoveAnnouncement} It is now ${turnAnnouncement}`
+        : turnAnnouncement,
+    )
+    this.pendingMoveAnnouncement = undefined
   }
 
   afterMove = (action: number) => {
     renderBoardState(this.board, this.players)
     const currentPlayer = this.players[this.currentPlayerId]
     const row = getMoveRow(this.board, action)
-    announce(
+    this.pendingMoveAnnouncement =
       `${currentPlayer.label} placed a disc in column ${action + 1}${
         row ? `, row ${row}` : ''
-      }.`,
-    )
+      }.`
     if (!this.connectionPlayerId || !this.connectionMatchId) {
       return
     }

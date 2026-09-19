@@ -40,7 +40,14 @@
         aria-atomic="true"
       ></div>
       <canvas class="section-canvas" aria-hidden="true"></canvas>
-      <table class="visually-hidden board-state">
+      <p
+        class="visually-hidden board-player-legend"
+        id="board-player-legend"
+      ></p>
+      <table
+        class="visually-hidden board-state"
+        aria-describedby="board-player-legend"
+      >
         <caption>
           Connect Four board. Rows are listed from top to bottom.
         </caption>
