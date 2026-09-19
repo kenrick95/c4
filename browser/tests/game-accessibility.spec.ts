@@ -82,3 +82,49 @@ test('replay returns keyboard focus to the first column', async ({ page }) => {
     )
     .toBe('0')
 })
+
+test('renders a winning player name as text instead of markup', async ({
+  page,
+}) => {
+  const playerName = '<img src="invalid" onerror="window.xssProbe = true">'
+
+  await page.addInitScript(() => {
+    Object.assign(window, { xssProbe: false })
+  })
+  await page.goto('/')
+
+  const liveRegion = page.locator('.section-message')
+  const resultDialog = page.locator('.message-body')
+
+  await page
+    .getByRole('radio', { name: 'Offline: Human player vs human player' })
+    .check()
+  await page.locator('#player-1-name').fill(playerName)
+  await page.getByRole('button', { name: 'Start game' }).click()
+
+  for (const [shortcut, nextTurn] of [
+    ['1', "Player 2's turn."],
+    ['2', `${playerName}'s turn.`],
+    ['1', "Player 2's turn."],
+    ['2', `${playerName}'s turn.`],
+    ['1', "Player 2's turn."],
+    ['2', `${playerName}'s turn.`],
+    ['1', `${playerName} won.`],
+  ]) {
+    await page.keyboard.press(shortcut)
+    await expect(liveRegion).toHaveText(nextTurn)
+  }
+
+  await expect(resultDialog).toBeVisible()
+  await expect(resultDialog.locator('p').first()).toHaveText(
+    `${playerName} won.`,
+  )
+  await expect(resultDialog.locator('img')).toHaveCount(0)
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () => Object.getOwnPropertyDescriptor(window, 'xssProbe')?.value,
+      ),
+    )
+    .toBe(false)
+})
