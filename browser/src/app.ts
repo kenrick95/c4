@@ -70,9 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderForm()
 
   backToModeSelector?.addEventListener('click', () => {
-    if (currentGameHandler?.end) {
-      currentGameHandler.end()
-    }
+    endCurrentGame()
     backToModeSelector?.classList.add('hidden')
     shareButton?.classList.add('hidden')
     playAgainButton?.classList.add('hidden')
@@ -163,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function initGame(chosenMode: string | null, playerNames: (string | null)[]) {
     console.log('initGame chosenMode:', chosenMode)
+    endCurrentGame()
     previewBoard?.dispose()
     previewBoard = undefined
     backToModeSelector?.classList.remove('hidden')
@@ -185,5 +184,10 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       console.error('Invalid game mode received', chosenMode)
     }
+  }
+
+  function endCurrentGame() {
+    currentGameHandler?.end()
+    currentGameHandler = undefined
   }
 })

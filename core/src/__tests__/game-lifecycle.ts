@@ -4,6 +4,8 @@ import { GameBase } from '../game'
 import { PlayerHuman } from '../player'
 
 class LifecycleGame extends GameBase {
+  movesApplied: number = 0
+
   waitingForMove() {
     // no-op
   }
@@ -11,7 +13,22 @@ class LifecycleGame extends GameBase {
     // no-op
   }
   afterMove() {
-    // no-op
+    this.movesApplied++
+  }
+}
+
+class DelayedBoard extends BoardBase {
+  private resolveApply: (() => void) | undefined
+
+  async applyPlayerAction() {
+    await new Promise<void>((resolve) => {
+      this.resolveApply = resolve
+    })
+    return true
+  }
+
+  finishApplyingMove() {
+    this.resolveApply?.()
   }
 }
 
@@ -31,5 +48,24 @@ describe('GameBase lifecycle', () => {
     expect(game.isGameEnded).toBe(true)
     expect(game.isMoveAllowed).toBe(false)
     expect(board.map[BoardBase.ROWS - 1][0]).toBe(BoardPiece.EMPTY)
+  })
+
+  test('ending a game prevents a pending board update from changing game state', async () => {
+    const firstPlayer = new PlayerHuman(BoardPiece.PLAYER_1, 'Player 1')
+    const secondPlayer = new PlayerHuman(BoardPiece.PLAYER_2, 'Player 2')
+    const board = new DelayedBoard()
+    const game = new LifecycleGame([firstPlayer, secondPlayer], board)
+
+    const gameStart = game.start()
+    await Promise.resolve()
+    firstPlayer.doAction(0)
+    await Promise.resolve()
+    game.end()
+    board.finishApplyingMove()
+    await gameStart
+
+    expect(game.isGameEnded).toBe(true)
+    expect(game.isMoveAllowed).toBe(false)
+    expect(game.movesApplied).toBe(0)
   })
 })
