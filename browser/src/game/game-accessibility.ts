@@ -2,6 +2,7 @@ import { BoardBase, BoardPiece, type Player } from '@kenrick95/c4'
 
 const liveRegion = document.querySelector('.section-message')
 const boardStateBody = document.querySelector('.board-state-body')
+let lastRenderedBoardState: string | undefined
 
 const boardPieceLabel = {
   [BoardPiece.EMPTY]: 'Empty',
@@ -23,6 +24,15 @@ export function renderBoardState(
   if (!boardStateBody) {
     return
   }
+
+  const boardState = JSON.stringify({
+    map: board.map,
+    players: players.map(({ boardPiece, label }) => ({ boardPiece, label })),
+  })
+  if (boardState === lastRenderedBoardState) {
+    return
+  }
+  lastRenderedBoardState = boardState
 
   const labels = new Map(
     players.map((player) => [player.boardPiece, player.label]),
