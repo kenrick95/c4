@@ -35,6 +35,7 @@
       <div
         class="section-message"
         role="status"
+        aria-label="Game updates"
         aria-live="polite"
         aria-atomic="true"
       ></div>
@@ -58,11 +59,15 @@
         <tbody class="board-state-body"></tbody>
       </table>
       <fieldset class="hidden game-controls" tabindex="-1">
-        <legend class="visually-hidden">Connect Four columns</legend>
+        <legend class="visually-hidden">
+          Connect Four columns. Use keys 1 through 7 to drop a disc in a
+          column when it is your turn.
+        </legend>
         <button
           class="visually-hidden game-control"
           type="button"
           data-column="0"
+          aria-keyshortcuts="1"
         >
           Drop a disc in column 1
         </button>
@@ -70,6 +75,7 @@
           class="visually-hidden game-control"
           type="button"
           data-column="1"
+          aria-keyshortcuts="2"
         >
           Drop a disc in column 2
         </button>
@@ -77,6 +83,7 @@
           class="visually-hidden game-control"
           type="button"
           data-column="2"
+          aria-keyshortcuts="3"
         >
           Drop a disc in column 3
         </button>
@@ -84,6 +91,7 @@
           class="visually-hidden game-control"
           type="button"
           data-column="3"
+          aria-keyshortcuts="4"
         >
           Drop a disc in column 4
         </button>
@@ -91,6 +99,7 @@
           class="visually-hidden game-control"
           type="button"
           data-column="4"
+          aria-keyshortcuts="5"
         >
           Drop a disc in column 5
         </button>
@@ -98,6 +107,7 @@
           class="visually-hidden game-control"
           type="button"
           data-column="5"
+          aria-keyshortcuts="6"
         >
           Drop a disc in column 6
         </button>
@@ -105,6 +115,7 @@
           class="visually-hidden game-control"
           type="button"
           data-column="6"
+          aria-keyshortcuts="7"
         >
           Drop a disc in column 7
         </button>
