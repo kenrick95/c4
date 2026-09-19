@@ -16,12 +16,17 @@ export function announce(message: string): void {
   }
 }
 
-export function renderBoardState(board: BoardBase, players: Array<Player>): void {
+export function renderBoardState(
+  board: BoardBase,
+  players: Array<Player>,
+): void {
   if (!boardStateBody) {
     return
   }
 
-  const labels = new Map(players.map((player) => [player.boardPiece, player.label]))
+  const labels = new Map(
+    players.map((player) => [player.boardPiece, player.label]),
+  )
   const rows = board.map.map((row, rowIndex) => {
     const tableRow = document.createElement('tr')
     const rowHeader = document.createElement('th')
@@ -41,7 +46,10 @@ export function renderBoardState(board: BoardBase, players: Array<Player>): void
   boardStateBody.replaceChildren(...rows)
 }
 
-export function getMoveRow(board: BoardBase, column: number): number | undefined {
+export function getMoveRow(
+  board: BoardBase,
+  column: number,
+): number | undefined {
   for (let row = 0; row < BoardBase.ROWS; row++) {
     if (board.map[row][column] !== BoardPiece.EMPTY) {
       return row + 1
