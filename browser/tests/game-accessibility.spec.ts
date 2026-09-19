@@ -40,3 +40,44 @@ test('keyboard play updates the accessible board and announces the next turn', a
   await expect(liveRegion).toHaveText("Player 2's turn.")
   await expect(firstColumn).toBeEnabled()
 })
+
+test('replay returns keyboard focus to the first column', async ({ page }) => {
+  await page.goto('/')
+
+  const setupDialog = page.locator('.init-screen')
+  const liveRegion = page.locator('.section-message')
+  const resultDialog = page.locator('.message-body')
+  const playAgainButton = page.getByRole('button', { name: 'Play again' })
+
+  await page
+    .getByRole('radio', { name: 'Offline: Human player vs human player' })
+    .check()
+  await page.getByRole('button', { name: 'Start game' }).click()
+  await expect(setupDialog).not.toBeVisible()
+
+  for (const [shortcut, nextTurn] of [
+    ['1', "Player 2's turn."],
+    ['2', "Player 1's turn."],
+    ['1', "Player 2's turn."],
+    ['2', "Player 1's turn."],
+    ['1', "Player 2's turn."],
+    ['2', "Player 1's turn."],
+    ['1', 'Player 1 won.'],
+  ]) {
+    await page.keyboard.press(shortcut)
+    await expect(liveRegion).toHaveText(nextTurn)
+  }
+
+  await expect(resultDialog).toBeVisible()
+  await expect(resultDialog).toContainText('Player 1 won.')
+  await resultDialog.getByRole('button', { name: 'OK' }).click()
+  await expect(playAgainButton).toBeFocused()
+
+  await playAgainButton.click()
+  await page.keyboard.press('Tab')
+  await expect
+    .poll(() =>
+      page.evaluate(() => document.activeElement?.getAttribute('data-column')),
+    )
+    .toBe('0')
+})
