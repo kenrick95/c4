@@ -37,7 +37,9 @@ test('keyboard play updates the accessible board and announces the next turn', a
   await page.keyboard.press('1')
 
   await expect(boardState).toContainText('Player 1: Player 1')
-  await expect(liveRegion).toHaveText("Player 2's turn.")
+  await expect(liveRegion).toHaveText(
+    "Player 1 placed a disc in column 1, row 6. It is now Player 2's turn.",
+  )
   await expect(firstColumn).toBeEnabled()
 })
 
@@ -65,7 +67,7 @@ test('replay returns keyboard focus to the first column', async ({ page }) => {
     ['1', 'Player 1 won.'],
   ]) {
     await page.keyboard.press(shortcut)
-    await expect(liveRegion).toHaveText(nextTurn)
+    await expect(liveRegion).toContainText(nextTurn)
   }
 
   await expect(resultDialog).toBeVisible()
@@ -112,7 +114,7 @@ test('renders a winning player name as text instead of markup', async ({
     ['1', `${playerName} won.`],
   ]) {
     await page.keyboard.press(shortcut)
-    await expect(liveRegion).toHaveText(nextTurn)
+    await expect(liveRegion).toContainText(nextTurn)
   }
 
   await expect(resultDialog).toBeVisible()
@@ -169,5 +171,5 @@ test('ignores column shortcuts while a text input or modal dialog is active', as
   await page.keyboard.press('1')
 
   await expect(boardState).toContainText('Player 1: Player 1')
-  await expect(liveRegion).toHaveText("Player 2's turn.")
+  await expect(liveRegion).toContainText("Player 2's turn.")
 })
