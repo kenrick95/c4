@@ -35,6 +35,8 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run Lint
         run: yarn lint:ci
+      - name: Install Playwright browser
+        run: yarn workspace @kenrick95/c4-browser exec playwright install --with-deps chromium
       - name: Run Tests
         run: yarn workspaces foreach --all --verbose run test
       - name: Run Builds
