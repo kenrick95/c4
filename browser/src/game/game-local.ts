@@ -129,6 +129,7 @@ export function initGameLocal(
   }
   const board = new Board(canvas)
   const game = new GameLocalConstructor([firstPlayer, secondPlayer], board)
+  let disposed = false
   statusbox?.classList.remove('hidden')
   statusboxBodyConnection?.classList.add('hidden')
   playAgainButton?.classList.add('hidden')
@@ -143,7 +144,12 @@ export function initGameLocal(
   renderBoardState(board, [firstPlayer, secondPlayer])
 
   function playColumn(column: number) {
-    if (game.isGameWon || game.isGameEnded || !game.isMoveAllowed) {
+    if (
+      disposed ||
+      game.isGameWon ||
+      game.isGameEnded ||
+      !game.isMoveAllowed
+    ) {
       return
     }
     if (game.currentPlayerId === 0) {
@@ -157,12 +163,15 @@ export function initGameLocal(
   }
 
   async function restartGame() {
-    if (!game.isGameWon) {
+    if (disposed || !game.isGameWon) {
       return
     }
     playAgainButton?.classList.add('hidden')
     game.reset()
     await animationFrame()
+    if (disposed) {
+      return
+    }
     game.start()
   }
 
@@ -182,6 +191,10 @@ export function initGameLocal(
   canvas.addEventListener('click', handleCanvasClick)
   return {
     end: () => {
+      if (disposed) {
+        return
+      }
+      disposed = true
       game.end()
       controls.dispose()
       canvas.removeEventListener('click', handleCanvasClick)
