@@ -13,11 +13,7 @@ import {
 } from '@kenrick95/c4'
 import { Board } from '../board'
 import { showMessage } from '../utils/message'
-import {
-  announce,
-  getMoveRow,
-  renderBoardState,
-} from './game-accessibility'
+import { announce, getMoveRow, renderBoardState } from './game-accessibility'
 import { activateGameControls } from './game-controls'
 
 enum GAME_MODE {
@@ -223,9 +219,11 @@ export class GameOnline2p extends GameBase {
           this.playerShadow.label = message.payload.otherPlayerName
           showMessage({
             title: 'Game started',
-            messages: [`The first piece should be dropped by ${
-              this.isCurrentMoveByCurrentPlayer() ? 'you' : 'the other player'
-            }.`],
+            messages: [
+              `The first piece should be dropped by ${
+                this.isCurrentMoveByCurrentPlayer() ? 'you' : 'the other player'
+              }.`,
+            ],
           })
 
           if (statusboxBodyGame) {

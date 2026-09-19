@@ -10,11 +10,7 @@ import {
 import { Board } from '../board'
 import { animationFrame } from '../utils/animate-frame'
 import { showMessage } from '../utils/message'
-import {
-  announce,
-  getMoveRow,
-  renderBoardState,
-} from './game-accessibility'
+import { announce, getMoveRow, renderBoardState } from './game-accessibility'
 import { activateGameControls } from './game-controls'
 
 const statusbox = document.querySelector('.statusbox')
@@ -100,11 +96,9 @@ export class GameLocal extends GameBase {
       title: 'Thank you for playing.',
       messages: [result, 'Use the Play again button to start a new game.'],
     })
-    messageDialog?.addEventListener(
-      'close',
-      () => playAgainButton?.focus(),
-      { once: true },
-    )
+    messageDialog?.addEventListener('close', () => playAgainButton?.focus(), {
+      once: true,
+    })
     playAgainButton?.classList.remove('hidden')
 
     if (statusboxBodyGame) {
