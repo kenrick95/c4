@@ -144,12 +144,7 @@ export function initGameLocal(
   renderBoardState(board, [firstPlayer, secondPlayer])
 
   function playColumn(column: number) {
-    if (
-      disposed ||
-      game.isGameWon ||
-      game.isGameEnded ||
-      !game.isMoveAllowed
-    ) {
+    if (disposed || game.isGameWon || game.isGameEnded || !game.isMoveAllowed) {
       return
     }
     if (game.currentPlayerId === 0) {
