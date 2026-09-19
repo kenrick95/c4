@@ -25,9 +25,14 @@ const playAgainButton = document.querySelector(
 
 export class GameLocal extends GameBase {
   controls?: ReturnType<typeof activateGameControls>
+  private pendingMoveAnnouncement: string | undefined
 
   constructor(players: Array<Player>, board: BoardBase) {
     super(players, board)
+  }
+  reset() {
+    this.pendingMoveAnnouncement = undefined
+    super.reset()
   }
   beforeMoveApplied() {
     this.controls?.setTurn(false)
@@ -52,26 +57,32 @@ export class GameLocal extends GameBase {
       statusboxBodyGame.textContent = 'Wating for move'
     }
 
+    // `currentPlayerId` is not updated yet
+    const currentPlayer = this.players[this.currentPlayerId]
     if (statusboxBodyPlayer) {
-      // `currentPlayerId` is not updated yet
-      const currentPlayer = this.players[this.currentPlayerId]
       statusboxBodyPlayer.textContent = `${currentPlayer.label} ${currentPlayer.boardPiece}`
-      announce(`${currentPlayer.label}'s turn.`)
     }
+    const turnAnnouncement = `${currentPlayer.label}'s turn.`
+    announce(
+      this.pendingMoveAnnouncement
+        ? `${this.pendingMoveAnnouncement} It is now ${turnAnnouncement}`
+        : turnAnnouncement,
+    )
+    this.pendingMoveAnnouncement = undefined
   }
   afterMove(action: number) {
     renderBoardState(this.board, this.players)
     const currentPlayer = this.players[this.currentPlayerId]
     const row = getMoveRow(this.board, action)
-    announce(
+    this.pendingMoveAnnouncement =
       `${currentPlayer.label} placed a disc in column ${action + 1}${
         row ? `, row ${row}` : ''
-      }.`,
-    )
+      }.`
   }
 
   announceWinner(winnerBoardPiece: BoardPiece) {
     this.controls?.setTurn(false)
+    this.pendingMoveAnnouncement = undefined
     super.announceWinner(winnerBoardPiece)
 
     if (winnerBoardPiece === BoardPiece.EMPTY) {
