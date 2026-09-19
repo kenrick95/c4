@@ -74,10 +74,9 @@ export class GameLocal extends GameBase {
     renderBoardState(this.board, this.players)
     const currentPlayer = this.players[this.currentPlayerId]
     const row = getMoveRow(this.board, action)
-    this.pendingMoveAnnouncement =
-      `${currentPlayer.label} placed a disc in column ${action + 1}${
-        row ? `, row ${row}` : ''
-      }.`
+    this.pendingMoveAnnouncement = `${currentPlayer.label} placed a disc in column ${action + 1}${
+      row ? `, row ${row}` : ''
+    }.`
   }
 
   announceWinner(winnerBoardPiece: BoardPiece) {
