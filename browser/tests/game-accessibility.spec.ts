@@ -74,6 +74,7 @@ test('replay returns keyboard focus to the first column', async ({ page }) => {
   await expect(playAgainButton).toBeFocused()
 
   await playAgainButton.click()
+  await expect(page.locator('.game-control').first()).toBeEnabled()
   await page.keyboard.press('Tab')
   await expect
     .poll(() =>
