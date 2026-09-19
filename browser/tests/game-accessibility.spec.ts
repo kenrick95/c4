@@ -128,3 +128,46 @@ test('renders a winning player name as text instead of markup', async ({
     )
     .toBe(false)
 })
+
+test('ignores column shortcuts while a text input or modal dialog is active', async ({
+  page,
+}) => {
+  await page.goto('/')
+
+  const liveRegion = page.locator('.section-message')
+  const boardState = page.locator('.board-state')
+  const messageDialog = page.locator('.message-body')
+
+  await page
+    .getByRole('radio', { name: 'Offline: Human player vs human player' })
+    .check()
+  await page.getByRole('button', { name: 'Start game' }).click()
+  await expect(liveRegion).toHaveText("Player 1's turn.")
+
+  await page.evaluate(() => {
+    const input = document.createElement('input')
+    input.className = 'keyboard-shortcut-test-input'
+    input.type = 'text'
+    document.body.append(input)
+    input.focus()
+  })
+  await page.keyboard.press('1')
+
+  await expect(page.locator('.keyboard-shortcut-test-input')).toHaveValue('1')
+  await expect(boardState).not.toContainText('Player 1: Player 1')
+
+  await page.evaluate(() => {
+    document.querySelector<HTMLDialogElement>('.message-body')?.showModal()
+  })
+  await expect(messageDialog).toBeVisible()
+  await page.keyboard.press('1')
+
+  await expect(boardState).not.toContainText('Player 1: Player 1')
+  await page.evaluate(() => {
+    document.querySelector<HTMLDialogElement>('.message-body')?.close()
+  })
+  await page.keyboard.press('1')
+
+  await expect(boardState).toContainText('Player 1: Player 1')
+  await expect(liveRegion).toHaveText("Player 2's turn.")
+})
