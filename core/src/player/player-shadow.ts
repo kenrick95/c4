@@ -15,11 +15,24 @@ export class PlayerShadow extends Player {
       0 <= column &&
       column < BoardBase.COLUMNS
     ) {
-      this.actionPromiseResolver(column)
+      this.resolveAction(column)
     }
   }
 
-  getAction(board: BoardBase): Promise<number> {
-    return new Promise<number>((r) => (this.actionPromiseResolver = r))
+  getAction(_board: BoardBase): Promise<number> {
+    this.cancelPendingAction()
+    return new Promise<number>((resolve) => {
+      this.actionPromiseResolver = resolve
+    })
+  }
+
+  cancelPendingAction(): void {
+    this.resolveAction(-1)
+  }
+
+  private resolveAction(column: number): void {
+    const resolve = this.actionPromiseResolver
+    this.actionPromiseResolver = null
+    resolve?.(column)
   }
 }

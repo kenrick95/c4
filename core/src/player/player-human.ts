@@ -15,11 +15,24 @@ export class PlayerHuman extends Player {
       0 <= column &&
       column < BoardBase.COLUMNS
     ) {
-      this.clickPromiseResolver(column)
+      this.resolveAction(column)
     }
   }
 
   getAction(_board: BoardBase): Promise<number> {
-    return new Promise<number>((r) => (this.clickPromiseResolver = r))
+    this.cancelPendingAction()
+    return new Promise<number>((resolve) => {
+      this.clickPromiseResolver = resolve
+    })
+  }
+
+  cancelPendingAction(): void {
+    this.resolveAction(-1)
+  }
+
+  private resolveAction(column: number): void {
+    const resolve = this.clickPromiseResolver
+    this.clickPromiseResolver = null
+    resolve?.(column)
   }
 }

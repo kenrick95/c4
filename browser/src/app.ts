@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('Mode element not found ')
     return
   }
-  const board = new Board(canvas)
-  board.render()
+  let previewBoard: Board | undefined = new Board(canvas)
+  previewBoard.render()
 
   const searchParams = new URLSearchParams(location.search)
   const connectionMatchId = searchParams.get('matchId')
@@ -163,6 +163,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function initGame(chosenMode: string | null, playerNames: (string | null)[]) {
     console.log('initGame chosenMode:', chosenMode)
+    previewBoard?.dispose()
+    previewBoard = undefined
     backToModeSelector?.classList.remove('hidden')
     playAgainButton?.classList.add('hidden')
     if (chosenMode === 'offline-human') {

@@ -5,6 +5,8 @@ import { clearCanvas, drawCircle, drawMask, onresize } from './utils'
 export class Board extends BoardBase {
   canvas: HTMLCanvasElement
   context: CanvasRenderingContext2D
+  private animationId: number = 0
+  private removeResizeListener: (() => void) | undefined
 
   constructor(canvas: HTMLCanvasElement) {
     super()
@@ -27,7 +29,7 @@ export class Board extends BoardBase {
 
   onresize() {
     let prevBoardScale = BoardBase.SCALE
-    onresize().add(() => {
+    this.removeResizeListener = onresize(() => {
       this.getBoardScale()
       if (prevBoardScale !== BoardBase.SCALE) {
         prevBoardScale = BoardBase.SCALE
@@ -39,6 +41,7 @@ export class Board extends BoardBase {
   }
 
   reset() {
+    this.animationId = (this.animationId || 0) + 1
     super.reset()
     if (this.canvas) {
       clearCanvas(this)
@@ -56,20 +59,30 @@ export class Board extends BoardBase {
       const dpr = self.devicePixelRatio || 1
       this.canvas.width = Board.CANVAS_WIDTH * dpr
       this.canvas.height = Board.CANVAS_HEIGHT * dpr
-      this.context.scale(dpr, dpr)
-      this.canvas.style.width = Board.CANVAS_WIDTH + 'px'
-      this.canvas.style.height = Board.CANVAS_HEIGHT + 'px'
+      this.context.setTransform(dpr, 0, 0, dpr, 0, 0)
+      this.canvas.style.width = `${Board.CANVAS_WIDTH}px`
+      this.canvas.style.height = `${Board.CANVAS_HEIGHT}px`
     }
+  }
+
+  dispose() {
+    this.animationId++
+    this.removeResizeListener?.()
+    this.removeResizeListener = undefined
   }
 
   private async animateAction(
     newRow: number,
     column: number,
     boardPiece: BoardPiece,
-  ): Promise<void> {
+    animationId: number,
+  ): Promise<boolean> {
     const fillStyle = this.getPlayerColor(boardPiece)
     let currentY = 0
-    const doAnimation = async () => {
+    const doAnimation = () => {
+      if (animationId !== this.animationId) {
+        return false
+      }
       clearCanvas(this)
       drawCircle(this.context, {
         x:
@@ -83,11 +96,18 @@ export class Board extends BoardBase {
       })
       this.render()
       currentY += BoardBase.PIECE_RADIUS
+      return true
     }
-    while (newRow * 3 * BoardBase.PIECE_RADIUS >= currentY) {
+    while (
+      animationId === this.animationId &&
+      newRow * 3 * BoardBase.PIECE_RADIUS >= currentY
+    ) {
       await animationFrame()
-      doAnimation()
+      if (!doAnimation()) {
+        return false
+      }
     }
+    return animationId === this.animationId
   }
 
   render() {
@@ -113,9 +133,9 @@ export class Board extends BoardBase {
 
   async applyPlayerAction(player: Player, column: number): Promise<boolean> {
     if (
-      this.map[0][column] !== BoardPiece.EMPTY ||
       column < 0 ||
-      column >= BoardBase.COLUMNS
+      column >= BoardBase.COLUMNS ||
+      this.map[0][column] !== BoardPiece.EMPTY
     ) {
       return false
     }
@@ -133,13 +153,24 @@ export class Board extends BoardBase {
       row = BoardBase.ROWS - 1
     }
 
-    await this.animateAction(row, column, player.boardPiece)
+    const animationId = this.animationId
+    if (
+      !(await this.animateAction(row, column, player.boardPiece, animationId))
+    ) {
+      return false
+    }
+    if (animationId !== this.animationId) {
+      return false
+    }
 
     // reflect player's action to the map
     this.map[row][column] = player.boardPiece
     this.debug()
 
     await animationFrame()
+    if (animationId !== this.animationId) {
+      return false
+    }
     this.render()
     return true
   }
