@@ -31,6 +31,7 @@ export function initGameAiVsAi() {
   const firstPlayer = new PlayerAi(BoardPiece.PLAYER_1, `AI Player 1`)
   const secondPlayer = new PlayerAi(BoardPiece.PLAYER_2, `AI Player 2`)
   const game = new GameAiVsAi([firstPlayer, secondPlayer], board)
+  let disposed = false
 
   statusbox?.classList.remove('hidden')
   statusboxBodyConnection?.classList.add('hidden')
@@ -38,18 +39,26 @@ export function initGameAiVsAi() {
   game.start()
 
   async function restartGame() {
-    if (!game.isGameWon) {
+    if (disposed || !game.isGameWon) {
       return
     }
     playAgainButton?.classList.add('hidden')
     game.reset()
     await animationFrame()
+    if (disposed) {
+      return
+    }
     game.start()
   }
 
   return {
     end: () => {
+      if (disposed) {
+        return
+      }
+      disposed = true
       game.end()
+      board.dispose()
       playAgainButton?.classList.add('hidden')
     },
     restart: restartGame,

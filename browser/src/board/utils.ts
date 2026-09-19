@@ -1,46 +1,50 @@
 import { Board } from './index'
 
 type Callback = () => void
-/**
- * From Mozilla Developer Network
- * https://developer.mozilla.org/en-US/docs/Web/Events/resize
- */
-export function onresize(): { add: (callback: Callback) => void } {
-  const callbacks: Array<Callback> = []
+
+export function onresize(callback: Callback): () => void {
   let running: boolean = false
+  let disposed: boolean = false
+  let animationFrameId: number | undefined
+  let timeoutId: ReturnType<typeof setTimeout> | undefined
 
   // Fired on resize event.
   function resize() {
-    if (!running) {
+    if (!disposed && !running) {
       running = true
 
-      if (window.requestAnimationFrame)
-        window.requestAnimationFrame(runCallbacks)
-      else setTimeout(runCallbacks, 66)
+      if (window.requestAnimationFrame) {
+        animationFrameId = window.requestAnimationFrame(runCallbacks)
+      } else {
+        timeoutId = setTimeout(runCallbacks, 66)
+      }
     }
   }
 
   // Run the actual callbacks.
   function runCallbacks() {
-    callbacks.forEach((callback: Callback): void => {
+    animationFrameId = undefined
+    timeoutId = undefined
+    if (!disposed) {
       callback()
-    })
-
+    }
     running = false
   }
 
-  // Adds callback to loop.
-  function addCallback(callback: Callback): void {
-    if (callback) callbacks.push(callback)
-  }
-
-  return {
-    // Public method to add additional callback.
-    add: (callback: Callback) => {
-      if (!callbacks.length) window.addEventListener('resize', resize)
-
-      addCallback(callback)
-    },
+  window.addEventListener('resize', resize)
+  return () => {
+    if (disposed) {
+      return
+    }
+    disposed = true
+    window.removeEventListener('resize', resize)
+    if (animationFrameId !== undefined) {
+      window.cancelAnimationFrame(animationFrameId)
+    }
+    if (timeoutId !== undefined) {
+      clearTimeout(timeoutId)
+    }
+    running = false
   }
 }
 

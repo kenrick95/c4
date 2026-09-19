@@ -8,6 +8,7 @@ export abstract class GameBase<P extends Player = Player> {
   isMoveAllowed: boolean = false
   isGameWon: boolean = false
   isGameEnded: boolean = false
+  private sessionId: number = 0
 
   constructor(players: Array<P>, board: BoardBase) {
     this.board = board
@@ -16,35 +17,57 @@ export abstract class GameBase<P extends Player = Player> {
     this.reset()
   }
   reset() {
+    this.sessionId++
     this.isMoveAllowed = false
     this.isGameWon = false
+    this.isGameEnded = false
+    this.cancelPendingActions()
     this.board.reset()
     // this.board.debug()
   }
   end() {
-    this.reset()
+    this.stopCurrentSession()
     this.isGameEnded = true
+    this.board.reset()
   }
 
   async start() {
+    if (this.isGameEnded) {
+      return
+    }
+    this.stopCurrentSession()
+    const sessionId = this.sessionId
     this.isMoveAllowed = true
-    while (!this.isGameWon) {
-      if (this.isGameEnded) {
-        return
+    try {
+      while (!this.isGameWon && this.isCurrentSession(sessionId)) {
+        if (this.isGameEnded) {
+          return
+        }
+        await this.move(sessionId)
+        if (!this.isCurrentSession(sessionId)) {
+          return
+        }
+        const winner = this.board.getWinner()
+        if (winner !== BoardPiece.EMPTY) {
+          console.log('[GameBase] Game over: winner is player ', winner)
+          this.isGameWon = true
+          this.isMoveAllowed = false
+          this.announceWinner(winner)
+          break
+        }
       }
-      await this.move()
-      const winner = this.board.getWinner()
-      if (winner !== BoardPiece.EMPTY) {
-        console.log('[GameBase] Game over: winner is player ', winner)
-        this.isGameWon = true
+    } catch (error) {
+      if (this.isCurrentSession(sessionId)) {
         this.isMoveAllowed = false
-        this.announceWinner(winner)
-        break
+        console.error(
+          '[GameBase] Game stopped after an unexpected error',
+          error,
+        )
       }
     }
   }
-  async move() {
-    if (this.isGameEnded) {
+  async move(sessionId: number = this.sessionId) {
+    if (!this.isCurrentSession(sessionId) || this.isGameEnded) {
       return
     }
     if (!this.isMoveAllowed) {
@@ -52,18 +75,24 @@ export abstract class GameBase<P extends Player = Player> {
     }
     const currentPlayer = this.players[this.currentPlayerId]
     let actionSuccesful = false
-    while (!actionSuccesful) {
+    while (!actionSuccesful && this.isCurrentSession(sessionId)) {
       if (this.isGameEnded) {
         return
       }
       this.waitingForMove()
       const action = await currentPlayer.getAction(this.board)
+      if (!this.isCurrentSession(sessionId)) {
+        return
+      }
       this.isMoveAllowed = false
       this.beforeMoveApplied(action)
       actionSuccesful = await this.board.applyPlayerAction(
         currentPlayer,
         action,
       )
+      if (!this.isCurrentSession(sessionId)) {
+        return
+      }
       this.isMoveAllowed = true
       if (!actionSuccesful) {
         console.log('Move not allowed! Try again.')
@@ -87,7 +116,23 @@ export abstract class GameBase<P extends Player = Player> {
     console.log('[GameBase] Game over: winner is ', winner, winnerPiece)
   }
 
+  protected stopCurrentSession(): void {
+    this.sessionId++
+    this.isMoveAllowed = false
+    this.cancelPendingActions()
+  }
+
   private getNextPlayer() {
     return this.currentPlayerId === 0 ? 1 : 0
+  }
+
+  private isCurrentSession(sessionId: number): boolean {
+    return sessionId === this.sessionId
+  }
+
+  private cancelPendingActions(): void {
+    for (const player of this.players) {
+      player.cancelPendingAction()
+    }
   }
 }

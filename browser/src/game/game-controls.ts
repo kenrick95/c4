@@ -1,3 +1,5 @@
+import { announce } from './game-accessibility'
+
 function isTextInput(target: EventTarget | null): boolean {
   return (
     target instanceof HTMLElement &&
@@ -53,9 +55,12 @@ export function activateGameControls(
       disposed ||
       !isYourTurn ||
       !controls[column] ||
-      controls[column].disabled ||
       document.querySelector('dialog[open]')
     ) {
+      return
+    }
+    if (controls[column].disabled) {
+      announce(`Column ${column + 1} is full. Choose another column.`)
       return
     }
     // Disable immediately, before the asynchronous game loop applies the move.

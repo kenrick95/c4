@@ -13,6 +13,7 @@ import {
 } from '@kenrick95/c4'
 import { Board } from '../board'
 import { showMessage } from '../utils/message'
+import { announce, getMoveRow, renderBoardState } from './game-accessibility'
 import { activateGameControls } from './game-controls'
 
 enum GAME_MODE {
@@ -39,6 +40,8 @@ const C4_SERVER_ENDPOINT =
 
 export class GameOnline2p extends GameBase {
   controls?: ReturnType<typeof activateGameControls>
+  private disposed: boolean = false
+  private pendingMoveAnnouncement: string | undefined
 
   connectionPlayerId: null | string = null
   connectionMatchId: null | string = null
@@ -66,16 +69,26 @@ export class GameOnline2p extends GameBase {
     this.initConnection()
   }
 
+  reset() {
+    this.pendingMoveAnnouncement = undefined
+    super.reset()
+  }
+
   end() {
+    if (this.disposed) {
+      return
+    }
+    this.disposed = true
     this.controls?.setTurn(false)
     super.end()
     this.endConnection()
+    shareButton.removeEventListener('click', this.showShareLink)
   }
 
   endConnection() {
-    if (this.ws) {
-      this.ws.close()
-    }
+    const ws = this.ws
+    this.ws = null
+    ws?.close()
   }
 
   initConnection() {
@@ -87,7 +100,9 @@ export class GameOnline2p extends GameBase {
     }
 
     const setStatusDisconnected = () => {
-      this.isMoveAllowed = false
+      this.ws = null
+      this.stopCurrentSession()
+      this.isGameEnded = true
       this.controls?.setTurn(false)
       if (statusboxBodyConnection) {
         statusboxBodyConnection.textContent = 'Disconnected from server'
@@ -100,21 +115,27 @@ export class GameOnline2p extends GameBase {
       }
     }
 
-    this.ws = new WebSocket(C4_SERVER_ENDPOINT)
-    this.ws.addEventListener('message', (event) => {
+    const ws = new WebSocket(C4_SERVER_ENDPOINT)
+    this.ws = ws
+    ws.addEventListener('message', (event) => {
+      if (this.disposed || this.ws !== ws) {
+        return
+      }
       this.messageActionHandler(parseMessage(event.data))
     })
-    this.ws.addEventListener('open', () => {
-      if (this.ws) {
-        this.ws.send(
-          constructMessage(MESSAGE_TYPE.NEW_PLAYER_CONNECTION_REQUEST, {
-            playerName: this.playerMain.label,
-          }),
-        )
+    ws.addEventListener('open', () => {
+      if (this.disposed || this.ws !== ws) {
+        return
       }
+      ws.send(
+        constructMessage(MESSAGE_TYPE.NEW_PLAYER_CONNECTION_REQUEST, {
+          playerName: this.playerMain.label,
+        }),
+      )
       if (statusboxBodyConnection) {
         statusboxBodyConnection.textContent = 'Connected to server'
       }
+      announce('Connected to server.')
       if (statusboxBodyGame) {
         statusboxBodyGame.textContent = ``
       }
@@ -122,11 +143,17 @@ export class GameOnline2p extends GameBase {
         statusboxBodyPlayer.textContent = ``
       }
     })
-    this.ws.addEventListener('close', (event) => {
+    ws.addEventListener('close', (event) => {
+      if (this.disposed || this.ws !== ws) {
+        return
+      }
       console.log('[ws] close event', event)
       setStatusDisconnected()
     })
-    this.ws.addEventListener('error', (event) => {
+    ws.addEventListener('error', (event) => {
+      if (this.disposed || this.ws !== ws) {
+        return
+      }
       console.log('[ws] error event', event)
       setStatusDisconnected()
     })
@@ -176,6 +203,7 @@ export class GameOnline2p extends GameBase {
         {
           this.connectionMatchId = message.payload.matchId
           shareButton.classList.remove('hidden')
+          shareButton.removeEventListener('click', this.showShareLink)
           shareButton.addEventListener('click', this.showShareLink)
           this.showShareLink()
         }
@@ -187,7 +215,10 @@ export class GameOnline2p extends GameBase {
         break
       case MESSAGE_TYPE.CONNECT_MATCH_FAIL:
         {
-          showMessage(`<h1>Error</h1> Failed to connect to match.`)
+          showMessage({
+            title: 'Error',
+            messages: ['Failed to connect to match.'],
+          })
 
           if (statusboxBodyConnection) {
             statusboxBodyConnection.textContent = 'Connection error'
@@ -197,11 +228,14 @@ export class GameOnline2p extends GameBase {
       case MESSAGE_TYPE.GAME_READY:
         {
           this.playerShadow.label = message.payload.otherPlayerName
-          showMessage(
-            `<h1>Game started</h1> The first piece should be dropped by ${
-              this.isCurrentMoveByCurrentPlayer() ? 'you' : 'the other player'
-            }`,
-          )
+          showMessage({
+            title: 'Game started',
+            messages: [
+              `The first piece should be dropped by ${
+                this.isCurrentMoveByCurrentPlayer() ? 'you' : 'the other player'
+              }.`,
+            ],
+          })
 
           if (statusboxBodyGame) {
             statusboxBodyGame.textContent = 'Wating for move'
@@ -226,7 +260,9 @@ export class GameOnline2p extends GameBase {
         break
       case MESSAGE_TYPE.GAME_ENDED:
         {
+          this.stopCurrentSession()
           this.controls?.setTurn(false)
+          this.pendingMoveAnnouncement = undefined
           const { winnerBoardPiece } = message.payload
 
           const winnerPlayer = this.players.find(
@@ -242,11 +278,10 @@ export class GameOnline2p extends GameBase {
                     winnerBoardPiece === BoardPiece.PLAYER_1 ? '1 🔴' : '2 🔵'
                   } won`
 
-          showMessage(
-            `<h1>Thank you for playing</h1>` +
-              messageWinner +
-              `<br />Next game will be started in 10 seconds.`,
-          )
+          showMessage({
+            title: 'Thank you for playing',
+            messages: [messageWinner, 'Next game will start in 10 seconds.'],
+          })
 
           if (statusboxBodyGame) {
             statusboxBodyGame.textContent = 'Game over'
@@ -254,22 +289,26 @@ export class GameOnline2p extends GameBase {
           if (statusboxBodyPlayer) {
             statusboxBodyPlayer.textContent = messageWinner
           }
+          announce(messageWinner)
         }
         break
       case MESSAGE_TYPE.GAME_RESET:
         {
           this.controls?.setTurn(false)
           this.reset()
+          renderBoardState(this.board, this.players)
         }
         break
 
       case MESSAGE_TYPE.OTHER_PLAYER_HUNGUP:
         {
-          this.isMoveAllowed = false
+          this.stopCurrentSession()
           this.controls?.setTurn(false)
-          showMessage(
-            `<h1>Other player disconnected</h1> Please reload the page to start a new match`,
-          )
+          showMessage({
+            title: 'Other player disconnected',
+            messages: ['Please reload the page to start a new match.'],
+          })
+          announce('Other player disconnected.')
         }
         break
     }
@@ -279,45 +318,45 @@ export class GameOnline2p extends GameBase {
     if (!this.connectionMatchId) {
       return
     }
-    const shareUrl = `${location.href}?matchId=${this.connectionMatchId}`
-    console.log('[url] Share this', shareUrl)
-    showMessage(
-      `<h1>Share this URL</h1>` +
-        `<p>` +
-        `Please share this URL to your friend to start the game: ` +
-        `<input type="text" id="copy-box" class="copy-box" readonly value="${shareUrl}" />` +
-        `<button type="button" id="copy-button">Copy</button>` +
-        `</p>`,
-    )
-    // Select all
-    const copyBox: HTMLInputElement | null = document.getElementById(
-      'copy-box',
-    ) as HTMLInputElement
-    copyBox.focus()
-    copyBox.select()
+    const shareUrl = new URL(location.href)
+    shareUrl.searchParams.set('matchId', this.connectionMatchId)
+    console.log('[url] Share this', shareUrl.toString())
+    showMessage({
+      title: 'Share this URL',
+      messages: ['Share this URL with a friend to start the game.'],
+      render: (content) => {
+        const label = document.createElement('label')
+        label.htmlFor = 'copy-box'
+        label.textContent = 'Game URL'
+        const copyBox = document.createElement('input')
+        copyBox.id = 'copy-box'
+        copyBox.className = 'copy-box'
+        copyBox.readOnly = true
+        copyBox.value = shareUrl.toString()
+        const copyButton = document.createElement('button')
+        copyButton.type = 'button'
+        copyButton.textContent = 'Copy'
+        copyButton.addEventListener('click', async () => {
+          let isClipboardApiSuccessful = false
 
-    // Click to copy
-    document
-      .getElementById('copy-button')
-      ?.addEventListener('click', async () => {
-        let isClipboardApiSuccessful = false
+          if (navigator.clipboard) {
+            try {
+              await navigator.clipboard.writeText(copyBox.value)
+              isClipboardApiSuccessful = true
+            } catch (_err) {}
+          }
 
-        if (navigator.clipboard) {
-          try {
-            await navigator.clipboard.writeText(shareUrl)
-            console.log('Using Clipboard API to write share url into clipboard')
-            isClipboardApiSuccessful = true
-          } catch (_err) {}
-        }
-
-        if (!isClipboardApiSuccessful) {
-          // Old method: use as fallback
-          copyBox?.select()
-          copyBox?.setSelectionRange(0, 99999)
-          document.execCommand('copy')
-          console.log('Using fallback method to write share url into clipboard')
-        }
-      })
+          if (!isClipboardApiSuccessful) {
+            copyBox.select()
+            copyBox.setSelectionRange(0, 99999)
+            document.execCommand('copy')
+          }
+        })
+        content.append(label, copyBox, copyButton)
+        copyBox.focus()
+        copyBox.select()
+      },
+    })
   }
 
   /**
@@ -340,6 +379,7 @@ export class GameOnline2p extends GameBase {
   }
 
   waitingForMove = () => {
+    renderBoardState(this.board, this.players)
     this.controls?.setTurn(
       this.isMoveAllowed &&
         !this.isGameWon &&
@@ -350,16 +390,31 @@ export class GameOnline2p extends GameBase {
       statusboxBodyGame.textContent = 'Wating for move'
     }
 
+    const currentPlayer = this.players[this.currentPlayerId]
+    const turnAnnouncement = `${currentPlayer.label}'s turn${
+      this.isCurrentMoveByCurrentPlayer() ? ' (you)' : ''
+    }.`
     if (statusboxBodyPlayer) {
-      const currentPlayer = this.players[this.currentPlayerId]
       statusboxBodyPlayer.textContent =
         `${currentPlayer.label} ${currentPlayer.boardPiece}` +
         ` ` +
         (this.isCurrentMoveByCurrentPlayer() ? `(you)` : `(the other player)`)
     }
+    announce(
+      this.pendingMoveAnnouncement
+        ? `${this.pendingMoveAnnouncement} It is now ${turnAnnouncement}`
+        : turnAnnouncement,
+    )
+    this.pendingMoveAnnouncement = undefined
   }
 
   afterMove = (action: number) => {
+    renderBoardState(this.board, this.players)
+    const currentPlayer = this.players[this.currentPlayerId]
+    const row = getMoveRow(this.board, action)
+    this.pendingMoveAnnouncement = `${currentPlayer.label} placed a disc in column ${action + 1}${
+      row ? `, row ${row}` : ''
+    }.`
     if (!this.connectionPlayerId || !this.connectionMatchId) {
       return
     }
@@ -408,10 +463,15 @@ export function initGameOnline2p(playerName: string) {
     gameMode,
     playerName,
   })
+  let disposed = false
   statusbox?.classList.remove('hidden')
   statusboxBodyConnection?.classList.remove('hidden')
+  renderBoardState(board, players)
 
   function playColumn(column: number) {
+    if (disposed) {
+      return
+    }
     if (
       !game.isGameWon &&
       !game.isGameEnded &&
@@ -438,9 +498,14 @@ export function initGameOnline2p(playerName: string) {
 
   return {
     end: () => {
+      if (disposed) {
+        return
+      }
+      disposed = true
       game.end()
       controls.dispose()
       canvas.removeEventListener('click', handleCanvasClick)
+      board.dispose()
       statusbox?.classList.add('hidden')
     },
   }

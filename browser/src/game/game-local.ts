@@ -10,6 +10,7 @@ import {
 import { Board } from '../board'
 import { animationFrame } from '../utils/animate-frame'
 import { showMessage } from '../utils/message'
+import { announce, getMoveRow, renderBoardState } from './game-accessibility'
 import { activateGameControls } from './game-controls'
 
 const statusbox = document.querySelector('.statusbox')
@@ -24,9 +25,14 @@ const playAgainButton = document.querySelector(
 
 export class GameLocal extends GameBase {
   controls?: ReturnType<typeof activateGameControls>
+  private pendingMoveAnnouncement: string | undefined
 
   constructor(players: Array<Player>, board: BoardBase) {
     super(players, board)
+  }
+  reset() {
+    this.pendingMoveAnnouncement = undefined
+    super.reset()
   }
   beforeMoveApplied() {
     this.controls?.setTurn(false)
@@ -36,6 +42,7 @@ export class GameLocal extends GameBase {
     }
   }
   waitingForMove() {
+    renderBoardState(this.board, this.players)
     this.controls?.setTurn(
       this.isMoveAllowed &&
         !this.isGameWon &&
@@ -50,39 +57,58 @@ export class GameLocal extends GameBase {
       statusboxBodyGame.textContent = 'Wating for move'
     }
 
+    // `currentPlayerId` is not updated yet
+    const currentPlayer = this.players[this.currentPlayerId]
     if (statusboxBodyPlayer) {
-      // `currentPlayerId` is not updated yet
-      const currentPlayer = this.players[this.currentPlayerId]
       statusboxBodyPlayer.textContent = `${currentPlayer.label} ${currentPlayer.boardPiece}`
     }
+    const turnAnnouncement = `${currentPlayer.label}'s turn.`
+    announce(
+      this.pendingMoveAnnouncement
+        ? `${this.pendingMoveAnnouncement} It is now ${turnAnnouncement}`
+        : turnAnnouncement,
+    )
+    this.pendingMoveAnnouncement = undefined
   }
-  afterMove() {
-    // no-op
+  afterMove(action: number) {
+    renderBoardState(this.board, this.players)
+    const currentPlayer = this.players[this.currentPlayerId]
+    const row = getMoveRow(this.board, action)
+    this.pendingMoveAnnouncement = `${currentPlayer.label} placed a disc in column ${action + 1}${
+      row ? `, row ${row}` : ''
+    }.`
   }
 
   announceWinner(winnerBoardPiece: BoardPiece) {
     this.controls?.setTurn(false)
+    this.pendingMoveAnnouncement = undefined
     super.announceWinner(winnerBoardPiece)
 
     if (winnerBoardPiece === BoardPiece.EMPTY) {
       return
     }
     let winnerPlayer: Player | undefined
-    let message = '<h1>Thank you for playing.</h1>'
+    let result = ''
     if (winnerBoardPiece === BoardPiece.DRAW) {
-      message += `It's a draw`
+      result = `It's a draw.`
     } else {
       winnerPlayer = this.players.find(
         (player) => player.boardPiece === winnerBoardPiece,
       )
       if (winnerPlayer) {
-        message += `${winnerPlayer.label} ${winnerPlayer.boardPiece} won`
+        result = `${winnerPlayer.label} won.`
       } else {
-        message += `Player ${winnerBoardPiece} won`
+        result = `Player ${winnerBoardPiece} won.`
       }
     }
-    message += '.<br />Use the Play again button to start a new game.'
-    showMessage(message)
+    renderBoardState(this.board, this.players)
+    const messageDialog = showMessage({
+      title: 'Thank you for playing.',
+      messages: [result, 'Use the Play again button to start a new game.'],
+    })
+    messageDialog?.addEventListener('close', () => playAgainButton?.focus(), {
+      once: true,
+    })
     playAgainButton?.classList.remove('hidden')
 
     if (statusboxBodyGame) {
@@ -98,6 +124,7 @@ export class GameLocal extends GameBase {
                 winnerBoardPiece === BoardPiece.PLAYER_1 ? '1 🔴' : '2 🔵'
               } won`
     }
+    announce(result)
   }
 }
 export function initGameLocal(
@@ -112,6 +139,7 @@ export function initGameLocal(
   }
   const board = new Board(canvas)
   const game = new GameLocalConstructor([firstPlayer, secondPlayer], board)
+  let disposed = false
   statusbox?.classList.remove('hidden')
   statusboxBodyConnection?.classList.add('hidden')
   playAgainButton?.classList.add('hidden')
@@ -123,9 +151,10 @@ export function initGameLocal(
   if (statusboxBodyPlayer) {
     statusboxBodyPlayer.textContent = `${firstPlayer.label} ${firstPlayer.boardPiece}`
   }
+  renderBoardState(board, [firstPlayer, secondPlayer])
 
   function playColumn(column: number) {
-    if (game.isGameWon || game.isGameEnded || !game.isMoveAllowed) {
+    if (disposed || game.isGameWon || game.isGameEnded || !game.isMoveAllowed) {
       return
     }
     if (game.currentPlayerId === 0) {
@@ -139,12 +168,15 @@ export function initGameLocal(
   }
 
   async function restartGame() {
-    if (!game.isGameWon) {
+    if (disposed || !game.isGameWon) {
       return
     }
     playAgainButton?.classList.add('hidden')
     game.reset()
     await animationFrame()
+    if (disposed) {
+      return
+    }
     game.start()
   }
 
@@ -164,9 +196,14 @@ export function initGameLocal(
   canvas.addEventListener('click', handleCanvasClick)
   return {
     end: () => {
+      if (disposed) {
+        return
+      }
+      disposed = true
       game.end()
       controls.dispose()
       canvas.removeEventListener('click', handleCanvasClick)
+      board.dispose()
       playAgainButton?.classList.add('hidden')
       statusbox?.classList.add('hidden')
     },
