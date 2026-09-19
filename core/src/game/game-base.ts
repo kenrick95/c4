@@ -59,7 +59,10 @@ export abstract class GameBase<P extends Player = Player> {
     } catch (error) {
       if (this.isCurrentSession(sessionId)) {
         this.isMoveAllowed = false
-        console.error('[GameBase] Game stopped after an unexpected error', error)
+        console.error(
+          '[GameBase] Game stopped after an unexpected error',
+          error,
+        )
       }
     }
   }

@@ -29,11 +29,7 @@ test('keyboard play updates the accessible board and announces the next turn', a
 
   await page.keyboard.press('Tab')
   await expect
-    .poll(() =>
-      page.evaluate(
-        () => document.activeElement?.getAttribute('data-column'),
-      ),
-    )
+    .poll(() => page.evaluate(() => document.activeElement?.getAttribute('data-column')))
     .toBe('0')
 
   await page.keyboard.press('1')
