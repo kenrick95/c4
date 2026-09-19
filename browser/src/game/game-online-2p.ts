@@ -454,11 +454,15 @@ export function initGameOnline2p(playerName: string) {
     gameMode,
     playerName,
   })
+  let disposed = false
   statusbox?.classList.remove('hidden')
   statusboxBodyConnection?.classList.remove('hidden')
   renderBoardState(board, players)
 
   function playColumn(column: number) {
+    if (disposed) {
+      return
+    }
     if (
       !game.isGameWon &&
       !game.isGameEnded &&
@@ -485,6 +489,10 @@ export function initGameOnline2p(playerName: string) {
 
   return {
     end: () => {
+      if (disposed) {
+        return
+      }
+      disposed = true
       game.end()
       controls.dispose()
       canvas.removeEventListener('click', handleCanvasClick)
