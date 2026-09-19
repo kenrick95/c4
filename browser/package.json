@@ -32,7 +32,7 @@
     "dev": "vite",
     "build": "vite build",
     "build-gh-pages": "vite build --base=\"https://kenrick95.github.io/c4/\"",
-    "test": "echo 'OK'"
+    "test": "yarn build"
   },
   "dependencies": {
     "@kenrick95/c4": "workspace:^"

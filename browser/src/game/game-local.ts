@@ -10,6 +10,11 @@ import {
 import { Board } from '../board'
 import { animationFrame } from '../utils/animate-frame'
 import { showMessage } from '../utils/message'
+import {
+  announce,
+  getMoveRow,
+  renderBoardState,
+} from './game-accessibility'
 import { activateGameControls } from './game-controls'
 
 const statusbox = document.querySelector('.statusbox')
@@ -36,6 +41,7 @@ export class GameLocal extends GameBase {
     }
   }
   waitingForMove() {
+    renderBoardState(this.board, this.players)
     this.controls?.setTurn(
       this.isMoveAllowed &&
         !this.isGameWon &&
@@ -54,10 +60,18 @@ export class GameLocal extends GameBase {
       // `currentPlayerId` is not updated yet
       const currentPlayer = this.players[this.currentPlayerId]
       statusboxBodyPlayer.textContent = `${currentPlayer.label} ${currentPlayer.boardPiece}`
+      announce(`${currentPlayer.label}'s turn.`)
     }
   }
-  afterMove() {
-    // no-op
+  afterMove(action: number) {
+    renderBoardState(this.board, this.players)
+    const currentPlayer = this.players[this.currentPlayerId]
+    const row = getMoveRow(this.board, action)
+    announce(
+      `${currentPlayer.label} placed a disc in column ${action + 1}${
+        row ? `, row ${row}` : ''
+      }.`,
+    )
   }
 
   announceWinner(winnerBoardPiece: BoardPiece) {
@@ -68,21 +82,29 @@ export class GameLocal extends GameBase {
       return
     }
     let winnerPlayer: Player | undefined
-    let message = '<h1>Thank you for playing.</h1>'
+    let result = ''
     if (winnerBoardPiece === BoardPiece.DRAW) {
-      message += `It's a draw`
+      result = `It's a draw.`
     } else {
       winnerPlayer = this.players.find(
         (player) => player.boardPiece === winnerBoardPiece,
       )
       if (winnerPlayer) {
-        message += `${winnerPlayer.label} ${winnerPlayer.boardPiece} won`
+        result = `${winnerPlayer.label} won.`
       } else {
-        message += `Player ${winnerBoardPiece} won`
+        result = `Player ${winnerBoardPiece} won.`
       }
     }
-    message += '.<br />Use the Play again button to start a new game.'
-    showMessage(message)
+    renderBoardState(this.board, this.players)
+    const messageDialog = showMessage({
+      title: 'Thank you for playing.',
+      messages: [result, 'Use the Play again button to start a new game.'],
+    })
+    messageDialog?.addEventListener(
+      'close',
+      () => playAgainButton?.focus(),
+      { once: true },
+    )
     playAgainButton?.classList.remove('hidden')
 
     if (statusboxBodyGame) {
@@ -98,6 +120,7 @@ export class GameLocal extends GameBase {
                 winnerBoardPiece === BoardPiece.PLAYER_1 ? '1 🔴' : '2 🔵'
               } won`
     }
+    announce(result)
   }
 }
 export function initGameLocal(
@@ -123,6 +146,7 @@ export function initGameLocal(
   if (statusboxBodyPlayer) {
     statusboxBodyPlayer.textContent = `${firstPlayer.label} ${firstPlayer.boardPiece}`
   }
+  renderBoardState(board, [firstPlayer, secondPlayer])
 
   function playColumn(column: number) {
     if (game.isGameWon || game.isGameEnded || !game.isMoveAllowed) {
@@ -167,6 +191,7 @@ export function initGameLocal(
       game.end()
       controls.dispose()
       canvas.removeEventListener('click', handleCanvasClick)
+      board.dispose()
       playAgainButton?.classList.add('hidden')
       statusbox?.classList.add('hidden')
     },

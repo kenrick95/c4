@@ -64,6 +64,10 @@ h2 {
 }
 .game-settings-form-section {
   grid-column: 1 / span 2;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
 }
 .game-settings-mode-list {
   list-style: none;
@@ -86,6 +90,12 @@ h2 {
 .game-controls:focus {
   /* This container only sets the starting point for keyboard navigation. */
   outline: none;
+}
+.game-controls {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
 }
 .visually-hidden {
   position: absolute;

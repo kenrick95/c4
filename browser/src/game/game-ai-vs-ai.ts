@@ -50,6 +50,7 @@ export function initGameAiVsAi() {
   return {
     end: () => {
       game.end()
+      board.dispose()
       playAgainButton?.classList.add('hidden')
     },
     restart: restartGame,
