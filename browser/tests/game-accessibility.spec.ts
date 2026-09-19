@@ -168,6 +168,10 @@ test('ignores column shortcuts while a text input or modal dialog is active', as
   await page.evaluate(() => {
     document.querySelector<HTMLDialogElement>('.message-body')?.close()
   })
+  await page.locator('.keyboard-shortcut-test-input').evaluate((input) => {
+    input.remove()
+  })
+  await page.locator('.game-controls').focus()
   await page.keyboard.press('1')
 
   await expect(boardState).toContainText('Player 1: Player 1')
