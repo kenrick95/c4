@@ -103,6 +103,8 @@ test('renders a winning player name as text instead of markup', async ({
     .check()
   await page.locator('#player-1-name').fill(playerName)
   await page.getByRole('button', { name: 'Start game' }).click()
+  await expect(page.locator('.game-control').first()).toBeEnabled()
+  await expect(liveRegion).toHaveText(`${playerName}'s turn.`)
 
   for (const [shortcut, nextTurn] of [
     ['1', "Player 2's turn."],
