@@ -260,7 +260,10 @@ export class GameOnline2p extends GameBase {
         break
       case MESSAGE_TYPE.GAME_ENDED:
         {
-          this.stopCurrentSession()
+          // MOVE_SHADOW and GAME_ENDED arrive in order on the same socket.
+          // Keep the session alive so the final animated move can update the
+          // semantic board before the game loop observes the winner.
+          this.isMoveAllowed = false
           this.controls?.setTurn(false)
           this.pendingMoveAnnouncement = undefined
           const { winnerBoardPiece } = message.payload
