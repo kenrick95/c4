@@ -17,8 +17,8 @@
       content="Connect Four game in JS + Canvas. Play against artificial intelligence or with other human offline or online!"
     />
     <link rel="icon" type="image/svg+xml" href="https://kenrick95.github.io/c4/logo.svg" />
-    <script type="module" crossorigin src="https://kenrick95.github.io/c4/assets/index-47cmAndh.js"></script>
-    <link rel="stylesheet" crossorigin href="https://kenrick95.github.io/c4/assets/index-9WwFEtzK.css">
+    <script type="module" crossorigin src="https://kenrick95.github.io/c4/assets/index-D2sGYd1j.js"></script>
+    <link rel="stylesheet" crossorigin href="https://kenrick95.github.io/c4/assets/index-D2l_oGI7.css">
   </head>
 
   <body>
@@ -37,20 +37,46 @@
       <div
         class="section-message"
         role="status"
+        aria-label="Game updates"
         aria-live="polite"
         aria-atomic="true"
       ></div>
       <canvas class="section-canvas" aria-hidden="true"></canvas>
-      <div
-        class="hidden game-controls"
-        role="group"
-        aria-label="Connect Four columns"
-        tabindex="-1"
+      <p
+        class="visually-hidden board-player-legend"
+        id="board-player-legend"
+      ></p>
+      <table
+        class="visually-hidden board-state"
+        aria-describedby="board-player-legend"
       >
+        <caption>
+          Connect Four board. Rows are listed from top to bottom.
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Row</th>
+            <th scope="col">Column 1</th>
+            <th scope="col">Column 2</th>
+            <th scope="col">Column 3</th>
+            <th scope="col">Column 4</th>
+            <th scope="col">Column 5</th>
+            <th scope="col">Column 6</th>
+            <th scope="col">Column 7</th>
+          </tr>
+        </thead>
+        <tbody class="board-state-body"></tbody>
+      </table>
+      <fieldset class="hidden game-controls" tabindex="-1">
+        <legend class="visually-hidden">
+          Connect Four columns. Use keys 1 through 7 to drop a disc in a
+          column when it is your turn.
+        </legend>
         <button
           class="visually-hidden game-control"
           type="button"
           data-column="0"
+          aria-keyshortcuts="1"
         >
           Drop a disc in column 1
         </button>
@@ -58,6 +84,7 @@
           class="visually-hidden game-control"
           type="button"
           data-column="1"
+          aria-keyshortcuts="2"
         >
           Drop a disc in column 2
         </button>
@@ -65,6 +92,7 @@
           class="visually-hidden game-control"
           type="button"
           data-column="2"
+          aria-keyshortcuts="3"
         >
           Drop a disc in column 3
         </button>
@@ -72,6 +100,7 @@
           class="visually-hidden game-control"
           type="button"
           data-column="3"
+          aria-keyshortcuts="4"
         >
           Drop a disc in column 4
         </button>
@@ -79,6 +108,7 @@
           class="visually-hidden game-control"
           type="button"
           data-column="4"
+          aria-keyshortcuts="5"
         >
           Drop a disc in column 5
         </button>
@@ -86,6 +116,7 @@
           class="visually-hidden game-control"
           type="button"
           data-column="5"
+          aria-keyshortcuts="6"
         >
           Drop a disc in column 6
         </button>
@@ -93,14 +124,15 @@
           class="visually-hidden game-control"
           type="button"
           data-column="6"
+          aria-keyshortcuts="7"
         >
           Drop a disc in column 7
         </button>
-      </div>
+      </fieldset>
     </section>
 
-    <dialog class="init-screen">
-      <h1>
+    <dialog class="init-screen" aria-labelledby="init-screen-title">
+      <h1 id="init-screen-title">
         <img
           src="https://kenrick95.github.io/c4/logo.svg"
           alt="c4 - Connect Four logo"
@@ -132,8 +164,8 @@
       </p>
       <h2>Game Settings</h2>
       <form method="dialog" class="game-settings-form">
-        <div class="game-settings-form-section">
-          Playing Mode:
+        <fieldset class="game-settings-form-section">
+          <legend>Playing mode</legend>
           <ul class="game-settings-mode-list">
             <li>
               <label
@@ -182,13 +214,14 @@
               >
             </li>
           </ul>
-        </div>
+        </fieldset>
         <label class="game-settings-player-1-name-label" for="player-1-name">
           Player's name:
         </label>
         <input
           type="text"
           class="game-settings-player-1-name-input"
+          id="player-1-name"
           value="Player 1"
           name="player-1-name"
           placeholder="Player 1"
@@ -199,6 +232,7 @@
         <input
           type="text"
           class="game-settings-player-2-name-input"
+          id="player-2-name"
           value="Player 2"
           name="player-2-name"
           placeholder="Player 2"
@@ -236,7 +270,7 @@
       </div>
     </div>
 
-    <dialog class="message-body">
+    <dialog class="message-body" aria-labelledby="message-title">
       <form method="dialog" class="message-form">
         <div class="message-body-content"></div>
         <button class="message-body-dismiss" type="submit" value="ok">
