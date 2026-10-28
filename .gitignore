@@ -78,6 +78,7 @@ typings/
 
 # End of https://www.gitignore.io/api/node
 dist/
+test-results/
 
 # https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
 .pnp.*

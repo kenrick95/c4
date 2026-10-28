@@ -24,7 +24,7 @@
     "node": "24.x",
     "yarn": "4.x"
   },
-  "packageManager": "yarn@4.14.1",
+  "packageManager": "yarn@4.18.1",
   "homepage": "https://github.com/kenrick95/c4",
   "license": "MIT",
   "keywords": [
@@ -45,7 +45,7 @@
     "lint:fix": "biome check --write ."
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.14",
-    "concurrently": "9.2.1"
+    "@biomejs/biome": "2.6.3",
+    "concurrently": "9.2.5"
   }
 }

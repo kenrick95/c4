@@ -38,8 +38,8 @@
     "@kenrick95/c4": "workspace:^"
   },
   "devDependencies": {
-    "@playwright/test": "^1.57.0",
+    "@playwright/test": "^1.64.1",
     "typescript": "~6.0.3",
-    "vite": "^8.1.6"
+    "vite": "^8.3.5"
   }
 }

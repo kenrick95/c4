@@ -35,16 +35,16 @@
     "test": "echo 'OK'"
   },
   "devDependencies": {
-    "@types/node": "24",
-    "@types/ws": "^8.5.10",
+    "@types/node": "24.19.2",
+    "@types/ws": "^8.18.2",
     "typescript": "~6.0.3",
-    "vite": "^8.1.6",
+    "vite": "^8.3.5",
     "vite-node": "6.0.0"
   },
   "dependencies": {
     "@kenrick95/c4": "workspace:^",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
-    "ws": "^8.21.0"
+    "ws": "^8.22.0"
   }
 }

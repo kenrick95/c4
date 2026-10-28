@@ -64,13 +64,13 @@
     "test": "vitest --watch=false"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "~0.18.1",
-    "@microsoft/api-extractor": "^7.58.7",
-    "@types/node": "24",
+    "@arethetypeswrong/cli": "~0.18.5",
+    "@microsoft/api-extractor": "^7.60.0",
+    "@types/node": "24.19.2",
     "typescript": "~6.0.3",
-    "vite": "^8.1.6",
+    "vite": "^8.3.5",
     "vite-dts": "^1.0.4",
-    "vite-plugin-dts": "^5.0.0",
-    "vitest": "^5.0.1"
+    "vite-plugin-dts": "^5.1.2",
+    "vitest": "^5.0.5"
   }
 }
